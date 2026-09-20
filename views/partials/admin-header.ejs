@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title : 'Recruiter Command Center | NG Global' %></title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Admin Stylesheet -->
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <!-- Top Admin Bar -->
+  <header class="admin-navbar">
+    <a href="/admin/dashboard" class="admin-nav-brand">
+      <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Emblem" />
+      <span>NG GLOBAL <small style="font-weight: 500; color: var(--admin-gold); font-size: 0.8rem; margin-left: 6px;">RECRUITMENT CRM</small></span>
+    </a>
+
+    <ul class="admin-nav-links">
+      <li>
+        <a href="/admin/dashboard" class="admin-nav-link <%= typeof path !== 'undefined' && path === '/admin/dashboard' ? 'active' : '' %>">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="/admin/leads" class="admin-nav-link <%= typeof path !== 'undefined' && path.startsWith('/admin/leads') ? 'active' : '' %>">
+          <i class="fa-solid fa-user-group"></i>
+          <span>Candidates</span>
+        </a>
+      </li>
+      <li>
+        <a href="/admin/jobs" class="admin-nav-link <%= typeof path !== 'undefined' && path.startsWith('/admin/jobs') ? 'active' : '' %>">
+          <i class="fa-solid fa-briefcase"></i>
+          <span>Job Quotas</span>
+        </a>
+      </li>
+      <li>
+        <a href="/admin/settings" class="admin-nav-link <%= typeof path !== 'undefined' && path === '/admin/settings' ? 'active' : '' %>">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Settings</span>
+        </a>
+      </li>
+      <li>
+        <a href="/" target="_blank" class="admin-nav-link">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>Public Portal</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="admin-user-pill">
+      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <span class="user-badge"><i class="fa-solid fa-shield-halved"></i> <%= currentUser.name %></span>
+        <a href="/auth/logout" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>Sign Out</span>
+        </a>
+      <% } %>
+    </div>
+  </header>

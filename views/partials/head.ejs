@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  
+  <!-- Primary SEO Metadata -->
+  <title><%= typeof title !== 'undefined' ? title : 'NG Global Manpower Services | Overseas Blue-Collar Careers & Verified Quotas' %></title>
+  <meta name="description" content="<%= typeof description !== 'undefined' ? description : 'Connect with verified international employers across Saudi Arabia (NEOM), UAE Dubai, Qatar, Germany Europe, USA, and New Zealand. Transparent service fees with 100% company-sponsored job quotas available. Direct embassy visa processing.' %>" />
+  <meta name="keywords" content="overseas recruitment, gulf jobs, saudi neom driver jobs, 6g welder jobs germany, dubai electrician vacancies, qatar construction helper, new zealand mechanic jobs, usa h2b visa jobs, international manpower consultancy, blue collar overseas employment" />
+  <meta name="author" content="NG Global Manpower Services" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <link rel="canonical" href="<%= typeof appUrl !== 'undefined' ? appUrl : 'http://localhost:3000' %><%= typeof path !== 'undefined' ? path : '' %>" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="NG Global Manpower Services" />
+  <meta property="og:url" content="<%= typeof appUrl !== 'undefined' ? appUrl : 'http://localhost:3000' %><%= typeof path !== 'undefined' ? path : '' %>" />
+  <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'NG Global Manpower Services | International Blue-Collar Careers' %>" />
+  <meta property="og:description" content="Verified overseas job openings in Saudi Arabia, UAE, Germany, USA, Qatar, and New Zealand. Transparent agency fees & 100% employer-funded quotas." />
+  <meta property="og:image" content="<%= typeof appUrl !== 'undefined' ? appUrl : 'http://localhost:3000' %>/images/job_saudi_driver.jpg" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'NG Global Manpower Services | Global Recruitment Quotas' %>" />
+  <meta name="twitter:description" content="Explore verified blue-collar job quotas for Gulf, Europe, USA, and NZ. Direct embassy processing." />
+  <meta name="twitter:image" content="<%= typeof appUrl !== 'undefined' ? appUrl : 'http://localhost:3000' %>/images/job_saudi_driver.jpg" />
+
+  <!-- Theme & Mobile Icon -->
+  <meta name="theme-color" content="#030A1A" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome 6 & Canvas Confetti -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Three.js for 3D Globe & WebGL Atmosphere -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Extracted Luxury Design System Stylesheet -->
+  <link rel="stylesheet" href="/css/main.css" />
+
+  <!-- Schema.org JSON-LD Structured Data for Google Jobs & Search -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "EmploymentAgency",
+        "@id": "<%= typeof appUrl !== 'undefined' ? appUrl : 'http://localhost:3000' %>/#agency",
+        "name": "NG Global Manpower Services",
+        "url": "<%= typeof appUrl !== 'undefined' ? appUrl : 'http://localhost:3000' %>",
+        "logo": "<%= typeof appUrl !== 'undefined' ? appUrl : 'http://localhost:3000' %>/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png",
+        "description": "Premier international overseas recruitment consultancy connecting skilled trade specialists with verified employers across Gulf, Europe, USA, and New Zealand.",
+        "telephone": "+91-80800-25670",
+        "priceRange": "Transparent Service Charges & 100% Company-Sponsored Quotas",
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "IN"
+        },
+        "areaServed": ["IN", "SA", "AE", "QA", "DE", "PL", "US", "NZ"]
+      }
+      <% if (typeof jobs !== 'undefined' && jobs && jobs.length > 0) { %>,
+      {
+        "@type": "ItemList",
+        "itemListElement": [
+          <% jobs.slice(0, 6).forEach((job, index) => { %>
+          {
+            "@type": "ListItem",
+            "position": <%= index + 1 %>,
+            "item": {
+              "@type": "JobPosting",
+              "title": "<%= job.title.replace(/"/g, '\\"') %>",
+              "description": "Verified overseas vacancy for <%= job.title.replace(/"/g, '\\"') %> in <%= job.country.replace(/"/g, '\\"') %>. Salary <%= job.salary_inr %> (<%= job.salary_foreign %>). Includes perks such as <%= (job.perks || []).join(', ') %>.",
+              "datePosted": "<%= new Date().toISOString().slice(0, 10) %>",
+              "validThrough": "<%= new Date(Date.now() + 90*24*60*60*1000).toISOString().slice(0, 10) %>",
+              "employmentType": "FULL_TIME",
+              "hiringOrganization": {
+                "@type": "Organization",
+                "name": "NG Global Partner Employer",
+                "sameAs": "<%= typeof appUrl !== 'undefined' ? appUrl : 'http://localhost:3000' %>"
+              },
+              "jobLocation": {
+                "@type": "Place",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressCountry": "<%= job.country.replace(/"/g, '\\"') %>"
+                }
+              },
+              "baseSalary": {
+                "@type": "MonetaryAmount",
+                "currency": "INR",
+                "value": {
+                  "@type": "QuantitativeValue",
+                  "value": "<%= job.salary_inr %>",
+                  "unitText": "MONTH"
+                }
+              }
+            }
+          }<%= index < Math.min(jobs.length, 6) - 1 ? ',' : '' %>
+          <% }); %>
+        ]
+      }
+      <% } %>
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- 3D Luxury Golden-Cyan Scroll Progress Indicator -->
+  <div id="scrollProgress3D" class="scroll-progress-3d"></div>
+
+  <!-- Ambient Decorative Backdrop -->
+  <div class="ambient-grid"></div>
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>

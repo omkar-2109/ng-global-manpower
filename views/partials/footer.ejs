@@ -1,0 +1,72 @@
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <div class="footer-col">
+          <a href="/" class="brand-logo" style="margin-bottom: 20px;">
+            <div class="logo-icon" style="background: rgba(255, 255, 255, 0.08); border: 1.5px solid var(--border-gold); padding: 3px; box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);">
+              <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+            </div>
+            <div class="brand-text">
+              <h2>NG GLOBAL <span>MANPOWER SERVICES</span></h2>
+            </div>
+          </a>
+          <p style="line-height: 1.7; margin-bottom: 24px;">
+            Premier international overseas recruitment consultancy. Bridging worldwide blue-collar trade specialists with verified infrastructure, industrial, and engineering employers across the Gulf, Europe, USA, and New Zealand.
+          </p>
+          <div style="display: flex; gap: 12px;">
+            <a href="https://wa.me/<%= typeof settings !== 'undefined' && settings.whatsappNumber ? settings.whatsappNumber : '918080025670' %>" target="_blank" class="btn btn-whatsapp" style="padding: 10px 20px; font-size: 0.85rem;">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span>WhatsApp Helpline</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Destinations</h4>
+          <ul class="footer-links">
+            <li><a href="/#timelines">United Arab Emirates</a></li>
+            <li><a href="/#timelines">Saudi Arabia (NEOM)</a></li>
+            <li><a href="/#timelines">Qatar & Oman</a></li>
+            <li><a href="/#timelines">Germany & Poland</a></li>
+            <li><a href="/#timelines">United States (H-2B)</a></li>
+            <li><a href="/#timelines">New Zealand & Australia</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Candidate Trust</h4>
+          <ul class="footer-links">
+            <li><a href="/#why-us">Transparent Fee Structure</a></li>
+            <li><a href="/#why-us">Direct Embassy Processing</a></li>
+            <li><a href="/#why-us">Authorized GAMCA Medicals</a></li>
+            <li><a href="/#fraud-advisory">Anti-Fraud Advisory</a></li>
+            <li><a href="/jobs">Current Job Quotas</a></li>
+            <li><a href="/#lead-funnel">Free Eligibility Assessment</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contact &amp; Verification</h4>
+          <ul class="footer-links">
+            <li><a href="tel:<%= typeof settings !== 'undefined' && settings.helplinePhone ? settings.helplinePhone.replace(/[^0-9+]/g, '') : '+918080025670' %>"><i class="fa-solid fa-phone" style="color: var(--gold-primary); margin-right: 8px;"></i> <%= typeof settings !== 'undefined' && settings.helplinePhone ? settings.helplinePhone : '+91 80800 25670' %></a></li>
+            <li><a href="https://wa.me/<%= typeof settings !== 'undefined' && settings.whatsappNumber ? settings.whatsappNumber : '918080025670' %>" target="_blank" style="color: #25D366;"><i class="fa-brands fa-whatsapp" style="margin-right: 8px;"></i>WhatsApp: <%= typeof settings !== 'undefined' && settings.helplinePhone ? settings.helplinePhone : '+91 80800 25670' %></a></li>
+            <li><a href="mailto:<%= typeof settings !== 'undefined' && settings.supportEmail ? settings.supportEmail : 'hr@ngglobalmp.in' %>"><i class="fa-solid fa-envelope" style="color: var(--sapphire-glow); margin-right: 8px;"></i><span style="font-size:0.78rem;color:var(--text-muted);">Human Resources</span><br><%= typeof settings !== 'undefined' && settings.supportEmail ? settings.supportEmail : 'hr@ngglobalmp.in' %></a></li>
+            <li><span style="color: var(--text-muted);"><i class="fa-solid fa-location-dot" style="color: var(--emerald-accent); margin-right: 8px;"></i> Mumbai &bull; Delhi &bull; Dubai &bull; Warsaw</span></li>
+            <li style="margin-top: 14px;"><a href="/admin/login" style="color: var(--gold-primary);"><i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Staff Portal Login</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <%= typeof currentYear !== 'undefined' ? currentYear : 2026 %> NG Global Manpower Services. All rights reserved. Registered Overseas Recruitment Platform.</p>
+        <div style="display: flex; gap: 20px;">
+          <a href="/#fraud-advisory">Legal Disclaimer</a>
+          <a href="/#fraud-advisory">Privacy Policy</a>
+          <a href="/#why-us">Zero Fraud Guarantee</a>
+        </div>
+      </div>
+    </div>
+  </footer>

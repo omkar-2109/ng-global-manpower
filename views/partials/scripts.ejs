@@ -1,0 +1,15 @@
+  <!-- Server Settings: Injected for client JS modules -->
+  <script>
+    window.NG_SETTINGS = {
+      whatsappNumber: '<%= typeof settings !== "undefined" && settings.whatsappNumber ? settings.whatsappNumber : "918080025670" %>',
+      helplinePhone: '<%= typeof settings !== "undefined" && settings.helplinePhone ? settings.helplinePhone : "+91 80800 25670" %>',
+      supportEmail: '<%= typeof settings !== "undefined" && settings.supportEmail ? settings.supportEmail : "hr@ngglobalmp.in" %>'
+    };
+  </script>
+  <!-- Modular Client Scripts -->
+  <script src="/js/apply-modal.js"></script>
+  <script src="/js/globe.js"></script>
+  <script src="/js/wizard.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+  <!-- Mobile Drawer Overlay & Menu -->
+  <div id="mobileDrawerOverlay" class="mobile-drawer-overlay" onclick="toggleMobileMenu()"></div>
+  <aside id="mobileDrawer" class="mobile-drawer">
+    <div class="mobile-drawer-header">
+      <div class="brand-logo">
+        <div class="logo-icon" style="width: 38px; height: 38px; background: rgba(255, 255, 255, 0.08); border: 1.5px solid var(--border-gold); padding: 3px;">
+          <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+        </div>
+        <div class="brand-text">
+          <h2 style="font-size: 1.05rem;">NG GLOBAL</h2>
+        </div>
+      </div>
+      <button type="button" class="mobile-drawer-close" onclick="toggleMobileMenu()" aria-label="Close Menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <ul class="mobile-drawer-links">
+      <li>
+        <a href="/#why-us" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Trust Model</span>
+        </a>
+      </li>
+      <li>
+        <a href="/jobs" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-briefcase"></i>
+          <span>Overseas Jobs Directory</span>
+        </a>
+      </li>
+      <li>
+        <a href="/#timelines" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-clock"></i>
+          <span>Processing Tracks</span>
+        </a>
+      </li>
+      <li>
+        <a href="/#lead-funnel" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-trowel-bricks"></i>
+          <span>Check Eligibility</span>
+        </a>
+      </li>
+      <li>
+        <a href="/#testimonials" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-comments"></i>
+          <span>Worker Stories</span>
+        </a>
+      </li>
+      <li>
+        <a href="/#fraud-advisory" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>Anti-Fraud Advisory</span>
+        </a>
+      </li>
+      <li>
+        <a href="/#faq" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-circle-question"></i>
+          <span>Frequently Asked Questions</span>
+        </a>
+      </li>
+      <% if (typeof user !== 'undefined' && user) { %>
+      <li>
+        <a href="/admin/dashboard" style="color: var(--gold-primary);">
+          <i class="fa-solid fa-user-shield"></i>
+          <span>Recruiter Command Center</span>
+        </a>
+      </li>
+      <% } else { %>
+      <li>
+        <a href="/admin/login">
+          <i class="fa-solid fa-lock"></i>
+          <span>Staff Login</span>
+        </a>
+      </li>
+      <% } %>
+    </ul>
+
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px;">
+      <a href="/#lead-funnel" class="btn btn-gold" style="width: 100%;" onclick="toggleMobileMenu()">
+        <span>Check Eligibility Free</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+      <a href="https://wa.me/<%= typeof settings !== 'undefined' && settings.whatsappNumber ? settings.whatsappNumber : '918080025670' %>" target="_blank" class="btn btn-whatsapp" style="width: 100%;">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span>WhatsApp Helpline</span>
+      </a>
+    </div>
+  </aside>

@@ -1,0 +1,25 @@
+# Dependency directories
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# SQLite Database storage
+data/*.sqlite
+data/*.sqlite-journal
+data/*.sqlite-wal
+data/*.sqlite-shm
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Uploads / Temp
+public/uploads/temp/
+temp/
+data/*.tmp
+.DS_Store
+Thumbs.db
+

@@ -1,0 +1,5201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>NG Global Manpower Services | Global Blue-Collar Careers. Zero Upfront Agency Risk.</title>
+  <meta name="description" content="NG Global Manpower Services connects blue-collar candidates with verified global employers across Gulf, Europe, USA, and New Zealand. Zero upfront agency fees. Official visa and processing fees paid directly by candidates to embassies." />
+  <meta name="theme-color" content="#030A1A" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome 6 & Canvas Confetti -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Three.js for 3D Globe & WebGL Atmosphere -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       1. LUXURY DESIGN TOKENS & RESET
+       ========================================================================== */
+    :root {
+      --bg-void: #020612;
+      --bg-deep: #030A1A;
+      --bg-surface: #07132C;
+      --bg-elevated: #0C1E42;
+      --bg-glass: rgba(12, 30, 66, 0.45);
+      --bg-glass-card: rgba(255, 255, 255, 0.04);
+      --bg-glass-hover: rgba(255, 255, 255, 0.08);
+
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-light: rgba(255, 255, 255, 0.14);
+      --border-gold: rgba(212, 175, 55, 0.4);
+      --border-gold-glow: rgba(245, 158, 11, 0.6);
+
+      --sapphire: #1E40AF;
+      --sapphire-bright: #2563EB;
+      --sapphire-glow: #38BDF8;
+      --sapphire-cyan: #06B6D4;
+
+      --gold-100: #FEF9C3;
+      --gold-300: #FDE047;
+      --gold-400: #FACC15;
+      --gold-primary: #D4AF37;
+      --gold-dark: #B45309;
+      --gold-amber: #F59E0B;
+
+      --emerald-accent: #10B981;
+      --emerald-glow: rgba(16, 185, 129, 0.25);
+
+      --text-white: #FFFFFF;
+      --text-heading: #F8FAFC;
+      --text-body: #CBD5E1;
+      --text-muted: #8493A8;
+      --text-gold: #F6D87A;
+
+      --font-heading: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'Space Grotesk', monospace;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --radius-full: 9999px;
+
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.45);
+      --shadow-gold: 0 8px 30px rgba(212, 175, 55, 0.25);
+      --shadow-blue: 0 12px 40px rgba(37, 99, 235, 0.25);
+
+      --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      background-color: var(--bg-void);
+      color: var(--text-body);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+      width: 100% !important;
+    }
+
+    body {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+      width: 100% !important;
+      background: radial-gradient(circle at 50% 0%, #081636 0%, #030A1A 40%, #020612 100%);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    img, svg, video, canvas {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Ambient Background Grid & Radial Lighting */
+    .ambient-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-size: 60px 60px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-glow-1 {
+      position: absolute;
+      top: -150px;
+      left: 20%;
+      width: min(600px, 90vw);
+      height: min(600px, 90vw);
+      background: radial-gradient(circle, rgba(30, 64, 175, 0.3) 0%, rgba(3, 10, 26, 0) 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      animation: pulseGlow 8s ease-in-out infinite alternate;
+    }
+
+    .ambient-glow-2 {
+      position: absolute;
+      top: 400px;
+      right: 5%;
+      width: min(550px, 80vw);
+      height: min(550px, 80vw);
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(3, 10, 26, 0) 70%);
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1) translateY(0); opacity: 0.6; }
+      100% { transform: scale(1.15) translateY(40px); opacity: 0.9; }
+    }
+
+    /* Typography & Utilities */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      color: var(--text-white);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #FFF6D3 0%, #D4AF37 40%, #F59E0B 70%, #FDE68A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .sapphire-gradient-text {
+      background: linear-gradient(135deg, #BAE6FD 0%, #38BDF8 50%, #2563EB 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Glassmorphic Container Utility */
+    .glass-card {
+      background: var(--bg-glass-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+      transition: 0.6s ease;
+      pointer-events: none;
+    }
+
+    .glass-card:hover::before {
+      left: 100%;
+    }
+
+    .glass-card:hover {
+      border-color: var(--border-light);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: var(--radius-full);
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: var(--transition-bounce);
+      border: none;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      min-height: 48px;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #FDE047 0%, #D4AF37 50%, #B45309 100%);
+      color: #030712;
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 30px rgba(212, 175, 55, 0.55);
+      color: #000000;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      color: var(--text-white);
+      border: 1px solid var(--border-light);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--border-gold);
+      color: var(--gold-300);
+      transform: translateY(-2px);
+    }
+
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #FFFFFF;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35);
+    }
+
+    .btn-whatsapp:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 30px rgba(37, 211, 102, 0.55);
+    }
+
+    /* ==========================================================================
+       2. TOP ANNOUNCEMENT BAR & NAVIGATION
+       ========================================================================== */
+    .top-bar {
+      background: linear-gradient(90deg, #091B3E 0%, #0B2556 50%, #091B3E 100%);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+      padding: 8px 0;
+      font-size: 0.8rem;
+      font-family: var(--font-body);
+      color: var(--text-white);
+      position: relative;
+      z-index: 100;
+      width: 100%;
+      max-width: 100vw;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .top-bar-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .top-badge-pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: var(--gold-300);
+      max-width: 100%;
+      word-break: break-word;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald-accent);
+      box-shadow: 0 0 10px var(--emerald-accent);
+      animation: blink 1.5s infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .top-bar-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--text-muted);
+    }
+
+    .top-bar-links a {
+      color: var(--text-body);
+      text-decoration: none;
+      transition: var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .top-bar-links a:hover {
+      color: var(--gold-300);
+    }
+
+    /* Sticky Navigation */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: rgba(3, 10, 26, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: var(--transition-smooth);
+      width: 100%;
+      max-width: 100vw;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 74px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #1E40AF 0%, #D4AF37 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .brand-text h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      white-space: nowrap;
+    }
+
+    .brand-text span {
+      font-size: 0.64rem;
+      color: var(--gold-300);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+      display: block;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-body);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: var(--transition-fast);
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold-300);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gold-primary);
+      transition: var(--transition-fast);
+      border-radius: 2px;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Mobile Hamburger Menu Toggle Button */
+    .mobile-menu-btn {
+      display: none;
+      width: 42px;
+      height: 42px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      color: var(--text-white);
+      font-size: 1.25rem;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-fast);
+    }
+
+    .mobile-menu-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--gold-300);
+    }
+
+    /* Mobile Navigation Drawer */
+    .mobile-drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(2, 6, 18, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .mobile-drawer-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: -320px;
+      width: 300px;
+      height: 100vh;
+      background: #07132C;
+      border-left: 1px solid var(--border-gold);
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
+      z-index: 1001;
+      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .mobile-drawer.active {
+      right: 0;
+    }
+
+    .mobile-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .mobile-drawer-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--text-white);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-drawer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      list-style: none;
+      margin-bottom: 32px;
+    }
+
+    .mobile-drawer-links a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-white);
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid transparent;
+      transition: var(--transition-fast);
+    }
+
+    .mobile-drawer-links a:hover {
+      background: rgba(212, 175, 55, 0.1);
+      border-color: var(--border-gold);
+      color: var(--gold-300);
+    }
+
+    .mobile-drawer-links a i {
+      color: var(--gold-300);
+      width: 20px;
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION & 3D INTERACTIVE GLOBE & 3D FLOATING FLAGS
+       ========================================================================== */
+    .hero-section {
+      padding: 48px 0 80px;
+      position: relative;
+      overflow: visible;
+      overflow-x: clip;
+      min-height: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 18px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--gold-300);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+      max-width: 100%;
+    }
+
+    .hero-tag i {
+      color: var(--gold-amber);
+      flex-shrink: 0;
+    }
+
+    .hero-title {
+      font-size: clamp(2.3rem, 5.5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.12;
+      margin-bottom: 20px;
+      word-break: break-word;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      color: var(--text-body);
+      line-height: 1.7;
+      margin-bottom: 32px;
+      max-width: 580px;
+    }
+
+    .hero-cta-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    /* Trust highlights beneath Hero CTA */
+    .hero-trust-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-value {
+      font-family: var(--font-heading);
+      font-size: clamp(1.15rem, 2.5vw, 1.55rem);
+      font-weight: 800;
+      color: var(--text-white);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .metric-value span {
+      color: var(--gold-amber);
+    }
+
+    .metric-label {
+      font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+      color: var(--text-muted);
+      margin-top: 3px;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    /* ==========================================================================
+       3D GLOBE & 3D FLOATING COUNTRY FLAGS STAGE
+       ========================================================================== */
+    .hero-visual-stage {
+      position: relative;
+      width: 100%;
+      height: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .globe-stage-wrap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 480px;
+      height: 480px;
+      max-width: 90vw;
+      max-height: 90vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+    }
+
+    /* Three.js Canvas Container */
+    #globeCanvasContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      pointer-events: auto;
+      cursor: grab;
+      z-index: 3;
+    }
+
+    #globeCanvasContainer:active {
+      cursor: grabbing;
+    }
+
+    /* Radial Glowing Atmosphere Rings */
+    .globe-glow-halo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 104%;
+      height: 104%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.18) 0%, rgba(212, 175, 55, 0.08) 55%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(20px);
+    }
+
+    .globe-orbit-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotateX(65deg);
+      width: 110%;
+      height: 110%;
+      border: 1px dashed rgba(212, 175, 55, 0.35);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 2;
+      animation: spinOrbit 35s linear infinite;
+    }
+
+    @keyframes spinOrbit {
+      0% { transform: translate(-50%, -50%) rotateX(65deg) rotateZ(0deg); }
+      100% { transform: translate(-50%, -50%) rotateX(65deg) rotateZ(360deg); }
+    }
+
+    /* 3D Floating Country Flags Stage */
+    .floating-flags-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 8;
+    }
+
+    .floating-flag-card {
+      position: absolute;
+      pointer-events: auto;
+      background: rgba(7, 19, 44, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.2);
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .floating-flag-card:hover {
+      transform: scale(1.08) translateY(-6px) translateZ(30px) !important;
+      border-color: var(--gold-amber);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 30px rgba(245, 158, 11, 0.45);
+      z-index: 25;
+    }
+
+    .flag-wave-emblem {
+      width: 40px;
+      height: 28px;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+      position: relative;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .flag-wave-emblem svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .flag-wave-emblem::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .flag-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .flag-country-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-white);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .flag-tag-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--gold-300);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .flag-tag-badge.fast-track {
+      color: #34D399;
+    }
+
+    /* Specific Floating Flag Positions (Desktop default) */
+    .flag-pos-uae {
+      top: 10%;
+      left: 0%;
+      animation: floatMotion1 6s ease-in-out infinite alternate;
+    }
+
+    .flag-pos-saudi {
+      bottom: 14%;
+      left: 2%;
+      animation: floatMotion2 7s ease-in-out infinite alternate;
+    }
+
+    .flag-pos-germany {
+      top: 6%;
+      right: 0%;
+      animation: floatMotion3 6.5s ease-in-out infinite alternate;
+    }
+
+    .flag-pos-usa {
+      bottom: 18%;
+      right: 0%;
+      animation: floatMotion1 7.5s ease-in-out infinite alternate;
+    }
+
+    .flag-pos-nz {
+      top: 48%;
+      right: 1%;
+      animation: floatMotion2 5.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatMotion1 {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-14px) rotate(1.5deg); }
+    }
+
+    @keyframes floatMotion2 {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(12px) rotate(-1.5deg); }
+    }
+
+    @keyframes floatMotion3 {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-10px) rotate(-2deg); }
+    }
+
+    /* ==========================================================================
+       4. VALUE PROPOSITION GRID (Glassmorphism & 3D Tilt)
+       ========================================================================== */
+    .section-spacing {
+      padding: 90px 0;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto 56px;
+    }
+
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 16px;
+      background: rgba(37, 99, 235, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--sapphire-glow);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(1.9rem, 4vw, 2.75rem);
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: clamp(0.92rem, 1.8vw, 1.05rem);
+      color: var(--text-body);
+      line-height: 1.7;
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .value-card {
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(165deg, rgba(12, 30, 66, 0.6) 0%, rgba(5, 15, 36, 0.7) 100%);
+      border: 1px solid var(--border-subtle);
+      position: relative;
+    }
+
+    .value-card:hover {
+      border-color: var(--border-gold);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(212, 175, 55, 0.15);
+    }
+
+    .value-step-num {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      font-family: var(--font-mono);
+      font-size: 2rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.05);
+      line-height: 1;
+    }
+
+    .value-icon-box {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(212, 175, 55, 0.2) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: var(--gold-300);
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .value-card h3 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--text-white);
+    }
+
+    .value-card p {
+      font-size: 0.92rem;
+      color: var(--text-body);
+      line-height: 1.68;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .value-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold-300);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    /* ==========================================================================
+       5. DUAL-TRACK TIMELINE COMPONENT (Gulf 1-15d vs EU/USA/NZ 3 Months)
+       ========================================================================== */
+    .timeline-tabs-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .timeline-tab-btn {
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      color: var(--text-muted);
+      font-family: var(--font-heading);
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition-smooth);
+    }
+
+    .timeline-tab-btn.active {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.35) 0%, rgba(212, 175, 55, 0.25) 100%);
+      border-color: var(--gold-primary);
+      color: var(--text-white);
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+    }
+
+    .timeline-tab-btn .badge-pill {
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .timeline-tab-btn.active .badge-pill {
+      background: var(--gold-primary);
+      color: #030712;
+    }
+
+    .timeline-track-container {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .timeline-track-container.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .timeline-track-card {
+      background: linear-gradient(170deg, rgba(11, 27, 60, 0.7) 0%, rgba(4, 11, 26, 0.85) 100%);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      box-shadow: var(--shadow-md);
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .timeline-header-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 24px;
+      margin-bottom: 36px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .track-badge-large {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .track-badge-large i {
+      font-size: 1.6rem;
+      color: var(--gold-300);
+      flex-shrink: 0;
+    }
+
+    .track-badge-large h3 {
+      font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+      font-weight: 800;
+      color: var(--text-white);
+    }
+
+    .track-badge-large p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .track-duration-pill {
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      font-weight: 800;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .duration-fast {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34D399;
+    }
+
+    .duration-standard {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38BDF8;
+    }
+
+    /* Steps visual pipeline */
+    .steps-pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      position: relative;
+    }
+
+    .steps-pipeline::before {
+      content: '';
+      position: absolute;
+      top: 36px;
+      left: 12%;
+      width: 76%;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.3) 0%, rgba(56, 189, 248, 0.6) 50%, rgba(16, 185, 129, 0.8) 100%);
+      z-index: 1;
+    }
+
+    .step-node {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .step-circle {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: #0B1D40;
+      border: 2px solid var(--border-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      color: var(--gold-300);
+      margin-bottom: 16px;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+      transition: var(--transition-smooth);
+      flex-shrink: 0;
+    }
+
+    .step-node:hover .step-circle {
+      transform: scale(1.08);
+      border-color: var(--gold-amber);
+      box-shadow: 0 0 28px rgba(245, 158, 11, 0.45);
+    }
+
+    .step-time-label {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gold-300);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .step-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 0.84rem;
+      color: var(--text-body);
+      line-height: 1.5;
+    }
+
+    /* Comparison Table Responsive Scroll Container */
+    .mobile-table-hint {
+      display: none;
+      font-size: 0.76rem;
+      color: var(--gold-300);
+      margin-top: 24px;
+      margin-bottom: 8px;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .table-responsive {
+      width: 100%;
+      max-width: 100%;
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: var(--radius-md);
+      margin-top: 10px;
+      border: 1px solid var(--border-subtle);
+      box-sizing: border-box;
+    }
+
+    .timeline-compare-table {
+      width: 100%;
+      min-width: 580px;
+      border-collapse: collapse;
+    }
+
+    .timeline-compare-table th, .timeline-compare-table td {
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    .timeline-compare-table th {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--gold-300);
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .timeline-compare-table tr:nth-child(even) td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .timeline-compare-table td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-body);
+    }
+
+    /* ==========================================================================
+       6. LEAD GENERATION COMPONENT: THE CORE MULTI-STEP FUNNEL
+       ========================================================================== */
+    .funnel-wrapper {
+      background: linear-gradient(180deg, #050E24 0%, #081636 100%);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(212, 175, 55, 0.15);
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+      max-width: 840px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .funnel-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      right: -120px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+      filter: blur(50px);
+      pointer-events: none;
+    }
+
+    /* Wizard Progress Header */
+    .wizard-progress-header {
+      margin-bottom: 36px;
+    }
+
+    .wizard-steps-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .wizard-progress-line {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    .wizard-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #D4AF37, #F59E0B);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .wizard-step-bubble {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #0A1938;
+      border: 2px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 2;
+      transition: var(--transition-smooth);
+    }
+
+    .wizard-step-bubble.active {
+      border-color: var(--gold-amber);
+      background: #D4AF37;
+      color: #030712;
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.5);
+    }
+
+    .wizard-step-bubble.completed {
+      border-color: var(--emerald-accent);
+      background: var(--emerald-accent);
+      color: #FFFFFF;
+    }
+
+    /* Funnel Step Content Panels */
+    .funnel-step-panel {
+      display: none;
+      animation: slideIn 0.35s ease forwards;
+    }
+
+    .funnel-step-panel.active {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .panel-question-title {
+      font-size: clamp(1.35rem, 3vw, 1.85rem);
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--text-white);
+    }
+
+    .panel-question-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    /* Step 1: Trade Selection Option Cards */
+    .trade-options-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .trade-card-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      position: relative;
+      min-height: 110px;
+      justify-content: center;
+    }
+
+    .trade-card-btn:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: var(--border-gold);
+      transform: translateY(-3px);
+    }
+
+    .trade-card-btn.selected {
+      background: rgba(212, 175, 55, 0.14);
+      border-color: var(--gold-amber);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+    }
+
+    .trade-card-icon {
+      font-size: 1.8rem;
+      color: var(--gold-300);
+    }
+
+    .trade-card-name {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .trade-card-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #34D399;
+      background: rgba(16, 185, 129, 0.12);
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+
+    /* Step 2: Destination Country Options */
+    .dest-options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .dest-card-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .dest-card-btn:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: var(--border-gold);
+      transform: translateY(-3px);
+    }
+
+    .dest-card-btn.selected {
+      background: rgba(212, 175, 55, 0.14);
+      border-color: var(--gold-amber);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+    }
+
+    .dest-flag-icon {
+      font-size: 2.2rem;
+      flex-shrink: 0;
+    }
+
+    .dest-info h4 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-white);
+      margin-bottom: 4px;
+    }
+
+    .dest-info p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .dest-badge-time {
+      margin-top: 6px;
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .time-badge-fast {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .time-badge-std {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38BDF8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    /* Step 3: Contact Details Form */
+    .contact-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .form-group-full {
+      grid-column: span 2;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 8px;
+    }
+
+    .form-input-box {
+      width: 100%;
+      background: rgba(7, 19, 44, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      color: var(--text-white);
+      font-family: var(--font-body);
+      font-size: 16px; /* 16px prevents iOS zoom on focus */
+      transition: var(--transition-fast);
+      outline: none;
+      min-height: 48px;
+    }
+
+    .form-input-box:focus {
+      border-color: var(--gold-amber);
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.3);
+    }
+
+    .form-input-box::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Funnel Action Buttons */
+    .funnel-nav-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+    }
+
+    /* Simulation Modal Overlay */
+    .simulation-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(2, 6, 18, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .simulation-overlay.active {
+      display: flex;
+    }
+
+    .simulation-box {
+      background: linear-gradient(175deg, #09193C 0%, #030A1A 100%);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-xl);
+      padding: 36px 28px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.25);
+      animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9) translateY(20px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .sim-spinner {
+      width: 56px;
+      height: 56px;
+      border: 4px solid rgba(212, 175, 55, 0.2);
+      border-top-color: var(--gold-amber);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ==========================================================================
+       7. TRANSPARENCY & ANTI-FRAUD GUARANTEE BANNER
+       ========================================================================== */
+    .fraud-banner-section {
+      padding: 44px 0;
+      background: linear-gradient(90deg, rgba(220, 38, 38, 0.12) 0%, rgba(15, 23, 42, 0.9) 50%, rgba(220, 38, 38, 0.12) 100%);
+      border-top: 1px solid rgba(239, 68, 68, 0.3);
+      border-bottom: 1px solid rgba(239, 68, 68, 0.3);
+      position: relative;
+    }
+
+    .fraud-banner-content {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .fraud-icon-shield {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #F87171;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .fraud-text-box {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .fraud-text-box h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #FCA5A5;
+      margin-bottom: 6px;
+    }
+
+    .fraud-text-box p {
+      font-size: 0.88rem;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+
+    /* ==========================================================================
+       8. FAQ ACCORDION
+       ========================================================================== */
+    .faq-grid {
+      max-width: 840px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .faq-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: var(--transition-smooth);
+    }
+
+    .faq-item.active {
+      border-color: var(--border-gold);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .faq-question {
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      user-select: none;
+    }
+
+    .faq-icon-arrow {
+      color: var(--gold-300);
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .faq-item.active .faq-icon-arrow {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      padding: 0 22px;
+      color: var(--text-body);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 320px;
+      padding-bottom: 20px;
+    }
+
+    /* ==========================================================================
+       9. FOOTER
+       ========================================================================== */
+    .site-footer {
+      background: #01040A;
+      border-top: 1px solid var(--border-subtle);
+      padding: 64px 0 32px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 36px;
+      margin-bottom: 48px;
+    }
+
+    .footer-col h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 16px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      color: var(--text-body);
+      text-decoration: none;
+      transition: var(--transition-fast);
+      display: inline-block;
+      padding: 2px 0;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold-300);
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.8rem;
+    }
+
+    /* Floating WhatsApp Quick Action Button */
+    .floating-wa-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-size: 1.8rem;
+      box-shadow: 0 8px 30px rgba(37, 211, 102, 0.45);
+      z-index: 999;
+      text-decoration: none;
+      transition: var(--transition-bounce);
+    }
+
+    .floating-wa-btn:hover {
+      transform: scale(1.1) rotate(6deg);
+      box-shadow: 0 12px 40px rgba(37, 211, 102, 0.65);
+    }
+
+    .floating-wa-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      background: #EF4444;
+      color: #FFFFFF;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      border: 2px solid #030A1A;
+    }
+
+    /* ==========================================================================
+       9B. BENEFIT BUSINESS SOLUTIONS (BBS) INSPIRED ENTERPRISE COMPONENTS
+       ========================================================================== */
+    /* 1. Multi-Tone Gradient Divider Line */
+    .gradient-divider {
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #D4AF37 20%, #EC4899 45%, #8B5CF6 70%, #38BDF8 90%, transparent 100%);
+      margin: 48px auto;
+      opacity: 0.7;
+    }
+
+    /* 2. 4-Column Live Metrics & Stats Counter Bar (like BBS stat strip) */
+    .stats-counter-section {
+      padding: 0 0 50px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .stats-counter-bar {
+      background: linear-gradient(135deg, rgba(12, 30, 66, 0.75) 0%, rgba(5, 15, 36, 0.85) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-xl);
+      padding: 28px 36px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(212, 175, 55, 0.15);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+    }
+
+    .stat-counter-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding-right: 14px;
+      border-right: 1px solid var(--border-subtle);
+    }
+
+    .stat-counter-item:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+
+    .stat-icon-pastel {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .icon-emerald-tint {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .icon-gold-tint {
+      background: rgba(212, 175, 55, 0.15);
+      color: #FDE047;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+    }
+
+    .icon-sapphire-tint {
+      background: rgba(37, 99, 235, 0.18);
+      color: #38BDF8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .icon-rose-tint {
+      background: rgba(225, 29, 72, 0.15);
+      color: #FB7185;
+      border: 1px solid rgba(225, 29, 72, 0.35);
+    }
+
+    .stat-counter-text h3 {
+      font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+      font-weight: 800;
+      color: var(--text-white);
+      line-height: 1.1;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-counter-text p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    /* 3. Live Hot Job Openings Cards (like BBS current openings) */
+    .jobs-showcase-section {
+      padding: 70px 0;
+      position: relative;
+    }
+
+    .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    .job-card {
+      background: linear-gradient(165deg, rgba(11, 27, 60, 0.75) 0%, rgba(4, 11, 26, 0.9) 100%);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .job-card:hover {
+      border-color: var(--gold-amber);
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(212, 175, 55, 0.2);
+    }
+
+    .job-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .job-country-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .job-country-flag {
+      font-size: 1.25rem;
+    }
+
+    .job-id-pill {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--gold-300);
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+
+    .job-title {
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: var(--text-white);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .job-salary-banner {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .job-salary-val {
+      font-weight: 800;
+      color: #34D399;
+      font-size: 0.95rem;
+    }
+
+    .job-salary-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .job-perks-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .job-perk-tag {
+      font-size: 0.74rem;
+      color: var(--text-body);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .job-perk-tag i {
+      color: var(--gold-300);
+      font-size: 0.7rem;
+    }
+
+    .job-apply-btn {
+      width: 100%;
+      padding: 10px 16px;
+      border-radius: var(--radius-full);
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(37, 211, 102, 0.2) 0%, rgba(18, 140, 126, 0.3) 100%);
+      border: 1px solid rgba(37, 211, 102, 0.4);
+      color: #FFFFFF;
+      text-decoration: none;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+
+    .job-apply-btn:hover {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: #030712;
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* 4. Dual-Track Workflow Matrix ("How It Works - Candidates vs Employers") */
+    .how-it-works-matrix {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+      margin-top: 36px;
+    }
+
+    .matrix-track-box {
+      background: linear-gradient(170deg, rgba(9, 23, 54, 0.8) 0%, rgba(4, 11, 26, 0.95) 100%);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 32px 28px;
+      position: relative;
+    }
+
+    .matrix-track-box.candidate-track {
+      border-color: rgba(212, 175, 55, 0.35);
+    }
+
+    .matrix-track-box.employer-track {
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+
+    .matrix-track-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+    }
+
+    .matrix-track-badge.candidate {
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-300);
+    }
+
+    .matrix-track-badge.employer {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--sapphire-glow);
+    }
+
+    .matrix-steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .matrix-step-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .matrix-step-index {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .candidate-track .matrix-step-index {
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: var(--gold-300);
+    }
+
+    .employer-track .matrix-step-index {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--sapphire-glow);
+    }
+
+    .matrix-step-content h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 4px;
+    }
+
+    .matrix-step-content p {
+      font-size: 0.86rem;
+      color: var(--text-body);
+      line-height: 1.55;
+    }
+
+    /* 5. Verified Candidate Testimonials (like BBS candidate quotes) */
+    .testimonials-section {
+      padding: 70px 0;
+      position: relative;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    .testimonial-card {
+      background: linear-gradient(165deg, rgba(12, 30, 66, 0.6) 0%, rgba(5, 15, 36, 0.8) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: var(--transition-smooth);
+    }
+
+    .testimonial-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.15);
+    }
+
+    .testimonial-quote-icon {
+      font-size: 2.2rem;
+      color: rgba(212, 175, 55, 0.25);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .testimonial-stars {
+      display: flex;
+      gap: 4px;
+      color: #FACC15;
+      font-size: 0.85rem;
+      margin-bottom: 14px;
+    }
+
+    .testimonial-text {
+      font-size: 0.9rem;
+      color: var(--text-body);
+      line-height: 1.68;
+      margin-bottom: 24px;
+      font-style: italic;
+      flex-grow: 1;
+    }
+
+    .testimonial-author-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .author-avatar-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1E40AF 0%, #D4AF37 100%);
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .author-details h5 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 2px;
+    }
+
+    .author-details p {
+      font-size: 0.76rem;
+      color: var(--gold-300);
+      font-weight: 500;
+    }
+
+    /* 6. Dual Audience Pre-Footer Banner (like BBS CTA cards) */
+    .dual-cta-section {
+      padding: 40px 0 80px;
+    }
+
+    .dual-cta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .dual-cta-card {
+      border-radius: var(--radius-xl);
+      padding: 36px 32px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .dual-cta-card.candidate-side {
+      background: linear-gradient(135deg, rgba(12, 30, 66, 0.9) 0%, rgba(8, 20, 48, 0.95) 100%);
+      border: 1px solid var(--border-gold);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(212, 175, 55, 0.15);
+    }
+
+    .dual-cta-card.employer-side {
+      background: linear-gradient(135deg, rgba(8, 28, 64, 0.9) 0%, rgba(3, 14, 38, 0.95) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(56, 189, 248, 0.15);
+    }
+
+    .dual-cta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    .dual-cta-card h3 {
+      font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+      font-weight: 800;
+      color: var(--text-white);
+      margin-bottom: 12px;
+      line-height: 1.25;
+    }
+
+    .dual-cta-card p {
+      font-size: 0.9rem;
+      color: var(--text-body);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* ==========================================================================
+       10. RESPONSIVE DESIGN BREAKPOINTS (COMPREHENSIVE MOBILE & TABLET SUITE)
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .container {
+        padding: 0 20px;
+      }
+      .nav-links, .nav-cta-group {
+        display: none !important;
+      }
+      .mobile-menu-btn {
+        display: flex;
+      }
+      .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 32px;
+      }
+      .hero-subtitle {
+        margin: 0 auto 28px;
+      }
+      .hero-cta-box {
+        justify-content: center;
+      }
+      .hero-trust-metrics {
+        max-width: 560px;
+        margin: 0 auto;
+      }
+      .hero-visual-stage {
+        height: 500px;
+      }
+      .value-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .steps-pipeline {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+      }
+      .steps-pipeline::before {
+        display: none;
+      }
+      .trade-options-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .stats-counter-bar {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      .stat-counter-item:nth-child(2) {
+        border-right: none;
+      }
+      .jobs-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-bar {
+        padding: 6px 0;
+      }
+      .top-bar-links {
+        display: none;
+      }
+      .top-bar-content {
+        justify-content: center;
+        text-align: center;
+      }
+      .top-badge-pulse {
+        font-size: 0.72rem;
+        text-align: center;
+        justify-content: center;
+        line-height: 1.35;
+      }
+      .nav-container {
+        height: 64px;
+      }
+      .hero-section {
+        padding: 24px 0 44px;
+      }
+      .hero-tag {
+        font-size: 0.74rem;
+        padding: 5px 14px;
+      }
+      .hero-visual-stage {
+        height: auto;
+        min-height: unset;
+        padding: 10px 0 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+      }
+      .globe-stage-wrap {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: min(280px, 78vw);
+        height: min(280px, 78vw);
+        margin: 0 auto 20px;
+      }
+      #globeCanvasContainer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: none;
+        width: 100%;
+        height: 100%;
+      }
+      .globe-glow-halo {
+        width: 105%;
+        height: 105%;
+      }
+      .globe-orbit-ring {
+        width: 110%;
+        height: 110%;
+      }
+
+      /* 3D flags on tablet & mobile become an organized interactive chip grid below the globe */
+      .floating-flags-layer {
+        position: relative;
+        top: auto;
+        left: auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      .floating-flag-card {
+        position: static !important;
+        animation: none !important;
+        transform: none !important;
+        padding: 10px 12px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        min-width: 0;
+      }
+      .flag-wave-emblem {
+        width: 32px;
+        height: 22px;
+      }
+      .flag-country-name {
+        font-size: 0.8rem;
+      }
+      .flag-tag-badge {
+        font-size: 0.68rem;
+      }
+
+      /* BBS Enterprise Component Breakpoints */
+      .stats-counter-bar {
+        grid-template-columns: 1fr;
+        padding: 20px 16px;
+        gap: 16px;
+      }
+      .stat-counter-item {
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+        padding-bottom: 14px;
+        padding-right: 0;
+      }
+      .stat-counter-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .jobs-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .how-it-works-matrix {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .matrix-track-box {
+        padding: 24px 18px;
+      }
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .dual-cta-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .dual-cta-card {
+        padding: 24px 20px;
+      }
+
+      /* Steps Visual Roadmap on Mobile */
+      .steps-pipeline {
+        grid-template-columns: 1fr;
+        gap: 22px;
+        position: relative;
+        padding-left: 10px;
+      }
+      .steps-pipeline::before {
+        display: block !important;
+        position: absolute;
+        top: 24px;
+        bottom: 24px;
+        left: 35px;
+        width: 2px;
+        height: calc(100% - 48px);
+        background: linear-gradient(180deg, var(--gold-primary) 0%, var(--sapphire-glow) 50%, var(--emerald-accent) 100%);
+        z-index: 1;
+      }
+      .step-node {
+        flex-direction: row;
+        text-align: left;
+        align-items: flex-start;
+        gap: 16px;
+        position: relative;
+        z-index: 2;
+      }
+      .step-circle {
+        width: 50px;
+        height: 50px;
+        font-size: 1.15rem;
+        margin-bottom: 0;
+        background: #0B1D40;
+        box-shadow: 0 0 16px rgba(212, 175, 55, 0.4);
+      }
+      .step-node > div {
+        flex: 1;
+        min-width: 0;
+      }
+      .timeline-track-card {
+        padding: 24px 16px;
+      }
+      .mobile-table-hint {
+        display: flex;
+      }
+      .dest-options-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .dest-card-btn {
+        padding: 14px;
+        gap: 14px;
+      }
+      .dest-flag-icon {
+        font-size: 1.8rem;
+      }
+      .dest-info h4 {
+        font-size: 1rem;
+      }
+      .dest-info p {
+        font-size: 0.78rem;
+      }
+      .trade-options-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .trade-card-btn {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: left;
+        padding: 12px 14px;
+        min-height: 56px;
+        gap: 12px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .trade-card-icon {
+        font-size: 1.4rem;
+        flex-shrink: 0;
+      }
+      .trade-card-name {
+        font-size: 0.92rem;
+        flex: 1;
+        min-width: 0;
+      }
+      .trade-card-badge {
+        margin-left: auto;
+        font-size: 0.68rem;
+        padding: 3px 8px;
+        white-space: normal;
+        text-align: right;
+        max-width: 45%;
+        flex-shrink: 0;
+      }
+      .contact-form-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .form-group-full {
+        grid-column: span 1;
+      }
+      .form-input-box {
+        padding: 12px 14px;
+        font-size: 16px;
+      }
+      .funnel-wrapper {
+        padding: 24px 16px;
+        border-radius: var(--radius-lg);
+      }
+      .panel-question-title {
+        font-size: 1.25rem;
+      }
+      .panel-question-desc {
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+      }
+      .wizard-step-bubble {
+        width: 34px;
+        height: 34px;
+        font-size: 0.82rem;
+      }
+      .fraud-banner-content {
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+        gap: 16px;
+      }
+      .fraud-text-box {
+        min-width: 100%;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        justify-content: center;
+      }
+      .footer-bottom div {
+        text-align: center;
+      }
+      .floating-wa-btn {
+        bottom: 16px;
+        right: 16px;
+        width: 48px;
+        height: 48px;
+        font-size: 1.45rem;
+      }
+      .floating-wa-badge {
+        font-size: 0.6rem;
+        padding: 1px 5px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 14px;
+      }
+      .brand-text h2 {
+        font-size: 1.05rem;
+      }
+      .brand-text span {
+        display: none;
+      }
+      .hero-title {
+        font-size: 1.95rem;
+        line-height: 1.15;
+      }
+      .hero-subtitle {
+        font-size: 0.88rem;
+        line-height: 1.6;
+      }
+      .hero-cta-box {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+      }
+      .hero-cta-box .btn {
+        width: 100%;
+      }
+      .hero-trust-metrics {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding-top: 18px;
+      }
+      .metric-item {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 8px 6px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-subtle);
+        text-align: center;
+        align-items: center;
+      }
+      .metric-value {
+        font-size: 0.95rem;
+        flex-direction: column;
+        gap: 0;
+        text-align: center;
+      }
+      .metric-label {
+        font-size: 0.64rem;
+        text-align: center;
+      }
+      .floating-flags-layer {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .floating-flag-card {
+        padding: 8px 10px;
+      }
+      .timeline-tab-btn {
+        padding: 10px 16px;
+        font-size: 0.82rem;
+        width: 100%;
+        justify-content: center;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .container {
+        padding: 0 10px;
+      }
+      .hero-title {
+        font-size: 1.75rem;
+      }
+      .hero-trust-metrics {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .metric-item {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 8px 12px;
+      }
+      .metric-value {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* ==========================================================================
+       11. 3D SCROLL EFFECTS, 3D PERSPECTIVE REVEAL & INTERACTIVE TILT
+       ========================================================================== */
+    .scroll-progress-3d {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3.5px;
+      width: 0%;
+      background: linear-gradient(90deg, #2563EB 0%, #06B6D4 30%, #D4AF37 70%, #F59E0B 100%);
+      box-shadow: 0 0 14px rgba(212, 175, 55, 0.9), 0 0 24px rgba(6, 182, 212, 0.7);
+      z-index: 9999;
+      pointer-events: none;
+      transition: width 0.08s ease-out;
+    }
+
+    /* 3D Perspective Scroll Reveal Animation */
+    .scroll-3d-reveal {
+      opacity: 0;
+      transform: perspective(1200px) rotateX(10deg) translateY(38px) scale(0.97);
+      transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .scroll-3d-reveal.is-revealed {
+      opacity: 1;
+      transform: perspective(1200px) rotateX(0deg) translateY(0) scale(1);
+    }
+
+    /* 3D Interactive Card Tilt with Smooth Specular Sheen */
+    .card-3d-interactive {
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+      will-change: transform;
+    }
+
+    .card-3d-interactive:hover {
+      border-color: rgba(212, 175, 55, 0.55) !important;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.65), 0 0 30px rgba(212, 175, 55, 0.22) !important;
+    }
+
+    /* ==========================================================================
+       12. PROFESSIONAL CORPORATE BACKGROUND IMAGES SYSTEM (OPTIMIZED & HARDWARE-ACCELERATED)
+       ========================================================================== */
+    .section-corporate-bg {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .section-corporate-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.16;
+    }
+
+    /* Hero Section: International Airport Runway & Corporate Dusk Skyline */
+    .hero-corporate-bg::before {
+      background-image: 
+        radial-gradient(circle at 75% 40%, rgba(30, 64, 175, 0.28) 0%, rgba(3, 10, 26, 0.9) 65%, #020612 100%),
+        linear-gradient(180deg, rgba(2, 6, 18, 0.8) 0%, rgba(3, 10, 26, 0.9) 60%, #020612 100%),
+        url('assets/images/corporate_hero_bg.jpg');
+      opacity: 0.24;
+    }
+
+    /* Hot Openings: High-Tech Mega Infrastructure, Industrial Cranes & Port Construction */
+    .jobs-corporate-bg::before {
+      background-image: 
+        radial-gradient(circle at 30% 30%, rgba(212, 175, 55, 0.14) 0%, rgba(3, 10, 26, 0.92) 70%),
+        linear-gradient(180deg, rgba(3, 10, 26, 0.9) 0%, rgba(7, 19, 44, 0.94) 50%, rgba(2, 6, 18, 0.96) 100%),
+        url('assets/images/corporate_construction_bg.jpg');
+      opacity: 0.18;
+    }
+
+    /* Timelines Section: Global International Transit & Departure Terminal */
+    .timeline-corporate-bg::before {
+      background-image: 
+        linear-gradient(180deg, rgba(3, 10, 26, 0.92) 0%, rgba(7, 19, 44, 0.92) 50%, rgba(3, 10, 26, 0.95) 100%),
+        url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop');
+      opacity: 0.14;
+    }
+
+    /* Why Us / Trust Section: Modern Architectural Glass Skyscraper Headquarters */
+    .trust-corporate-bg::before {
+      background-image: 
+        linear-gradient(180deg, rgba(2, 6, 18, 0.94) 0%, rgba(6, 18, 43, 0.92) 50%, rgba(2, 6, 18, 0.96) 100%),
+        url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop');
+      opacity: 0.13;
+    }
+
+    /* Testimonials Section: Global Twilight Cityscape & Skyscraper Lights */
+    .testimonials-corporate-bg::before {
+      background-image: 
+        linear-gradient(180deg, rgba(2, 6, 18, 0.92) 0%, rgba(9, 23, 52, 0.92) 50%, rgba(2, 6, 18, 0.96) 100%),
+        url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=2000&auto=format&fit=crop');
+      opacity: 0.12;
+    }
+
+    /* Dual CTA Section: Executive International Corporate Boardroom */
+    .cta-corporate-bg::before {
+      background-image: 
+        linear-gradient(135deg, rgba(3, 10, 26, 0.94) 0%, rgba(12, 30, 66, 0.92) 50%, rgba(2, 6, 18, 0.96) 100%),
+        url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop');
+      opacity: 0.14;
+    }
+
+    /* ==========================================================================
+       13. SMALL FLOATING 3D ICONS SYSTEM (LIGHTWEIGHT, UNCLIPPED & FULLY VISIBLE)
+       ========================================================================== */
+    .floating-3d-icon-wrap {
+      position: absolute;
+      pointer-events: auto;
+      z-index: 45 !important; /* Above cards and backgrounds, safely contained */
+      cursor: pointer;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+      will-change: transform;
+    }
+
+    .floating-3d-icon-wrap:hover {
+      transform: scale(1.18) !important;
+      z-index: 60 !important;
+    }
+
+    .floating-3d-icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(14, 34, 75, 0.95) 0%, rgba(4, 12, 32, 0.98) 100%);
+      border: 1.5px solid rgba(212, 175, 55, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .floating-3d-icon-badge svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Small floating hover tooltip */
+    .floating-3d-tooltip {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.85);
+      opacity: 0;
+      pointer-events: none;
+      background: rgba(3, 10, 26, 0.96);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-300);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.66rem;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .floating-3d-icon-wrap:hover .floating-3d-tooltip {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* Flight 3D Floating Animation - Spacious non-overlapping positions */
+    .flight-float-hero {
+      top: 24px;
+      right: 48px;
+      animation: floatFlight3D 7s ease-in-out infinite;
+    }
+
+    .flight-float-timeline {
+      top: 24px;
+      right: 36px;
+      animation: floatFlight3D 8s ease-in-out infinite reverse;
+    }
+
+    .flight-float-cta {
+      top: 24px;
+      right: 36px;
+      animation: floatFlight3D 6.5s ease-in-out infinite;
+    }
+
+    @keyframes floatFlight3D {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    /* Jobs Briefcase 3D Floating Animation */
+    .jobs-float-hero {
+      bottom: 28px;
+      left: 36px;
+      animation: floatJobs3D 7.5s ease-in-out infinite;
+    }
+
+    .jobs-float-section {
+      top: 24px;
+      left: 36px;
+      animation: floatJobs3D 8s ease-in-out infinite;
+    }
+
+    @keyframes floatJobs3D {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(8px) rotate(-2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    /* Passport / Visa 3D Floating Animation */
+    .passport-float-1 {
+      top: 20px;
+      left: 36px;
+      animation: floatPassport3D 8.5s ease-in-out infinite;
+    }
+
+    .passport-float-timeline {
+      top: 24px;
+      left: 36px;
+      animation: floatPassport3D 7s ease-in-out infinite;
+    }
+
+    @keyframes floatPassport3D {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    /* Shield 3D Floating Animation */
+    .shield-float-trust {
+      top: 24px;
+      right: 36px;
+      animation: floatShield3D 6.8s ease-in-out infinite;
+    }
+
+    @keyframes floatShield3D {
+      0% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(6px) scale(1.04); }
+      100% { transform: translateY(0px) scale(1); }
+    }
+
+    /* Helmet 3D Floating Animation */
+    .helmet-float-jobs {
+      top: 24px;
+      right: 36px;
+      animation: floatHelmet3D 7.2s ease-in-out infinite;
+    }
+
+    @keyframes floatHelmet3D {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(-3deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @media (max-width: 900px) {
+      .floating-3d-icon-wrap {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 3D Luxury Golden-Cyan Scroll Progress Indicator -->
+  <div id="scrollProgress3D" class="scroll-progress-3d"></div>
+
+  <!-- Ambient Decorative Backdrop -->
+  <div class="ambient-grid"></div>
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <!-- Top Announcement Bar -->
+  <header class="top-bar">
+    <div class="container top-bar-content">
+      <div class="top-badge-pulse">
+        <span class="pulse-dot"></span>
+        <span>Zero Upfront Agency Fees • Direct Official Embassy & Govt Processing • 1-on-1 WhatsApp Guidance</span>
+      </div>
+      <div class="top-bar-links">
+        <span><i class="fa-solid fa-phone"></i> Candidate Helpline: +91 98765 43210</span>
+        <a href="#fraud-advisory"><i class="fa-solid fa-shield-halved"></i> Anti-Fraud Advisory</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky Luxury Navbar with Mobile Menu Support -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="brand-logo">
+        <div class="logo-icon" style="background: rgba(255, 255, 255, 0.08); border: 1.5px solid var(--border-gold); padding: 3px; box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);">
+          <img src="NG_Global_Manpower_Logo_Kit/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+        </div>
+        <div class="brand-text">
+          <h2>NG GLOBAL <span>MANPOWER SERVICES</span></h2>
+        </div>
+      </a>
+
+      <!-- Desktop Links -->
+      <ul class="nav-links">
+        <li><a href="#why-us">Trust Model</a></li>
+        <li><a href="#hot-openings">Hot Openings</a></li>
+        <li><a href="#timelines">Processing Tracks</a></li>
+        <li><a href="#testimonials">Worker Stories</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <!-- Desktop CTA -->
+      <div class="nav-cta-group">
+        <a href="#lead-funnel" class="btn btn-gold">
+          <span>Check Eligibility Free</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button type="button" class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Open Navigation Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer Overlay & Menu -->
+  <div id="mobileDrawerOverlay" class="mobile-drawer-overlay" onclick="toggleMobileMenu()"></div>
+  <aside id="mobileDrawer" class="mobile-drawer">
+    <div class="mobile-drawer-header">
+      <div class="brand-logo">
+        <div class="logo-icon" style="width: 38px; height: 38px; background: rgba(255, 255, 255, 0.08); border: 1.5px solid var(--border-gold); padding: 3px;">
+          <img src="NG_Global_Manpower_Logo_Kit/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+        </div>
+        <div class="brand-text">
+          <h2 style="font-size: 1.05rem;">NG GLOBAL</h2>
+        </div>
+      </div>
+      <button type="button" class="mobile-drawer-close" onclick="toggleMobileMenu()" aria-label="Close Menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <ul class="mobile-drawer-links">
+      <li>
+        <a href="#why-us" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Trust Model</span>
+        </a>
+      </li>
+      <li>
+        <a href="#hot-openings" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-briefcase"></i>
+          <span>Hot Job Openings</span>
+        </a>
+      </li>
+      <li>
+        <a href="#timelines" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-clock"></i>
+          <span>Processing Tracks</span>
+        </a>
+      </li>
+      <li>
+        <a href="#lead-funnel" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-trowel-bricks"></i>
+          <span>Check Eligibility</span>
+        </a>
+      </li>
+      <li>
+        <a href="#testimonials" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-comments"></i>
+          <span>Worker Stories</span>
+        </a>
+      </li>
+      <li>
+        <a href="#fraud-advisory" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>Anti-Fraud Advisory</span>
+        </a>
+      </li>
+      <li>
+        <a href="#faq" onclick="toggleMobileMenu()">
+          <i class="fa-solid fa-circle-question"></i>
+          <span>Frequently Asked Questions</span>
+        </a>
+      </li>
+    </ul>
+
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px;">
+      <a href="#lead-funnel" class="btn btn-gold" style="width: 100%;" onclick="toggleMobileMenu()">
+        <span>Check Eligibility Free</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+      <a href="https://wa.me/919876543210" target="_blank" class="btn btn-whatsapp" style="width: 100%;">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span>WhatsApp Helpline</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Hero Section with 3D Globe & Responsive Country Flags -->
+  <section class="hero-section section-corporate-bg hero-corporate-bg">
+    
+    <!-- Small Floating 3D Flight Icon -->
+    <div class="floating-3d-icon-wrap flight-float-hero" title="Global Flight Deployments">
+      <div class="floating-3d-icon-badge">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="heroPlaneGrad" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FFFFFF"/>
+              <stop offset="0.4" stop-color="#E2E8F0"/>
+              <stop offset="0.8" stop-color="#94A3B8"/>
+              <stop offset="1" stop-color="#475569"/>
+            </linearGradient>
+            <linearGradient id="heroPlaneGold" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#FDE047"/>
+              <stop offset="0.6" stop-color="#D4AF37"/>
+              <stop offset="1" stop-color="#92400E"/>
+            </linearGradient>
+            <linearGradient id="heroJetTrail" x1="0" y1="0" x2="1" y2="0">
+              <stop stop-color="#38BDF8" stop-opacity="0.9"/>
+              <stop offset="1" stop-color="#2563EB" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M10 50 C20 44 28 40 36 38" stroke="url(#heroJetTrail)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M22 52L46 44L40 40L24 44Z" fill="rgba(0,0,0,0.4)"/>
+          <path d="M34 16L18 36H28L40 28Z" fill="url(#heroPlaneGold)"/>
+          <path d="M34 40L14 46H22L36 42Z" fill="url(#heroPlaneGold)"/>
+          <path d="M52 14C52 14 44 22 26 36L14 45L20 47L36 39C46 31 52 14 52 14Z" fill="url(#heroPlaneGrad)"/>
+          <path d="M15 45L12 36L18 42Z" fill="url(#heroPlaneGold)"/>
+          <ellipse cx="48" cy="18" rx="2.5" ry="1.2" transform="rotate(-35 48 18)" fill="#38BDF8"/>
+        </svg>
+      </div>
+      <span class="floating-3d-tooltip">Overseas Flights</span>
+    </div>
+
+    <!-- Small Floating 3D Jobs Icon -->
+    <div class="floating-3d-icon-wrap jobs-float-hero" title="Verified Overseas Job Openings">
+      <div class="floating-3d-icon-badge">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="heroCaseLeather" x1="12" y1="20" x2="52" y2="54" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#1E293B"/>
+              <stop offset="0.5" stop-color="#0F172A"/>
+              <stop offset="1" stop-color="#020617"/>
+            </linearGradient>
+            <linearGradient id="heroCaseGold" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#FEF08A"/>
+              <stop offset="0.5" stop-color="#D4AF37"/>
+              <stop offset="1" stop-color="#854D0E"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="32" cy="54" rx="20" ry="3.5" fill="rgba(0,0,0,0.4)"/>
+          <path d="M25 22V16C25 14.3431 26.3431 13 28 13H36C37.6569 13 39 14.3431 39 16V22" stroke="url(#heroCaseGold)" stroke-width="3" stroke-linecap="round"/>
+          <rect x="12" y="21" width="40" height="28" rx="5" fill="url(#heroCaseLeather)" stroke="url(#heroCaseGold)" stroke-width="1.2"/>
+          <rect x="12" y="32" width="40" height="3" fill="#0B132B"/>
+          <path d="M12 25C12 22.7909 13.7909 21 16 21H18V27H12V25Z" fill="url(#heroCaseGold)"/>
+          <path d="M52 25C52 22.7909 50.2091 21 48 21H46V27H52V25Z" fill="url(#heroCaseGold)"/>
+          <path d="M12 45C12 47.2091 13.7909 49 16 49H18V43H12V45Z" fill="url(#heroCaseGold)"/>
+          <path d="M52 45C52 47.2091 50.2091 49 48 49H46V43H52V45Z" fill="url(#heroCaseGold)"/>
+          <rect x="22" y="30" width="5" height="7" rx="1.5" fill="url(#heroCaseGold)"/>
+          <rect x="37" y="30" width="5" height="7" rx="1.5" fill="url(#heroCaseGold)"/>
+          <path d="M38 22L42 28H46L42 22Z" fill="#38BDF8"/>
+        </svg>
+      </div>
+      <span class="floating-3d-tooltip">150+ Direct Jobs</span>
+    </div>
+
+    <!-- Small Floating 3D Passport Icon -->
+    <div class="floating-3d-icon-wrap passport-float-1" title="Direct Embassy Visa Processing">
+      <div class="floating-3d-icon-badge">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="heroPassCover" x1="16" y1="12" x2="48" y2="52">
+              <stop stop-color="#1E3A8A"/>
+              <stop offset="0.7" stop-color="#0F172A"/>
+              <stop offset="1" stop-color="#030712"/>
+            </linearGradient>
+            <linearGradient id="heroPassGold" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#FDE68A"/>
+              <stop offset="0.5" stop-color="#D4AF37"/>
+              <stop offset="1" stop-color="#92400E"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="33" cy="54" rx="18" ry="3.5" fill="rgba(0,0,0,0.4)"/>
+          <rect x="18" y="14" width="28" height="38" rx="3" fill="#0B1329"/>
+          <rect x="16" y="12" width="28" height="38" rx="3" fill="url(#heroPassCover)" stroke="url(#heroPassGold)" stroke-width="1"/>
+          <rect x="16" y="12" width="3.5" height="38" rx="1" fill="url(#heroPassGold)"/>
+          <circle cx="30" cy="27" r="7" stroke="url(#heroPassGold)" stroke-width="1.2" fill="none"/>
+          <ellipse cx="30" cy="27" rx="3.5" ry="7" stroke="url(#heroPassGold)" stroke-width="0.8" fill="none"/>
+          <line x1="23" y1="27" x2="37" y2="27" stroke="url(#heroPassGold)" stroke-width="0.8"/>
+          <rect x="23" y="38" width="14" height="2" rx="1" fill="url(#heroPassGold)"/>
+          <rect x="25" y="42" width="10" height="1.5" rx="0.75" fill="url(#heroPassGold)"/>
+        </svg>
+      </div>
+      <span class="floating-3d-tooltip">Official Stamped Visas</span>
+    </div>
+
+    <div class="container hero-grid">
+      
+      <!-- Hero Left Text Area -->
+      <div class="hero-content scroll-3d-reveal is-revealed">
+        <div class="hero-tag">
+          <i class="fa-solid fa-crown"></i>
+          <span>Direct Overseas Careers • Zero Upfront Agency Fees</span>
+        </div>
+
+        <h1 class="hero-title">
+          Global Blue-Collar Careers. <br />
+          <span class="gold-gradient-text" style="font-style: italic; font-family: 'Space Grotesk', sans-serif;">Zero Upfront Risk.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          NG Global connects worldwide skilled and semi-skilled workers directly with verified employers across the Gulf, Europe, USA, and New Zealand. Zero upfront agency fees. Candidates pay legitimate visa, biometric, and medical fees directly to government embassies and authorized centers. Our executives coordinate directly on WhatsApp to evaluate your profile, assess your budget, and match you with suitable international companies.
+        </p>
+
+        <div class="hero-cta-box">
+          <a href="#lead-funnel" class="btn btn-gold">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Check Eligibility & Connect</span>
+          </a>
+          <a href="#timelines" class="btn btn-secondary">
+            <i class="fa-solid fa-clock"></i>
+            <span>View Processing Timelines</span>
+          </a>
+        </div>
+
+        <div class="hero-trust-metrics">
+          <div class="metric-item">
+            <div class="metric-value">₹0 <span>Agency Fees</span></div>
+            <div class="metric-label">Zero Upfront Charge</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">Direct <span>Embassy</span></div>
+            <div class="metric-label">Official Govt Fees</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">1-on-1 <span>Match</span></div>
+            <div class="metric-label">Personal Guidance</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Right 3D Visual Centerpiece -->
+      <div class="hero-visual-stage">
+        <div class="globe-stage-wrap">
+          <div class="globe-glow-halo"></div>
+          <div class="globe-orbit-ring"></div>
+
+          <!-- Three.js Canvas Container -->
+          <div id="globeCanvasContainer" title="Drag to rotate 3D Globe"></div>
+        </div>
+
+        <!-- 3D Floating Country Flags with Metallic Sheen -->
+        <div class="floating-flags-layer">
+          
+          <!-- UAE Flag Card -->
+          <div class="floating-flag-card flag-pos-uae" onclick="prefillDestination('Gulf Countries (UAE, Saudi, Qatar)')">
+            <div class="flag-wave-emblem">
+              <svg viewBox="0 0 640 480">
+                <rect width="640" height="160" fill="#00732f"/>
+                <rect y="160" width="640" height="160" fill="#ffffff"/>
+                <rect y="320" width="640" height="160" fill="#000000"/>
+                <rect width="200" height="480" fill="#ff0000"/>
+              </svg>
+            </div>
+            <div class="flag-info">
+              <span class="flag-country-name">UAE (Dubai / Abu Dhabi)</span>
+              <span class="flag-tag-badge fast-track"><i class="fa-solid fa-bolt"></i> 7–12 Days Fast-Track</span>
+            </div>
+          </div>
+
+          <!-- Saudi Arabia Flag Card -->
+          <div class="floating-flag-card flag-pos-saudi" onclick="prefillDestination('Gulf Countries (UAE, Saudi, Qatar)')">
+            <div class="flag-wave-emblem">
+              <svg viewBox="0 0 640 480">
+                <rect width="640" height="480" fill="#006c35"/>
+                <text x="50%" y="45%" fill="#ffffff" font-size="70" font-family="Arial" font-weight="bold" text-anchor="middle">🇸🇦 KSA</text>
+                <rect x="180" y="270" width="280" height="14" rx="7" fill="#ffffff"/>
+              </svg>
+            </div>
+            <div class="flag-info">
+              <span class="flag-country-name">Saudi Arabia (NEOM)</span>
+              <span class="flag-tag-badge fast-track"><i class="fa-solid fa-bolt"></i> 10–15 Days</span>
+            </div>
+          </div>
+
+          <!-- Germany Flag Card -->
+          <div class="floating-flag-card flag-pos-germany" onclick="prefillDestination('Europe (Germany, Poland, UK)')">
+            <div class="flag-wave-emblem">
+              <svg viewBox="0 0 640 480">
+                <rect width="640" height="160" fill="#000000"/>
+                <rect y="160" width="640" height="160" fill="#dd0000"/>
+                <rect y="320" width="640" height="160" fill="#ffce00"/>
+              </svg>
+            </div>
+            <div class="flag-info">
+              <span class="flag-country-name">Germany (EU Skilled)</span>
+              <span class="flag-tag-badge"><i class="fa-solid fa-shield-heart"></i> 90 Days Track</span>
+            </div>
+          </div>
+
+          <!-- USA Flag Card -->
+          <div class="floating-flag-card flag-pos-usa" onclick="prefillDestination('United States (H-2B / Industry)')">
+            <div class="flag-wave-emblem">
+              <svg viewBox="0 0 640 480">
+                <rect width="640" height="480" fill="#bd3d44"/>
+                <rect y="37" width="640" height="37" fill="#ffffff"/>
+                <rect y="111" width="640" height="37" fill="#ffffff"/>
+                <rect y="185" width="640" height="37" fill="#ffffff"/>
+                <rect y="259" width="640" height="37" fill="#ffffff"/>
+                <rect y="333" width="640" height="37" fill="#ffffff"/>
+                <rect y="407" width="640" height="37" fill="#ffffff"/>
+                <rect width="260" height="259" fill="#192f5d"/>
+                <circle cx="130" cy="130" r="40" fill="#ffffff"/>
+              </svg>
+            </div>
+            <div class="flag-info">
+              <span class="flag-country-name">United States (H-2B)</span>
+              <span class="flag-tag-badge"><i class="fa-solid fa-star"></i> Major Quotas</span>
+            </div>
+          </div>
+
+          <!-- New Zealand Flag Card -->
+          <div class="floating-flag-card flag-pos-nz" onclick="prefillDestination('New Zealand & Australia')">
+            <div class="flag-wave-emblem">
+              <svg viewBox="0 0 640 480">
+                <rect width="640" height="480" fill="#00247d"/>
+                <rect width="280" height="200" fill="#cc142b"/>
+                <text x="75%" y="60%" fill="#ffffff" font-size="70" font-family="Arial" font-weight="bold" text-anchor="middle">🇳🇿 NZ</text>
+              </svg>
+            </div>
+            <div class="flag-info">
+              <span class="flag-country-name">New Zealand & Australia</span>
+              <span class="flag-tag-badge"><i class="fa-solid fa-award"></i> Essential Skills</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BBS-Inspired 4-Column Live Metric Stats Counter Bar -->
+  <section class="stats-counter-section">
+    <div class="container">
+      <div class="stats-counter-bar">
+        
+        <div class="stat-counter-item">
+          <div class="stat-icon-pastel icon-emerald-tint">
+            <i class="fa-solid fa-users-viewfinder"></i>
+          </div>
+          <div class="stat-counter-text">
+            <h3>12,500+</h3>
+            <p>Candidates Placed in Gulf, Europe & NZ</p>
+          </div>
+        </div>
+
+        <div class="stat-counter-item">
+          <div class="stat-icon-pastel icon-gold-tint">
+            <i class="fa-solid fa-building-circle-check"></i>
+          </div>
+          <div class="stat-counter-text">
+            <h3>150+</h3>
+            <p>Verified Direct Corporate Employers</p>
+          </div>
+        </div>
+
+        <div class="stat-counter-item">
+          <div class="stat-icon-pastel icon-rose-tint">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div class="stat-counter-text">
+            <h3>₹0 Upfront</h3>
+            <p>Zero Advance Agency / Registration Fee</p>
+          </div>
+        </div>
+
+        <div class="stat-counter-item">
+          <div class="stat-icon-pastel icon-sapphire-tint">
+            <i class="fa-solid fa-passport"></i>
+          </div>
+          <div class="stat-counter-text">
+            <h3>100% Direct</h3>
+            <p>Official Embassy & GAMCA Medical Fees</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rainbow Gradient Divider Line -->
+      <div class="gradient-divider"></div>
+    </div>
+  </section>
+
+  <!-- Section 3: Value Proposition Grid -->
+  <section id="why-us" class="section-spacing section-corporate-bg trust-corporate-bg scroll-3d-reveal">
+    
+    <!-- Small Floating 3D Security Shield Icon -->
+    <div class="floating-3d-icon-wrap shield-float-trust" title="Zero Upfront Risk Guarantee">
+      <div class="floating-3d-icon-badge">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="trustShieldGrad" x1="16" y1="12" x2="48" y2="52">
+              <stop stop-color="#2563EB"/>
+              <stop offset="0.6" stop-color="#1E40AF"/>
+              <stop offset="1" stop-color="#0F172A"/>
+            </linearGradient>
+            <linearGradient id="trustShieldRim" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#FEF08A"/>
+              <stop offset="0.5" stop-color="#D4AF37"/>
+              <stop offset="1" stop-color="#B45309"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="32" cy="54" rx="16" ry="3.5" fill="rgba(0,0,0,0.4)"/>
+          <path d="M32 12L46 17V30C46 41 39 49 32 52C25 49 18 41 18 30V17L32 12Z" fill="url(#trustShieldGrad)" stroke="url(#trustShieldRim)" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M32 14L44 18V30C44 39.5 38 46.5 32 49.5V14Z" fill="rgba(255,255,255,0.12)"/>
+          <path d="M26 30L30 34L38 25" stroke="url(#trustShieldRim)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="floating-3d-tooltip">Anti-Fraud Protection</span>
+    </div>
+
+    <!-- Small Floating 3D Jobs Briefcase Icon -->
+    <div class="floating-3d-icon-wrap jobs-float-section" title="Direct Employment Security">
+      <div class="floating-3d-icon-badge">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="32" cy="54" rx="20" ry="3.5" fill="rgba(0,0,0,0.4)"/>
+          <path d="M25 22V16C25 14.3431 26.3431 13 28 13H36C37.6569 13 39 14.3431 39 16V22" stroke="#D4AF37" stroke-width="3" stroke-linecap="round"/>
+          <rect x="12" y="21" width="40" height="28" rx="5" fill="#0F172A" stroke="#D4AF37" stroke-width="1.2"/>
+          <rect x="12" y="32" width="40" height="3" fill="#0B132B"/>
+          <rect x="22" y="30" width="5" height="7" rx="1.5" fill="#D4AF37"/>
+          <rect x="37" y="30" width="5" height="7" rx="1.5" fill="#D4AF37"/>
+        </svg>
+      </div>
+      <span class="floating-3d-tooltip">Direct Contracts</span>
+    </div>
+
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-solid fa-handshake"></i>
+          <span>Absolute Candidate Trust</span>
+        </div>
+        <h2 class="section-title">Why Global Workers Choose <span class="gold-gradient-text">NG Global</span></h2>
+        <p class="section-subtitle">
+          Traditional agents demand hefty deposits upfront with zero accountability. We completely inverted the recruitment model to protect candidates.
+        </p>
+      </div>
+
+      <div class="value-grid">
+        
+        <!-- Card 1: Global Network -->
+        <div class="glass-card value-card card-3d-interactive">
+          <div class="value-step-num">01</div>
+          <div class="value-icon-box">
+            <i class="fa-solid fa-network-wired"></i>
+          </div>
+          <h3>Global Network</h3>
+          <p>
+            Direct corporate tie-ups with tier-1 construction contractors, logistics giants, hospitality groups, and manufacturing plants worldwide. Zero middle-brokers or unverified sub-agents.
+          </p>
+          <div>
+            <span class="value-pill"><i class="fa-solid fa-check"></i> 150+ Direct Employer Partners</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Verified Employers -->
+        <div class="glass-card value-card card-3d-interactive">
+          <div class="value-step-num">02</div>
+          <div class="value-icon-box">
+            <i class="fa-solid fa-building-circle-check"></i>
+          </div>
+          <h3>Verified Employers</h3>
+          <p>
+            Every single job order is authenticated by government labor ministries and embassy attested. Guaranteed food, accommodation, health insurance, and paid overtime explicitly written in contracts.
+          </p>
+          <div>
+            <span class="value-pill"><i class="fa-solid fa-file-contract"></i> Ministry Attested Contracts</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Zero Upfront Agency Fees & Direct Embassy Processing -->
+        <div class="glass-card value-card card-3d-interactive">
+          <div class="value-step-num">03</div>
+          <div class="value-icon-box">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3>Zero Upfront Agency Fees</h3>
+          <p>
+            We charge zero advance agency or registration fees. Candidates pay legitimate visa application, GAMCA medicals, and consular fees directly to authorized government portals and embassies. Once your application is received, our executive coordinates 1-on-1 on WhatsApp to evaluate your profile and recommend matching companies according to your trade and capacity.
+          </p>
+          <div>
+            <span class="value-pill"><i class="fa-solid fa-lock"></i> Direct Embassy Payment Transparency</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BBS-Inspired Dual-Track Workflow Matrix ("How It Works") -->
+      <div style="margin-top: 64px; text-align: center;">
+        <div class="section-badge" style="background: rgba(212, 175, 55, 0.12); border-color: var(--border-gold); color: var(--gold-300);">
+          <i class="fa-solid fa-route"></i>
+          <span>Transparent Process</span>
+        </div>
+        <h3 class="section-title" style="font-size: clamp(1.6rem, 3vw, 2.2rem);">How It Works: <span class="gold-gradient-text" style="font-style: italic;">Two Dedicated Tracks</span></h3>
+        <p class="section-subtitle" style="max-width: 680px; margin: 0 auto 36px;">
+          Whether you are a skilled blue-collar tradesman seeking foreign placement or an overseas employer mobilizing manpower, our end-to-end framework guarantees complete peace of mind.
+        </p>
+      </div>
+
+      <div class="how-it-works-matrix">
+        
+        <!-- Track A: For Candidates -->
+        <div class="matrix-track-box candidate-track">
+          <div class="matrix-track-badge candidate">
+            <i class="fa-solid fa-user-shield"></i>
+            <span>For Candidates (Zero Upfront Risk)</span>
+          </div>
+          <div class="matrix-steps-list">
+            <div class="matrix-step-item">
+              <div class="matrix-step-index">01</div>
+              <div class="matrix-step-content">
+                <h4>Free WhatsApp Profile & Trade Evaluation</h4>
+                <p>Submit your trade background and passport details. Our executive conducts a 1-on-1 WhatsApp interview to match you with active employer block visas—with zero advance fee.</p>
+              </div>
+            </div>
+            <div class="matrix-step-item">
+              <div class="matrix-step-index">02</div>
+              <div class="matrix-step-content">
+                <h4>Official Embassy & GAMCA Direct Payments</h4>
+                <p>You pay your legitimate medical, biometric, and visa fees directly to government embassies and diagnostic centers. We never ask for payments into private accounts.</p>
+              </div>
+            </div>
+            <div class="matrix-step-item">
+              <div class="matrix-step-index">03</div>
+              <div class="matrix-step-content">
+                <h4>Stamped Visa, Legal Contract & Flight</h4>
+                <p>Receive your ministry-attested labor contract with guaranteed food, accommodation, and salary terms. Once your visa is stamped, your flight is dispatched to the job site.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Track B: For Global Employers -->
+        <div class="matrix-track-box employer-track">
+          <div class="matrix-track-badge employer">
+            <i class="fa-solid fa-building-user"></i>
+            <span>For Global Employers & Principals</span>
+          </div>
+          <div class="matrix-steps-list">
+            <div class="matrix-step-item">
+              <div class="matrix-step-index">01</div>
+              <div class="matrix-step-content">
+                <h4>Demand Specification & Block Quota</h4>
+                <p>Submit your project manpower schedule, skill standards, and ministry block visa approval across construction, MEP, industrial welding, logistics, and hospitality trades.</p>
+              </div>
+            </div>
+            <div class="matrix-step-item">
+              <div class="matrix-step-index">02</div>
+              <div class="matrix-step-content">
+                <h4>Practical Trade Testing & Verification</h4>
+                <p>Candidates undergo practical competency testing in certified Indian trade workshops (welding test bays, heavy vehicle grounds, electrical panels) before selection.</p>
+              </div>
+            </div>
+            <div class="matrix-step-item">
+              <div class="matrix-step-index">03</div>
+              <div class="matrix-step-content">
+                <h4>e-Migrate Clearance & Turnkey Mobilization</h4>
+                <p>We handle all emigration clearances, POE formalities, pre-departure orientations, and flight ticketing, delivering job-ready manpower to your site on schedule.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Section 4: Dual-Track Processing Timeline -->
+  <section id="timelines" class="section-spacing section-corporate-bg timeline-corporate-bg scroll-3d-reveal">
+    
+    <!-- Small Floating 3D Flight Icon -->
+    <div class="floating-3d-icon-wrap flight-float-timeline" title="Fast Express Flight Timelines">
+      <div class="floating-3d-icon-badge">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 50 C20 44 28 40 36 38" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M34 16L18 36H28L40 28Z" fill="#D4AF37"/>
+          <path d="M34 40L14 46H22L36 42Z" fill="#D4AF37"/>
+          <path d="M52 14C52 14 44 22 26 36L14 45L20 47L36 39C46 31 52 14 52 14Z" fill="#FFFFFF"/>
+          <ellipse cx="48" cy="18" rx="2.5" ry="1.2" transform="rotate(-35 48 18)" fill="#38BDF8"/>
+        </svg>
+      </div>
+      <span class="floating-3d-tooltip">1–15 Day Flights</span>
+    </div>
+
+    <!-- Small Floating 3D Passport Icon -->
+    <div class="floating-3d-icon-wrap passport-float-timeline" title="Consular Visa Processing">
+      <div class="floating-3d-icon-badge">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="33" cy="54" rx="18" ry="3.5" fill="rgba(0,0,0,0.4)"/>
+          <rect x="18" y="14" width="28" height="38" rx="3" fill="#0B1329"/>
+          <rect x="16" y="12" width="28" height="38" rx="3" fill="#1E3A8A" stroke="#D4AF37" stroke-width="1"/>
+          <rect x="16" y="12" width="3.5" height="38" rx="1" fill="#D4AF37"/>
+          <circle cx="30" cy="27" r="7" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
+        </svg>
+      </div>
+      <span class="floating-3d-tooltip">Work Permits</span>
+    </div>
+
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-solid fa-timeline"></i>
+          <span>Transparent Speed</span>
+        </div>
+        <h2 class="section-title">Two Distinct Processing <span class="sapphire-gradient-text">Tracks</span></h2>
+        <p class="section-subtitle">
+          We offer clear, honest deployment expectations. Compare the fast-track Gulf channel with our comprehensive Western and European programs.
+        </p>
+      </div>
+
+      <!-- Timeline Tabs Control -->
+      <div class="timeline-tabs-control">
+        <button class="timeline-tab-btn active" onclick="switchTimelineTrack('gulf')">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Gulf Countries Track</span>
+          <span class="badge-pill">1–15 Days</span>
+        </button>
+        <button class="timeline-tab-btn" onclick="switchTimelineTrack('western')">
+          <i class="fa-solid fa-earth-americas"></i>
+          <span>EU, USA & New Zealand Track</span>
+          <span class="badge-pill">~3 Months</span>
+        </button>
+      </div>
+
+      <!-- Track A: Gulf Countries (Fast Track 1-15 Days) -->
+      <div id="track-gulf" class="timeline-track-container active">
+        <div class="timeline-track-card card-3d-interactive">
+          <div class="timeline-header-meta">
+            <div class="track-badge-large">
+              <i class="fa-solid fa-gas-pump"></i>
+              <div>
+                <h3>Gulf Cooperation Council (UAE, Saudi, Qatar, Kuwait, Oman)</h3>
+                <p>Express electronic e-Visa systems and direct corporate allocation quotas</p>
+              </div>
+            </div>
+            <div class="track-duration-pill duration-fast">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Total Duration: 1 to 15 Days</span>
+            </div>
+          </div>
+
+          <div class="steps-pipeline">
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-id-card"></i></div>
+              <div>
+                <span class="step-time-label">Day 1</span>
+                <h4 class="step-title">Profile Screening</h4>
+                <p class="step-desc">Trade background, passport validity check, and direct resume review.</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-user-tie"></i></div>
+              <div>
+                <span class="step-time-label">Day 2–4</span>
+                <h4 class="step-title">Employer Interview</h4>
+                <p class="step-desc">Direct client interview or practical trade test. Formal job offer letter signed.</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-stethoscope"></i></div>
+              <div>
+                <span class="step-time-label">Day 5–8</span>
+                <h4 class="step-title">Medical & e-Visa</h4>
+                <p class="step-desc">GAMCA medical test and electronic ministry visa approval submission.</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-plane-departure"></i></div>
+              <div>
+                <span class="step-time-label">Day 9–15</span>
+                <h4 class="step-title">Visa Handover & Fly</h4>
+                <p class="step-desc">Candidate verifies visa on official portal, completes direct embassy processing, and boards flight.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Responsive Table Container -->
+          <div class="table-responsive">
+            <table class="timeline-compare-table">
+              <thead>
+                <tr>
+                  <th>Destination</th>
+                  <th>Target Trades</th>
+                  <th>Monthly Salary Range</th>
+                  <th>Hiring & Processing Model</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>United Arab Emirates 🇦🇪</strong></td>
+                  <td>Construction, Electricians, Drivers, Hospitality</td>
+                  <td>AED 1,600 – AED 4,200 + Overtime</td>
+                  <td><span style="color:#34D399; font-weight:700;">Direct Embassy e-Visa / Tailored Packages</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Saudi Arabia (NEOM) 🇸🇦</strong></td>
+                  <td>Civil, Welders, MEP, Equipment Operators</td>
+                  <td>SAR 1,800 – SAR 4,500 + Food/Stay</td>
+                  <td><span style="color:#FCD34D; font-weight:700;">Select Openings 100% Employer-Sponsored</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Qatar & Oman 🇶🇦 🇴🇲</strong></td>
+                  <td>HVAC, Scaffolding, Logistics, Security</td>
+                  <td>QAR 1,500 – QAR 3,800 + Overtime</td>
+                  <td><span style="color:#34D399; font-weight:700;">Ministry Attested / Direct Visa Issuance</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted); font-style: italic;">
+            * Note: A select few international openings have zero service charges because overseas principal companies fully sponsor the recruitment fees directly to us for those specific project quotas.
+          </div>
+        </div>
+      </div>
+
+      <!-- Track B: Western Nations (Comprehensive 3 Months) -->
+      <div id="track-western" class="timeline-track-container">
+        <div class="timeline-track-card card-3d-interactive">
+          <div class="timeline-header-meta">
+            <div class="track-badge-large">
+              <i class="fa-solid fa-monument"></i>
+              <div>
+                <h3>Europe, United States & New Zealand</h3>
+                <p>Consular labor market certifications, work permits & embassy biometric verification</p>
+              </div>
+            </div>
+            <div class="track-duration-pill duration-standard">
+              <i class="fa-solid fa-clock"></i>
+              <span>Total Duration: Approx. 3 Months (90 Days)</span>
+            </div>
+          </div>
+
+          <div class="steps-pipeline">
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-certificate"></i></div>
+              <div>
+                <span class="step-time-label">Month 1</span>
+                <h4 class="step-title">Trade Assessment</h4>
+                <p class="step-desc">Skills translation, criminal record clearance, and employer quota filing.</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-landmark"></i></div>
+              <div>
+                <span class="step-time-label">Month 2</span>
+                <h4 class="step-title">Work Permit Grant</h4>
+                <p class="step-desc">Labor Ministry work approval issued (e.g. ZAV Germany, LMIA, AEWV).</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-fingerprint"></i></div>
+              <div>
+                <span class="step-time-label">Month 2.5</span>
+                <h4 class="step-title">Embassy Biometrics</h4>
+                <p class="step-desc">Direct consulate appointment for biometric enrollment and passport submission.</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-passport"></i></div>
+              <div>
+                <span class="step-time-label">Month 3</span>
+                <h4 class="step-title">Stamped Visa & Fly</h4>
+                <p class="step-desc">National work visa stamped in passport. Direct embassy flight dispatch.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Responsive Table Container -->
+          <div class="mobile-table-hint">
+            <i class="fa-solid fa-arrows-left-right"></i> Scroll table horizontally to compare tracks
+          </div>
+          <div class="table-responsive">
+            <table class="timeline-compare-table">
+              <thead>
+                <tr>
+                  <th>Destination</th>
+                  <th>Target Trades</th>
+                  <th>Monthly Salary Range</th>
+                  <th>Hiring & Processing Model</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Germany & Poland 🇩🇪 🇵🇱</strong></td>
+                  <td>Industrial Welders, CNC, Electricians, Food Processing</td>
+                  <td>€1,400 – €3,200 (~₹1.3L – ₹2.9L INR)</td>
+                  <td><span style="color:#34D399; font-weight:700;">National Work Permit / Embassy Direct Appointment</span></td>
+                </tr>
+                <tr>
+                  <td><strong>United States (H-2B) 🇺🇸</strong></td>
+                  <td>Landscape, Construction Helpers, Hospitality Staff</td>
+                  <td>$2,600 – $4,200 (~₹2.2L – ₹3.5L INR)</td>
+                  <td><span style="color:#34D399; font-weight:700;">Official Consulate Processing / Tailored Placement</span></td>
+                </tr>
+                <tr>
+                  <td><strong>New Zealand & Australia 🇳🇿 🇦🇺</strong></td>
+                  <td>Carpenters, Mechanics, Heavy Riggers, Farm Hands</td>
+                  <td>NZ$ 3,200 – NZ$ 5,000 (~₹1.6L – ₹2.5L INR)</td>
+                  <td><span style="color:#34D399; font-weight:700;">Accredited Employer Quota / Direct Biometrics</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted); font-style: italic;">
+            * Official embassy visa stamping and consular fees are paid directly to government portals. Select hiring batches are employer-sponsored.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BBS-Inspired Live Hot Job Openings Showcase -->
+  <section id="hot-openings" class="jobs-showcase-section section-corporate-bg jobs-corporate-bg scroll-3d-reveal">
+    
+    <!-- Small Floating 3D Jobs Briefcase Icon -->
+    <div class="floating-3d-icon-wrap jobs-float-section" title="Verified Corporate Demand">
+      <div class="floating-3d-icon-badge">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="32" cy="54" rx="20" ry="3.5" fill="rgba(0,0,0,0.4)"/>
+          <path d="M25 22V16C25 14.3431 26.3431 13 28 13H36C37.6569 13 39 14.3431 39 16V22" stroke="#D4AF37" stroke-width="3" stroke-linecap="round"/>
+          <rect x="12" y="21" width="40" height="28" rx="5" fill="#0F172A" stroke="#D4AF37" stroke-width="1.2"/>
+          <rect x="12" y="32" width="40" height="3" fill="#0B132B"/>
+          <rect x="22" y="30" width="5" height="7" rx="1.5" fill="#D4AF37"/>
+          <rect x="37" y="30" width="5" height="7" rx="1.5" fill="#D4AF37"/>
+        </svg>
+      </div>
+      <span class="floating-3d-tooltip">Global Quotas</span>
+    </div>
+
+    <!-- Small Floating 3D Industrial Helmet Icon -->
+    <div class="floating-3d-icon-wrap helmet-float-jobs" title="Skilled Trade Standards">
+      <div class="floating-3d-icon-badge">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="jobsHelmetGrad" x1="14" y1="16" x2="50" y2="46">
+              <stop stop-color="#FDE047"/>
+              <stop offset="0.5" stop-color="#EAB308"/>
+              <stop offset="0.9" stop-color="#CA8A04"/>
+              <stop offset="1" stop-color="#854D0E"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="32" cy="48" rx="20" ry="4" fill="rgba(0,0,0,0.4)"/>
+          <path d="M16 36C16 23 23 15 32 15C41 15 48 23 48 36H16Z" fill="url(#jobsHelmetGrad)"/>
+          <path d="M30 15C30 15 31 28 31 36H33C33 28 34 15 34 15H30Z" fill="#FEF08A"/>
+          <path d="M13 36C13 34.5 17 33.8 32 33.8C47 33.8 51 34.5 51 36C51 37.5 47 39 32 39C17 39 13 37.5 13 36Z" fill="url(#jobsHelmetGrad)"/>
+        </svg>
+      </div>
+      <span class="floating-3d-tooltip">Trade Certified</span>
+    </div>
+
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge" style="background: rgba(225, 29, 72, 0.12); border-color: rgba(225, 29, 72, 0.35); color: #FB7185;">
+          <i class="fa-solid fa-fire"></i>
+          <span>Verified Overseas Openings</span>
+        </div>
+        <h2 class="section-title">Current International <span class="gold-gradient-text" style="font-style: italic;">Hot Openings</span></h2>
+        <p class="section-subtitle">
+          Direct employer block visa quotas currently recruiting skilled and semi-skilled trade workers. Zero advance agency charges. Official visa fees paid directly to authorized embassies.
+        </p>
+      </div>
+
+      <div class="jobs-grid">
+        
+        <!-- Job 1 -->
+        <div class="job-card card-3d-interactive">
+          <div>
+            <div class="job-card-header">
+              <div class="job-country-badge">
+                <span class="job-country-flag">🇸🇦</span>
+                <span>Saudi Arabia (NEOM Mega Project)</span>
+              </div>
+              <span class="job-id-pill">ID: NG-KSA-9041</span>
+            </div>
+            <h3 class="job-title">Heavy Trailer & Tanker Driver</h3>
+            <div class="job-salary-banner">
+              <span class="job-salary-val">₹85,000 – ₹1,25,000 / mo</span>
+              <span class="job-salary-sub">SAR 3,800 – 5,500</span>
+            </div>
+            <div class="job-perks-list">
+              <span class="job-perk-tag"><i class="fa-solid fa-utensils"></i> Free Food</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-bed"></i> Bachelor Accomm.</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-bolt"></i> 10-15 Days Visa</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-id-card"></i> Indian / GCC Heavy DL</span>
+            </div>
+          </div>
+          <button type="button" class="job-apply-btn" onclick="applyForJob('NG-KSA-9041', 'Heavy Trailer Driver', 'Saudi Arabia (NEOM)', 'SAR 3,800 - 5,500')">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Quick Apply on WhatsApp</span>
+          </button>
+        </div>
+
+        <!-- Job 2 -->
+        <div class="job-card card-3d-interactive">
+          <div>
+            <div class="job-card-header">
+              <div class="job-country-badge">
+                <span class="job-country-flag">🇩🇪</span>
+                <span>Germany & Poland (EU Industrial)</span>
+              </div>
+              <span class="job-id-pill">ID: NG-EU-7720</span>
+            </div>
+            <h3 class="job-title">6G TIG & ARC Pipe Welder</h3>
+            <div class="job-salary-banner">
+              <span class="job-salary-val">₹1,45,000 – ₹2,30,000 / mo</span>
+              <span class="job-salary-sub">€1,600 – €2,500</span>
+            </div>
+            <div class="job-perks-list">
+              <span class="job-perk-tag"><i class="fa-solid fa-passport"></i> EU Work Permit</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-building-columns"></i> Embassy Appointment</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-clock"></i> Overtime Extra</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-certificate"></i> Trade Test Req.</span>
+            </div>
+          </div>
+          <button type="button" class="job-apply-btn" onclick="applyForJob('NG-EU-7720', '6G TIG & ARC Welder', 'Germany & Poland', '€1,600 - €2,500')">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Quick Apply on WhatsApp</span>
+          </button>
+        </div>
+
+        <!-- Job 3 -->
+        <div class="job-card card-3d-interactive">
+          <div>
+            <div class="job-card-header">
+              <div class="job-country-badge">
+                <span class="job-country-flag">🇦🇪</span>
+                <span>UAE (Dubai / Abu Dhabi Projects)</span>
+              </div>
+              <span class="job-id-pill">ID: NG-UAE-5512</span>
+            </div>
+            <h3 class="job-title">Commercial MEP Electrician & Plumber</h3>
+            <div class="job-salary-banner">
+              <span class="job-salary-val">₹70,000 – ₹1,10,000 / mo</span>
+              <span class="job-salary-sub">AED 3,100 – 4,800</span>
+            </div>
+            <div class="job-perks-list">
+              <span class="job-perk-tag"><i class="fa-solid fa-van-shuttle"></i> Free Transport</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-heart-pulse"></i> Medical Card</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-bolt"></i> 7-12 Days Track</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-file-signature"></i> 2-Year Contract</span>
+            </div>
+          </div>
+          <button type="button" class="job-apply-btn" onclick="applyForJob('NG-UAE-5512', 'Commercial MEP Electrician', 'UAE (Dubai / Abu Dhabi)', 'AED 3,100 - 4,800')">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Quick Apply on WhatsApp</span>
+          </button>
+        </div>
+
+        <!-- Job 4 -->
+        <div class="job-card card-3d-interactive">
+          <div>
+            <div class="job-card-header">
+              <div class="job-country-badge">
+                <span class="job-country-flag">🇺🇸</span>
+                <span>United States (Seasonal H-2B)</span>
+              </div>
+              <span class="job-id-pill">ID: NG-USA-3318</span>
+            </div>
+            <h3 class="job-title">Hospitality & Resort Services Crew</h3>
+            <div class="job-salary-banner">
+              <span class="job-salary-val">₹1,80,000 – ₹2,60,000 / mo</span>
+              <span class="job-salary-sub">$2,200 – $3,200</span>
+            </div>
+            <div class="job-perks-list">
+              <span class="job-perk-tag"><i class="fa-solid fa-building-columns"></i> US Consulate Visa</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-utensils"></i> Shift Meals</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-money-bill-wave"></i> Legal USD Salary</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-sun"></i> Seasonal Placement</span>
+            </div>
+          </div>
+          <button type="button" class="job-apply-btn" onclick="applyForJob('NG-USA-3318', 'Hospitality & Resort Crew', 'United States (H-2B)', '$2,200 - $3,200')">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Quick Apply on WhatsApp</span>
+          </button>
+        </div>
+
+        <!-- Job 5 -->
+        <div class="job-card card-3d-interactive">
+          <div>
+            <div class="job-card-header">
+              <div class="job-country-badge">
+                <span class="job-country-flag">🇳🇿</span>
+                <span>New Zealand & Australia</span>
+              </div>
+              <span class="job-id-pill">ID: NG-NZ-8840</span>
+            </div>
+            <h3 class="job-title">Heavy Equipment & Crane Mechanic</h3>
+            <div class="job-salary-banner">
+              <span class="job-salary-val">₹1,70,000 – ₹2,50,000 / mo</span>
+              <span class="job-salary-sub">NZ$ 3,400 – $5,000</span>
+            </div>
+            <div class="job-perks-list">
+              <span class="job-perk-tag"><i class="fa-solid fa-award"></i> Accredited Employer</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-wrench"></i> Essential Skills</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-house-chimney"></i> Subsidized Stay</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-fingerprint"></i> Direct Biometrics</span>
+            </div>
+          </div>
+          <button type="button" class="job-apply-btn" onclick="applyForJob('NG-NZ-8840', 'Heavy Equipment Mechanic', 'New Zealand & Australia', 'NZ$ 3,400 - $5,000')">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Quick Apply on WhatsApp</span>
+          </button>
+        </div>
+
+        <!-- Job 6 -->
+        <div class="job-card card-3d-interactive">
+          <div>
+            <div class="job-card-header">
+              <div class="job-country-badge">
+                <span class="job-country-flag">🇶🇦</span>
+                <span>Qatar (Infrastructure & Industrial)</span>
+              </div>
+              <span class="job-id-pill" style="color: #34D399; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.35);">100% Employer Funded</span>
+            </div>
+            <h3 class="job-title">Construction Helpers & Riggers</h3>
+            <div class="job-salary-banner">
+              <span class="job-salary-val">₹55,000 – ₹75,000 / mo</span>
+              <span class="job-salary-sub">QAR 2,400 – 3,300</span>
+            </div>
+            <div class="job-perks-list">
+              <span class="job-perk-tag"><i class="fa-solid fa-ticket"></i> Free Air Ticket</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-shield-halved"></i> Zero Service Charge</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-bed"></i> Camp Accommodation</span>
+              <span class="job-perk-tag"><i class="fa-solid fa-bowl-food"></i> Catering Provided</span>
+            </div>
+          </div>
+          <button type="button" class="job-apply-btn" onclick="applyForJob('NG-QAT-1190', 'Construction Helper & Rigger', 'Qatar', 'QAR 2,400 - 3,300 (Employer Funded)')">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Quick Apply on WhatsApp</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Gradient Divider -->
+      <div class="gradient-divider"></div>
+    </div>
+  </section>
+
+  <!-- Section 5: Lead Generation Component (The Core Multi-Step Funnel) -->
+  <section id="lead-funnel" class="section-spacing">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Instant Eligibility Check</span>
+        </div>
+        <h2 class="section-title">Check Your Overseas <span class="gold-gradient-text">Eligibility</span></h2>
+        <p class="section-subtitle">
+          Complete this 30-second assessment. Our career executives coordinate directly with you on WhatsApp to evaluate your profile and suggest companies according to your trade and preferences.
+        </p>
+      </div>
+
+      <div class="funnel-wrapper">
+        
+        <!-- Progress Stepper Header -->
+        <div class="wizard-progress-header">
+          <div class="wizard-steps-indicator">
+            <div class="wizard-progress-line">
+              <div id="wizardFill" class="wizard-progress-fill"></div>
+            </div>
+            <div id="stepBubble1" class="wizard-step-bubble active">1</div>
+            <div id="stepBubble2" class="wizard-step-bubble">2</div>
+            <div id="stepBubble3" class="wizard-step-bubble">3</div>
+          </div>
+        </div>
+
+        <!-- FORM STEP 1: Skill / Trade -->
+        <div id="panelStep1" class="funnel-step-panel active">
+          <h3 class="panel-question-title">Step 1: What is your primary skill or trade?</h3>
+          <p class="panel-question-desc">Select the occupational category that best matches your experience or training.</p>
+
+          <div class="trade-options-grid">
+            <div class="trade-card-btn selected" onclick="selectTrade(this, 'Construction & Infrastructure')">
+              <i class="fa-solid fa-trowel-bricks trade-card-icon"></i>
+              <span class="trade-card-name">Construction</span>
+              <span class="trade-card-badge">High Demand</span>
+            </div>
+            <div class="trade-card-btn" onclick="selectTrade(this, 'Hospitality & Catering')">
+              <i class="fa-solid fa-utensils trade-card-icon"></i>
+              <span class="trade-card-name">Hospitality</span>
+              <span class="trade-card-badge">Employer-Sponsored</span>
+            </div>
+            <div class="trade-card-btn" onclick="selectTrade(this, 'Logistics & Heavy Driving')">
+              <i class="fa-solid fa-truck-fast trade-card-icon"></i>
+              <span class="trade-card-name">Logistics</span>
+              <span class="trade-card-badge">Express Processing</span>
+            </div>
+            <div class="trade-card-btn" onclick="selectTrade(this, 'Manufacturing & Industrial')">
+              <i class="fa-solid fa-industry trade-card-icon"></i>
+              <span class="trade-card-name">Manufacturing</span>
+              <span class="trade-card-badge">Active Quotas</span>
+            </div>
+            <div class="trade-card-btn" onclick="selectTrade(this, 'Electrical, Plumbing & MEP')">
+              <i class="fa-solid fa-plug-circle-bolt trade-card-icon"></i>
+              <span class="trade-card-name">MEP / Technical</span>
+              <span class="trade-card-badge">High Salary</span>
+            </div>
+            <div class="trade-card-btn" onclick="selectTrade(this, 'Other Skilled Trades')">
+              <i class="fa-solid fa-screwdriver-wrench trade-card-icon"></i>
+              <span class="trade-card-name">Other Trades</span>
+              <span class="trade-card-badge">Open Categories</span>
+            </div>
+          </div>
+
+          <div class="funnel-nav-actions" style="justify-content: flex-end;">
+            <button type="button" class="btn btn-gold" onclick="goToStep(2)">
+              <span>Next: Select Destination</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- FORM STEP 2: Destination -->
+        <div id="panelStep2" class="funnel-step-panel">
+          <h3 class="panel-question-title">Step 2: Where do you want to work?</h3>
+          <p class="panel-question-desc">Choose your preferred international region for visa sponsorship.</p>
+
+          <div class="dest-options-grid">
+            <div class="dest-card-btn selected" onclick="selectDest(this, 'Gulf Countries (UAE, Saudi, Qatar)')">
+              <div class="dest-flag-icon">⚡</div>
+              <div class="dest-info">
+                <h4>Gulf Countries</h4>
+                <p>UAE, Saudi Arabia, Qatar, Kuwait, Oman</p>
+                <span class="dest-badge-time time-badge-fast"><i class="fa-solid fa-bolt"></i> 1 to 15 Days Fast-Track</span>
+              </div>
+            </div>
+
+            <div class="dest-card-btn" onclick="selectDest(this, 'Europe (Germany, Poland, UK)')">
+              <div class="dest-flag-icon">🇪🇺</div>
+              <div class="dest-info">
+                <h4>Europe</h4>
+                <p>Germany, Poland, Czechia, Romania</p>
+                <span class="dest-badge-time time-badge-std"><i class="fa-solid fa-clock"></i> ~3 Months Processing</span>
+              </div>
+            </div>
+
+            <div class="dest-card-btn" onclick="selectDest(this, 'United States (H-2B / Industry)')">
+              <div class="dest-flag-icon">🇺🇸</div>
+              <div class="dest-info">
+                <h4>United States</h4>
+                <p>H-2B Seasonal, Construction & Logistics</p>
+                <span class="dest-badge-time time-badge-std"><i class="fa-solid fa-clock"></i> ~3 Months Processing</span>
+              </div>
+            </div>
+
+            <div class="dest-card-btn" onclick="selectDest(this, 'New Zealand & Australia')">
+              <div class="dest-flag-icon">🇳🇿</div>
+              <div class="dest-info">
+                <h4>New Zealand / Australia</h4>
+                <p>Accredited Employer Work Visa Programs</p>
+                <span class="dest-badge-time time-badge-std"><i class="fa-solid fa-clock"></i> ~3 Months Processing</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="funnel-nav-actions">
+            <button type="button" class="btn btn-secondary" onclick="goToStep(1)">
+              <i class="fa-solid fa-arrow-left"></i>
+              <span>Back</span>
+            </button>
+            <button type="button" class="btn btn-gold" onclick="goToStep(3)">
+              <span>Next: Contact Details</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- FORM STEP 3: Contact Details & Submit -->
+        <div id="panelStep3" class="funnel-step-panel">
+          <h3 class="panel-question-title">Step 3: Your Contact Details</h3>
+          <p class="panel-question-desc">We will verify your profile and connect you directly to our official career executive on WhatsApp.</p>
+
+          <form id="leadCaptureForm" onsubmit="handleFormSubmission(event)">
+            <div class="contact-form-grid">
+              <div class="form-group">
+                <label class="form-label" for="candidateName">Full Name *</label>
+                <input type="text" id="candidateName" class="form-input-box" placeholder="e.g. Ramesh Patel" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="candidatePhone">WhatsApp Phone Number *</label>
+                <input type="tel" id="candidatePhone" class="form-input-box" placeholder="e.g. +91 98765 43210" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="candidateExp">Years of Experience</label>
+                <select id="candidateExp" class="form-input-box">
+                  <option value="1 to 2 Years">1 to 2 Years (Junior)</option>
+                  <option value="3 to 5 Years" selected>3 to 5 Years (Experienced)</option>
+                  <option value="5+ Years GCC / Overseas">5+ Years (Overseas Returned / Senior)</option>
+                  <option value="Fresher with Certificate">Fresher with Trade ITI / Diploma</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="candidateCity">Your Current City / State</label>
+                <input type="text" id="candidateCity" class="form-input-box" placeholder="e.g. Mumbai, Maharashtra" />
+              </div>
+            </div>
+
+            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 24px; font-size: 0.85rem; color: #6EE7B7; display: flex; align-items: center; gap: 10px;">
+              <i class="fa-solid fa-shield-check" style="font-size: 1.2rem; flex-shrink: 0;"></i>
+              <span>Transparency Guarantee: Zero upfront agency fees. Official visa and medical fees are paid directly to authorized government embassies & centers. Our executive coordinates directly with you on WhatsApp.</span>
+            </div>
+
+            <div class="funnel-nav-actions">
+              <button type="button" class="btn btn-secondary" onclick="goToStep(2)">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Back</span>
+              </button>
+              <button type="submit" class="btn btn-whatsapp" style="font-size: 1.02rem; padding: 16px 28px; width: 100%;">
+                <i class="fa-brands fa-whatsapp" style="font-size: 1.3rem;"></i>
+                <span>Check Eligibility & Connect on WhatsApp</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6.5: BBS-Inspired Candidate Testimonials & Success Stories -->
+  <section id="testimonials" class="testimonials-section section-spacing section-corporate-bg testimonials-corporate-bg scroll-3d-reveal">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-solid fa-star"></i>
+          <span>Verified Worker Stories</span>
+        </div>
+        <h2 class="section-title">Trusted by Thousands of <span class="gold-gradient-text">Overseas Workers</span></h2>
+        <p class="section-subtitle">
+          Real feedback from skilled and technical personnel placed with leading contractors across the Gulf, Europe, and beyond.
+        </p>
+      </div>
+
+      <div class="testimonials-grid">
+        <!-- Testimonial 1 -->
+        <div class="testimonial-card card-3d-interactive">
+          <div class="testimonial-quote-icon">
+            <i class="fa-solid fa-quote-left"></i>
+          </div>
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">
+            "I was scammed earlier by an agent demanding 1.5 Lakhs upfront. With NG Global, there was zero upfront agency fee. I paid GAMCA medical and visa fees directly to the official clinic and embassy portal. Today I drive heavy trailer trucks in Dammam earning 3,600 SAR with free housing!"
+          </p>
+          <div class="testimonial-author-box">
+            <div class="author-avatar-badge">RK</div>
+            <div class="author-details">
+              <h5>Rajesh Kumar</h5>
+              <p>Heavy Trailer Driver • Saudi Arabia (Dammam)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="testimonial-card card-3d-interactive">
+          <div class="testimonial-quote-icon">
+            <i class="fa-solid fa-quote-left"></i>
+          </div>
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">
+            "Getting a European work permit seemed impossible without giant middleman charges. NG Global matched my 6G pipe welding certifications directly with a Polish infrastructure firm. The company paid their hiring costs to NG Global, and I only paid my direct embassy appointment fee."
+          </p>
+          <div class="testimonial-author-box">
+            <div class="author-avatar-badge" style="background: linear-gradient(135deg, #059669 0%, #10B981 100%);">MA</div>
+            <div class="author-details">
+              <h5>Mohd. Aslam Ansari</h5>
+              <p>6G Pipe Welder • Poland (Katowice)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="testimonial-card card-3d-interactive">
+          <div class="testimonial-quote-icon">
+            <i class="fa-solid fa-quote-left"></i>
+          </div>
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">
+            "Submitted my questionnaire on WhatsApp and got a call within 2 hours. The coordinator was polite, verified my HVAC trade test, and matched me with a Dubai marina facility project. My e-Visa was approved in just 11 days. Complete transparency from start to finish."
+          </p>
+          <div class="testimonial-author-box">
+            <div class="author-avatar-badge" style="background: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);">GS</div>
+            <div class="author-details">
+              <h5>Gurpreet Singh</h5>
+              <p>MEP HVAC Technician • UAE (Dubai Marina)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6.6: BBS-Inspired Dual-Audience Banner (Candidates vs Employers) -->
+  <section class="dual-cta-section section-corporate-bg cta-corporate-bg scroll-3d-reveal">
+    
+    <!-- Small Floating 3D Flight Icon -->
+    <div class="floating-3d-icon-wrap flight-float-cta" title="International Mobilization">
+      <div class="floating-3d-icon-badge">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 50 C20 44 28 40 36 38" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M34 16L18 36H28L40 28Z" fill="#D4AF37"/>
+          <path d="M34 40L14 46H22L36 42Z" fill="#D4AF37"/>
+          <path d="M52 14C52 14 44 22 26 36L14 45L20 47L36 39C46 31 52 14 52 14Z" fill="#FFFFFF"/>
+          <ellipse cx="48" cy="18" rx="2.5" ry="1.2" transform="rotate(-35 48 18)" fill="#38BDF8"/>
+        </svg>
+      </div>
+      <span class="floating-3d-tooltip">Global Mobilization</span>
+    </div>
+
+    <div class="container">
+      <div class="dual-cta-grid">
+        <!-- Candidate Card -->
+        <div class="dual-cta-card candidate-side card-3d-interactive">
+          <div>
+            <div class="dual-cta-badge">
+              <span class="badge-gold"><i class="fa-solid fa-user-check"></i> For Overseas Job Seekers</span>
+            </div>
+            <h3>Ready to Accelerate Your Global Career with Zero Upfront Agency Risk?</h3>
+            <p>
+              Check your eligibility in 60 seconds. Our executive will personally coordinate with you on WhatsApp, assess your trade experience, and match you with verified international employers.
+            </p>
+          </div>
+          <div>
+            <a href="#lead-funnel" class="btn btn-gold" style="width: fit-content;">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span>Check Eligibility Free</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Employer Card -->
+        <div class="dual-cta-card employer-side card-3d-interactive">
+          <div>
+            <div class="dual-cta-badge">
+              <span style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 9999px; padding: 4px 12px; font-size: 0.74rem; font-weight: 700; text-transform: uppercase;">
+                <i class="fa-solid fa-building"></i> For Global Employers & Contractors
+              </span>
+            </div>
+            <h3>Looking to Hire Certified Blue-Collar Manpower at Scale?</h3>
+            <p>
+              Partner with NG Global Manpower Services for certified trade-tested personnel, swift mobilization, and compliant international deployment across Gulf, Europe, and the Americas.
+            </p>
+          </div>
+          <div>
+            <a href="https://wa.me/919876543210?text=Hello%20NG%20Global,%20we%20are%20an%20overseas%20employer%20interested%20in%20recruiting%20skilled%20manpower." target="_blank" class="btn btn-primary" style="background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%); border: 1px solid rgba(56, 189, 248, 0.4); width: fit-content;">
+              <i class="fa-solid fa-handshake"></i>
+              <span>Partner as an Employer</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 7: Anti-Fraud Advisory Banner -->
+  <section id="fraud-advisory" class="fraud-banner-section">
+    <div class="container">
+      <div class="fraud-banner-content">
+        <div class="fraud-icon-shield">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="fraud-text-box">
+          <h3>Beware of Fraudulent Recruitment Agents Demanding Upfront Cash Deposits</h3>
+          <p>
+            NG Global Manpower Services charges zero upfront agency fees. Official visa application, consular biometrics, and GAMCA medical fees are payable directly to government portals and authorized medical clinics—never into personal bank accounts of unverified middlemen. Report any suspicious agent immediately to our official helpline.
+          </p>
+        </div>
+        <div>
+          <a href="https://wa.me/919876543210?text=Hello%20NG%20Global,%20I%20want%20to%20verify%20a%20recruitment%20agent%20claim." target="_blank" class="btn btn-secondary">
+            <i class="fa-solid fa-shield"></i>
+            <span>Verify Official Agent</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 8: FAQ Accordion -->
+  <section id="faq" class="section-spacing">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-solid fa-circle-question"></i>
+          <span>Common Queries</span>
+        </div>
+        <h2 class="section-title">Frequently Asked <span class="gold-gradient-text">Questions</span></h2>
+        <p class="section-subtitle">
+          Everything you need to know about our candidate coordination, employer allocations, and official embassy processing.
+        </p>
+      </div>
+
+      <div class="faq-grid">
+        
+        <div class="faq-item active">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Does NG Global charge any upfront registration or agency fees?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </div>
+          <div class="faq-answer">
+            No. NG Global charges zero upfront agency or registration fees. Once you submit your details, our career executive coordinates 1-on-1 with you on WhatsApp to review your trade background, understand your preferences, and identify suitable foreign employers tailored to your profile. Official visa application, consular biometrics, and medical tests are paid directly by you to authorized government embassies and medical clinics.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Why are some international jobs completely free with zero service charges?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </div>
+          <div class="faq-answer">
+            A select few international positions have zero service charges because overseas principal companies fully sponsor the recruitment and hiring costs directly to us for those specific project quotas. In these specific cases, candidates do not pay any service charges.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How do official visa application and processing payments work?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </div>
+          <div class="faq-answer">
+            Candidates pay all official visa application fees, GAMCA medical examinations, and consular biometric processing charges directly to the relevant foreign embassies, government portals, or authorized diagnostic clinics. You never pay government visa fees to personal accounts of unverified agents.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Why is the Gulf process so fast (1 to 15 days) compared to Western countries?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </div>
+          <div class="faq-answer">
+            Gulf nations (UAE, Saudi, Qatar, Kuwait, Oman) use streamlined electronic e-Visa portals directly connected to employer corporate block visas. In contrast, European countries, the USA, and New Zealand require formal labor market certifications, consular interviews, and biometric physical passport submissions, which take approximately 90 days.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Are food, accommodation, and transport provided by the employer?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </div>
+          <div class="faq-answer">
+            Yes! All contracts secured through NG Global include free bachelor accommodation, duty transportation, medical health insurance, and either free meals or a generous monthly food allowance on top of your base salary.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Can candidates with an ECR (Emigration Check Required) passport apply?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </div>
+          <div class="faq-answer">
+            Absolutely. Both ECR and ECNR passport holders are eligible. Our documentation desk assists with complete e-Migrate clearance and embassy attestations so you travel 100% legally.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <div class="footer-col">
+          <a href="#" class="brand-logo" style="margin-bottom: 20px;">
+            <div class="logo-icon" style="background: rgba(255, 255, 255, 0.08); border: 1.5px solid var(--border-gold); padding: 3px; box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);">
+              <img src="NG_Global_Manpower_Logo_Kit/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+            </div>
+            <div class="brand-text">
+              <h2>NG GLOBAL <span>MANPOWER SERVICES</span></h2>
+            </div>
+          </a>
+          <p style="line-height: 1.7; margin-bottom: 24px;">
+            Premier international overseas recruitment consultancy. Bridging worldwide blue-collar trade specialists with verified infrastructure, industrial, and engineering employers across the Gulf, Europe, USA, and New Zealand.
+          </p>
+          <div style="display: flex; gap: 12px;">
+            <a href="https://wa.me/919876543210" target="_blank" class="btn btn-whatsapp" style="padding: 10px 20px; font-size: 0.85rem;">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span>WhatsApp Helpline</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Destinations</h4>
+          <ul class="footer-links">
+            <li><a href="#timelines">United Arab Emirates</a></li>
+            <li><a href="#timelines">Saudi Arabia (NEOM)</a></li>
+            <li><a href="#timelines">Qatar & Oman</a></li>
+            <li><a href="#timelines">Germany & Poland</a></li>
+            <li><a href="#timelines">United States (H-2B)</a></li>
+            <li><a href="#timelines">New Zealand & Australia</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Candidate Trust</h4>
+          <ul class="footer-links">
+            <li><a href="#why-us">Zero Upfront Agency Fees</a></li>
+            <li><a href="#why-us">Direct Embassy Processing</a></li>
+            <li><a href="#fraud-advisory">Anti-Fraud Advisory</a></li>
+            <li><a href="#timelines">Processing Timelines</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contact & Verification</h4>
+          <p style="margin-bottom: 12px;"><i class="fa-solid fa-location-dot" style="color: var(--gold-300); margin-right: 8px;"></i> International Placement Hub, Mumbai, India</p>
+          <p style="margin-bottom: 12px;"><i class="fa-solid fa-envelope" style="color: var(--gold-300); margin-right: 8px;"></i> verification@ngglobalmanpower.com</p>
+          <p style="margin-bottom: 12px;"><i class="fa-solid fa-phone" style="color: var(--gold-300); margin-right: 8px;"></i> +91 98765 43210 / +91 98765 43211</p>
+          <p style="font-size: 0.8rem; color: #34D399; margin-top: 16px;"><i class="fa-solid fa-circle-check"></i> Government Authorized Overseas Recruitment Agency</p>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          © 2026 NG Global Manpower Services. All rights reserved. Absolute Trust & Transparency Standard.
+        </div>
+        <div style="display: flex; gap: 20px;">
+          <a href="#" style="color: var(--text-muted); text-decoration: none;">Privacy Policy</a>
+          <a href="#" style="color: var(--text-muted); text-decoration: none;">Terms of Service</a>
+          <a href="#fraud-advisory" style="color: var(--text-muted); text-decoration: none;">Anti-Fraud Disclaimer</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Quick Button -->
+  <a href="https://wa.me/919876543210?text=Hello%20NG%20Global,%20I%20want%20to%20inquire%20about%20overseas%20jobs%20with%20zero%20advance%20agency%20fee." target="_blank" class="floating-wa-btn" title="Chat on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+    <span class="floating-wa-badge">Online</span>
+  </a>
+
+  <!-- WhatsApp Redirect Simulation Modal Overlay -->
+  <div id="simulationModal" class="simulation-overlay">
+    <div class="simulation-box">
+      <div class="sim-spinner"></div>
+      <h3 style="font-size: 1.4rem; color: #FFFFFF; margin-bottom: 12px;">Validating Your Profile...</h3>
+      <p style="font-size: 0.92rem; color: var(--text-body); margin-bottom: 22px; line-height: 1.6;">
+        Matching your trade qualifications with active employer visa quotas in our global registry. Redirecting you to our official career executive on WhatsApp...
+      </p>
+      <div style="background: rgba(37, 211, 102, 0.12); border: 1px solid rgba(37, 211, 102, 0.35); border-radius: var(--radius-md); padding: 14px; color: #34D399; font-weight: 700; font-size: 0.9rem;">
+        <i class="fa-brands fa-whatsapp"></i> Connecting to Career Executive (+91 98765 43210)
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC & THREE.JS 3D GLOBE IMPLEMENTATION
+       ========================================================================== -->
+  <script>
+    // Toggle Mobile Navigation Drawer
+    function toggleMobileMenu() {
+      const drawer = document.getElementById('mobileDrawer');
+      const overlay = document.getElementById('mobileDrawerOverlay');
+      if (drawer && overlay) {
+        drawer.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = drawer.classList.contains('active') ? 'hidden' : '';
+      }
+    }
+
+    // State management for Questionnaire
+    let currentStep = 1;
+    let selectedTradeValue = 'Construction & Infrastructure';
+    let selectedDestValue = 'Gulf Countries (UAE, Saudi, Qatar)';
+
+    function selectTrade(element, tradeName) {
+      document.querySelectorAll('.trade-card-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+      selectedTradeValue = tradeName;
+    }
+
+    function selectDest(element, destName) {
+      document.querySelectorAll('.dest-card-btn').forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+      selectedDestValue = destName;
+    }
+
+    function prefillDestination(destName) {
+      selectedDestValue = destName;
+      document.querySelectorAll('.dest-card-btn').forEach(btn => {
+        if (btn.querySelector('h4') && btn.querySelector('h4').textContent.includes(destName.split(' ')[0])) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+      // Scroll to lead funnel smoothly
+      const funnel = document.getElementById('lead-funnel');
+      if (funnel) {
+        funnel.scrollIntoView({ behavior: 'smooth' });
+        goToStep(2);
+      }
+    }
+
+    function goToStep(stepNumber) {
+      currentStep = stepNumber;
+
+      // Hide all panels
+      document.getElementById('panelStep1').classList.remove('active');
+      document.getElementById('panelStep2').classList.remove('active');
+      document.getElementById('panelStep3').classList.remove('active');
+
+      // Update progress bar
+      const fill = document.getElementById('wizardFill');
+      const b1 = document.getElementById('stepBubble1');
+      const b2 = document.getElementById('stepBubble2');
+      const b3 = document.getElementById('stepBubble3');
+
+      [b1, b2, b3].forEach(b => {
+        b.classList.remove('active');
+        b.classList.remove('completed');
+      });
+
+      if (stepNumber === 1) {
+        document.getElementById('panelStep1').classList.add('active');
+        fill.style.width = '0%';
+        b1.classList.add('active');
+      } else if (stepNumber === 2) {
+        document.getElementById('panelStep2').classList.add('active');
+        fill.style.width = '50%';
+        b1.classList.add('completed');
+        b2.classList.add('active');
+      } else if (stepNumber === 3) {
+        document.getElementById('panelStep3').classList.add('active');
+        fill.style.width = '100%';
+        b1.classList.add('completed');
+        b2.classList.add('completed');
+        b3.classList.add('active');
+      }
+    }
+
+    // Handle Form Submission & WhatsApp API Link
+    function handleFormSubmission(event) {
+      event.preventDefault();
+
+      const candidateName = document.getElementById('candidateName').value.trim();
+      const candidatePhone = document.getElementById('candidatePhone').value.trim();
+      const candidateExp = document.getElementById('candidateExp').value;
+      const candidateCity = document.getElementById('candidateCity').value.trim() || 'Not Specified';
+
+      if (!candidateName || !candidatePhone) {
+        alert('Please fill in your Full Name and WhatsApp Phone Number.');
+        return;
+      }
+
+      // Trigger Celebration Confetti
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#D4AF37', '#F59E0B', '#38BDF8', '#10B981']
+        });
+      }
+
+      // Show Realistic Simulated Routing Overlay
+      const modal = document.getElementById('simulationModal');
+      modal.classList.add('active');
+
+      // Build structured WhatsApp pre-filled message according to new business logic
+      const message = `*APPLICATION FOR OVERSEAS RECRUITMENT (NG GLOBAL)*\n` +
+        `----------------------------------------\n` +
+        `👤 *Candidate Name:* ${candidateName}\n` +
+        `📞 *WhatsApp:* ${candidatePhone}\n` +
+        `🛠️ *Primary Trade:* ${selectedTradeValue}\n` +
+        `🌍 *Desired Destination:* ${selectedDestValue}\n` +
+        `⏱️ *Work Experience:* ${candidateExp}\n` +
+        `📍 *Current Location:* ${candidateCity}\n` +
+        `----------------------------------------\n` +
+        `*Candidate Note:* I have submitted my trade profile on your website with zero upfront agency fees. Please connect with me to assess my profile, discuss suitable employer openings, and guide me on direct embassy visa processing steps.`;
+
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/919876543210?text=${encodedMessage}`;
+
+      // Simulate realistic verification delay, then redirect
+      setTimeout(() => {
+        window.open(whatsappUrl, '_blank');
+        modal.classList.remove('active');
+      }, 1600);
+    }
+
+    // BBS-Inspired Instant WhatsApp Quick-Apply for Featured Job Openings
+    function applyForJob(jobId, jobTitle, country, salary) {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 80,
+          spread: 60,
+          origin: { y: 0.7 },
+          colors: ['#D4AF37', '#38BDF8', '#10B981']
+        });
+      }
+
+      const message = `*APPLICATION FOR JOB OPENING [${jobId}]*\n` +
+        `----------------------------------------\n` +
+        `🛠️ *Position:* ${jobTitle}\n` +
+        `🌍 *Country/Location:* ${country}\n` +
+        `💵 *Offered Package:* ${salary}\n` +
+        `----------------------------------------\n` +
+        `*Candidate Note:* Hello NG Global, I want to apply for this opening. I understand there are zero upfront agency fees and I will pay official visa/GAMCA fees directly to embassies. Please share requirements and process my trade application.`;
+
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/919876543210?text=${encodedMessage}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
+    // Timeline Track Switcher
+    function switchTimelineTrack(track) {
+      const btnGulf = document.querySelectorAll('.timeline-tab-btn')[0];
+      const btnWestern = document.querySelectorAll('.timeline-tab-btn')[1];
+      const trackGulf = document.getElementById('track-gulf');
+      const trackWestern = document.getElementById('track-western');
+
+      if (track === 'gulf') {
+        btnGulf.classList.add('active');
+        btnWestern.classList.remove('active');
+        trackGulf.classList.add('active');
+        trackWestern.classList.remove('active');
+      } else {
+        btnWestern.classList.add('active');
+        btnGulf.classList.remove('active');
+        trackWestern.classList.add('active');
+        trackGulf.classList.remove('active');
+      }
+    }
+
+    // FAQ Accordion Toggle
+    function toggleFaq(element) {
+      const parent = element.parentElement;
+      const isOpen = parent.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(item => item.classList.remove('active'));
+      if (!isOpen) {
+        parent.classList.add('active');
+      }
+    }
+
+    // ==========================================================================
+    // THREE.JS HIGH-PERFORMANCE 3D INTERACTIVE GLOBE WITH GLOWING FLIGHT ARCS
+    // ==========================================================================
+    function init3DGlobe() {
+      const container = document.getElementById('globeCanvasContainer');
+      if (!container) return;
+
+      let width = container.clientWidth || 480;
+      let height = container.clientHeight || 480;
+
+      // 1. Scene, Camera, Renderer
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.z = 2.8;
+
+      const renderer = new THREE.WebGLRenderer({ 
+        alpha: true, 
+        antialias: true, 
+        powerPreference: 'high-performance',
+        preserveDrawingBuffer: true 
+      });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      container.appendChild(renderer.domElement);
+
+      const globeGroup = new THREE.Group();
+      scene.add(globeGroup);
+
+      // 2. Base Sphere with Dark Sapphire Material
+      const sphereGeo = new THREE.SphereGeometry(1, 48, 48);
+      const sphereMat = new THREE.MeshPhongMaterial({
+        color: 0x071536,
+        emissive: 0x020716,
+        specular: 0x2563eb,
+        shininess: 30,
+        transparent: true,
+        opacity: 0.95
+      });
+      const globeMesh = new THREE.Mesh(sphereGeo, sphereMat);
+      globeGroup.add(globeMesh);
+
+      // 3. Glowing Atmosphere Outer Halo
+      const atmosphereGeo = new THREE.SphereGeometry(1.08, 48, 48);
+      const atmosphereMat = new THREE.ShaderMaterial({
+        vertexShader: `
+          varying vec3 vNormal;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vNormal;
+          void main() {
+            float intensity = pow(0.65 - dot(vNormal, vec3(0, 0, 1.0)), 2.2);
+            gl_FragColor = vec4(0.14, 0.45, 0.95, 1.0) * intensity * 0.9;
+          }
+        `,
+        blending: THREE.AdditiveBlending,
+        side: THREE.BackSide,
+        transparent: true
+      });
+      const atmosphereMesh = new THREE.Mesh(atmosphereGeo, atmosphereMat);
+      scene.add(atmosphereMesh);
+
+      // 4. Dot Grid / Point Cloud representing Continental Surface
+      const particleCount = 1800;
+      const particlePositions = new Float32Array(particleCount * 3);
+      const particleColors = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount; i++) {
+        // Distribute points on sphere surface
+        const phi = Math.acos(-1 + (2 * i) / particleCount);
+        const theta = Math.sqrt(particleCount * Math.PI) * phi;
+        const radius = 1.012;
+
+        const x = radius * Math.cos(theta) * Math.sin(phi);
+        const y = radius * Math.sin(theta) * Math.sin(phi);
+        const z = radius * Math.cos(phi);
+
+        particlePositions[i * 3] = x;
+        particlePositions[i * 3 + 1] = y;
+        particlePositions[i * 3 + 2] = z;
+
+        // Gold & Sapphire shimmering particles
+        if (i % 5 === 0) {
+          // Gold accent node
+          particleColors[i * 3] = 0.95;
+          particleColors[i * 3 + 1] = 0.78;
+          particleColors[i * 3 + 2] = 0.25;
+        } else {
+          // Cyan/Blue node
+          particleColors[i * 3] = 0.2;
+          particleColors[i * 3 + 1] = 0.55;
+          particleColors[i * 3 + 2] = 0.95;
+        }
+      }
+
+      const particleGeo = new THREE.BufferGeometry();
+      particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+      particleGeo.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+      const particleMat = new THREE.PointsMaterial({
+        size: 0.024,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.85
+      });
+      const particleSystem = new THREE.Points(particleGeo, particleMat);
+      globeGroup.add(particleSystem);
+
+      // 5. Connecting 3D Flight Arcs between Major Hubs
+      function latLongToVector3(lat, lon, radius) {
+        const phi = (90 - lat) * (Math.PI / 180);
+        const theta = (lon + 180) * (Math.PI / 180);
+        return new THREE.Vector3(
+          -radius * Math.sin(phi) * Math.cos(theta),
+          radius * Math.cos(phi),
+          radius * Math.sin(phi) * Math.sin(theta)
+        );
+      }
+
+      // Key Hubs: India (Source), Dubai, Riyadh, Frankfurt, Dallas, Auckland
+      const hubOrigin = { lat: 19.0760, lon: 72.8777 }; // Mumbai / India
+      const hubDestinations = [
+        { lat: 25.2048, lon: 55.2708, name: 'Dubai UAE' },
+        { lat: 24.7136, lon: 46.6753, name: 'Riyadh KSA' },
+        { lat: 50.1109, lon: 8.6821, name: 'Frankfurt DE' },
+        { lat: 52.2297, lon: 21.0122, name: 'Warsaw PL' },
+        { lat: 32.7767, lon: -96.7970, name: 'USA' },
+        { lat: -36.8485, lon: 174.7633, name: 'Auckland NZ' }
+      ];
+
+      const arcCurves = [];
+      const arcMeshes = [];
+
+      hubDestinations.forEach(dest => {
+        const vStart = latLongToVector3(hubOrigin.lat, hubOrigin.lon, 1.01);
+        const vEnd = latLongToVector3(dest.lat, dest.lon, 1.01);
+
+        const midPoint = new THREE.Vector3().addVectors(vStart, vEnd).multiplyScalar(0.5);
+        const distance = vStart.distanceTo(vEnd);
+        midPoint.normalize().multiplyScalar(1.0 + distance * 0.38);
+
+        const curve = new THREE.QuadraticBezierCurve3(vStart, midPoint, vEnd);
+        arcCurves.push(curve);
+
+        const points = curve.getPoints(50);
+        const curveGeo = new THREE.BufferGeometry().setFromPoints(points);
+
+        const curveMat = new THREE.LineBasicMaterial({
+          color: 0xF59E0B,
+          transparent: true,
+          opacity: 0.65
+        });
+        const arcLine = new THREE.Line(curveGeo, curveMat);
+        globeGroup.add(arcLine);
+        arcMeshes.push(arcLine);
+
+        // Glowing Hub Beacons
+        const beaconGeo = new THREE.SphereGeometry(0.024, 16, 16);
+        const beaconMat = new THREE.MeshBasicMaterial({ color: 0xFDE047 });
+        const beaconMesh = new THREE.Mesh(beaconGeo, beaconMat);
+        beaconMesh.position.copy(vEnd);
+        globeGroup.add(beaconMesh);
+      });
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xd4af37, 1.2);
+      directionalLight.position.set(5, 3, 5);
+      scene.add(directionalLight);
+
+      const blueLight = new THREE.DirectionalLight(0x2563eb, 1.8);
+      blueLight.position.set(-5, -2, -3);
+      scene.add(blueLight);
+
+      // 6. Interactive Drag & Touch Controls
+      let isDragging = false;
+      let previousMousePosition = { x: 0, y: 0 };
+
+      container.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      container.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - previousMousePosition.x;
+        const deltaY = e.clientY - previousMousePosition.y;
+
+        globeGroup.rotation.y += deltaX * 0.005;
+        globeGroup.rotation.x += deltaY * 0.005;
+
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      // Touch controls for mobile
+      container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => {
+        isDragging = false;
+      });
+
+      container.addEventListener('touchmove', (e) => {
+        if (!isDragging || e.touches.length !== 1) return;
+        const deltaX = e.touches[0].clientX - previousMousePosition.x;
+        const deltaY = e.touches[0].clientY - previousMousePosition.y;
+
+        globeGroup.rotation.y += deltaX * 0.006;
+        globeGroup.rotation.x += deltaY * 0.006;
+
+        previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }, { passive: true });
+
+      // 7. Enhanced 3D Animation Loop with Smart Off-Screen Optimization
+      let autoRotationAngle = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        const scrollY = window.scrollY || window.pageYOffset;
+        // Pause WebGL rendering when scrolled beyond the hero section to keep scrolling lightweight and 60fps
+        if (scrollY > 950) return;
+
+        if (!isDragging) {
+          autoRotationAngle += 0.0022;
+          // React to vertical page scroll with 3D rotational tilt & yaw
+          globeGroup.rotation.y = autoRotationAngle + (scrollY * 0.0016);
+          globeGroup.rotation.x = Math.sin(scrollY * 0.0008) * 0.22;
+          camera.position.z = 2.8 + Math.min(scrollY * 0.0003, 0.4);
+        }
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Responsive Resize
+      window.addEventListener('resize', () => {
+        const newWidth = container.clientWidth || 340;
+        const newHeight = container.clientHeight || 340;
+        camera.aspect = newWidth / newHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(newWidth, newHeight);
+      });
+    }
+
+    // ==========================================================================
+    // 3D SCROLL PROGRESS ENGINE (ULTRA-LIGHTWEIGHT 60FPS)
+    // ==========================================================================
+    function handle3DScroll() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? (scrollY / maxScroll) * 100 : 0;
+
+      // Update 3D glowing golden-cyan progress bar
+      const progressBar = document.getElementById('scrollProgress3D');
+      if (progressBar) {
+        progressBar.style.width = progress + '%';
+      }
+    }
+
+    // ==========================================================================
+    // 3D SCROLL REVEAL (INTERSECTION OBSERVER)
+    // ==========================================================================
+    function init3DScrollReveal() {
+      const revealElements = document.querySelectorAll('.scroll-3d-reveal');
+      if (!('IntersectionObserver' in window)) {
+        revealElements.forEach(el => el.classList.add('is-revealed'));
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '0px 0px -50px 0px',
+        threshold: 0.08
+      });
+
+      revealElements.forEach(el => observer.observe(el));
+    }
+
+    // ==========================================================================
+    // INTERACTIVE 3D CARD TILT ON MOUSE MOVE
+    // ==========================================================================
+    function init3DCardTilt() {
+      const cards = document.querySelectorAll('.card-3d-interactive');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -6;
+          const rotateY = ((x - centerX) / centerX) * 6;
+
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale3d(1.015, 1.015, 1.015)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale3d(1, 1, 1)';
+        });
+      });
+    }
+
+    // Initialize all 3D effects on DOM ready
+    window.addEventListener('DOMContentLoaded', () => {
+      init3DGlobe();
+      init3DScrollReveal();
+      init3DCardTilt();
+      handle3DScroll();
+    });
+
+    // Throttled scroll listener
+    let isScrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!isScrollTicking) {
+        window.requestAnimationFrame(() => {
+          handle3DScroll();
+          isScrollTicking = false;
+        });
+        isScrollTicking = true;
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>

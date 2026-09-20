@@ -1,0 +1,186 @@
+<%- include('../partials/admin-header') %>
+
+<main class="admin-container">
+  
+  <!-- Page Header -->
+  <div class="admin-page-header">
+    <div class="admin-page-title">
+      <h1>Recruitment Command Center</h1>
+      <p>Real-time candidate eligibility assessments, application pipelines, and overseas quotas.</p>
+    </div>
+    <div style="display: flex; gap: 12px;">
+      <a href="/admin/leads/export" class="btn-admin btn-admin-secondary">
+        <i class="fa-solid fa-file-csv"></i>
+        <span>Export All Leads (CSV)</span>
+      </a>
+      <a href="/admin/jobs/new" class="btn-admin btn-admin-primary">
+        <i class="fa-solid fa-plus"></i>
+        <span>Add Job Quota</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- KPI Cards Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-title">Total Applications</span>
+        <div class="kpi-icon icon-blue"><i class="fa-solid fa-users"></i></div>
+      </div>
+      <div class="kpi-value"><%= metrics.total %></div>
+      <p style="margin: 8px 0 0 0; font-size: 0.8rem; color: var(--admin-text-muted);">Registered Candidate Leads</p>
+    </div>
+
+    <div class="kpi-card" style="border-color: rgba(56, 189, 248, 0.4);">
+      <div class="kpi-header">
+        <span class="kpi-title">New Unprocessed</span>
+        <div class="kpi-icon icon-blue"><i class="fa-solid fa-sparkles"></i></div>
+      </div>
+      <div class="kpi-value" style="color: var(--admin-cyan);"><%= metrics.new %></div>
+      <p style="margin: 8px 0 0 0; font-size: 0.8rem; color: var(--admin-text-muted);">Pending WhatsApp Follow-up</p>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-title">Contacted</span>
+        <div class="kpi-icon icon-gold"><i class="fa-solid fa-phone"></i></div>
+      </div>
+      <div class="kpi-value" style="color: var(--admin-gold);"><%= metrics.contacted %></div>
+      <p style="margin: 8px 0 0 0; font-size: 0.8rem; color: var(--admin-text-muted);">Initial Verification Done</p>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-title">Trade In-Progress</span>
+        <div class="kpi-icon icon-gold"><i class="fa-solid fa-hourglass-half"></i></div>
+      </div>
+      <div class="kpi-value" style="color: #C084FC;"><%= metrics.inProgress %></div>
+      <p style="margin: 8px 0 0 0; font-size: 0.8rem; color: var(--admin-text-muted);">GAMCA / Embassy Phase</p>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-title">Deployed / Placed</span>
+        <div class="kpi-icon icon-emerald"><i class="fa-solid fa-plane-departure"></i></div>
+      </div>
+      <div class="kpi-value" style="color: var(--admin-emerald);"><%= metrics.placed %></div>
+      <p style="margin: 8px 0 0 0; font-size: 0.8rem; color: var(--admin-text-muted);">Visa Approved & Deployed</p>
+    </div>
+  </div>
+
+  <!-- Quick Overview Row -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <h2 style="font-size: 1.3rem; margin: 0; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;">
+      Recent Candidate Applications
+    </h2>
+    <a href="/admin/leads" style="color: var(--admin-gold); text-decoration: none; font-size: 0.9rem; font-weight: 600;">
+      View All Candidates &rarr;
+    </a>
+  </div>
+
+  <!-- Recent Leads Table -->
+  <div class="table-card">
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Ref #</th>
+            <th>Candidate</th>
+            <th>Phone / WhatsApp</th>
+            <th>Primary Trade</th>
+            <th>Desired Region</th>
+            <th>Experience</th>
+            <th>Status</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (recentLeads && recentLeads.length > 0) { %>
+            <% recentLeads.forEach(lead => { %>
+              <tr>
+                <td>
+                  <strong style="font-family: 'Space Grotesk', monospace; color: var(--admin-gold);">#NG-<%= lead.id %></strong>
+                </td>
+                <td>
+                  <div style="font-weight: 600; color: #fff;"><%= lead.full_name %></div>
+                  <small style="color: var(--admin-text-muted);"><%= lead.city %></small>
+                </td>
+                <td>
+                  <a href="https://wa.me/<%= lead.phone.replace(/[^0-9]/g, '') %>" target="_blank" style="color: #34D399; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span><%= lead.phone %></span>
+                  </a>
+                </td>
+                <td><%= lead.trade %></td>
+                <td><%= lead.destination %></td>
+                <td><%= lead.experience %></td>
+                <td>
+                  <% 
+                    let statusClass = 'new';
+                    if (lead.status === 'Contacted') statusClass = 'contacted';
+                    if (lead.status === 'In-Progress') statusClass = 'in-progress';
+                    if (lead.status === 'Placed') statusClass = 'placed';
+                  %>
+                  <span class="status-badge <%= statusClass %>"><%= lead.status %></span>
+                </td>
+                <td style="text-align: right;">
+                  <a href="/admin/leads/<%= lead.id %>" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.82rem;">
+                    <i class="fa-solid fa-eye"></i>
+                    <span>Review</span>
+                  </a>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="8" style="text-align: center; padding: 40px; color: var(--admin-text-muted);">
+                No candidate leads found. New applications from the website wizard will appear here automatically.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quick Navigation Highlights -->
+  <div style="margin-top: 36px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+    
+    <div class="card-panel">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
+        <div class="kpi-icon icon-gold"><i class="fa-solid fa-briefcase"></i></div>
+        <div>
+          <h3 style="margin: 0; color: #fff; font-size: 1.1rem;">Active Overseas Quotas</h3>
+          <p style="margin: 0; color: var(--admin-text-muted); font-size: 0.85rem;"><%= activeJobsCount %> verified job openings live</p>
+        </div>
+      </div>
+      <p style="color: var(--admin-text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px;">
+        Manage employer openings for Saudi Arabia, UAE, Qatar, Germany, USA, and New Zealand.
+      </p>
+      <a href="/admin/jobs" class="btn-admin btn-admin-secondary" style="width: 100%; justify-content: center;">
+        <span>Manage Job Quotas</span>
+      </a>
+    </div>
+
+    <div class="card-panel">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
+        <div class="kpi-icon icon-emerald"><i class="fa-solid fa-sliders"></i></div>
+        <div>
+          <h3 style="margin: 0; color: #fff; font-size: 1.1rem;">Routing & Helpline</h3>
+          <p style="margin: 0; color: var(--admin-text-muted); font-size: 0.85rem;">WhatsApp & Anti-Fraud config</p>
+        </div>
+      </div>
+      <p style="color: var(--admin-text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px;">
+        Configure candidate helpline phone numbers, WhatsApp routing desks, and advisory notices.
+      </p>
+      <a href="/admin/settings" class="btn-admin btn-admin-secondary" style="width: 100%; justify-content: center;">
+        <span>Platform Settings</span>
+      </a>
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>

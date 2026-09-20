@@ -1,0 +1,105 @@
+  <!-- Top Live Trending Latest Jobs Ticker -->
+  <div class="trending-ticker-wrapper">
+    <div class="trending-ticker-inner">
+      <span class="ticker-lead-badge"><i class="fa-solid fa-fire"></i> Trending Openings</span>
+      <a href="/jobs?country=Saudi" class="ticker-job-item">
+        <span>🇸🇦 Heavy Trailer & Tanker Driver (NEOM Project)</span>
+        <span class="ticker-job-tag">₹85,000 – ₹1.25L / mo</span>
+      </a>
+      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
+      <a href="/jobs?country=Germany" class="ticker-job-item">
+        <span>🇩🇪 6G TIG & ARC Pipe Welder (EU Germany & Poland)</span>
+        <span class="ticker-job-tag">€1,600 – €2,500</span>
+      </a>
+      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
+      <a href="/jobs?country=Qatar" class="ticker-job-item">
+        <span>🇶🇦 Construction Helpers & Riggers (Qatar)</span>
+        <span class="ticker-sponsored-pill"><i class="fa-solid fa-gift"></i> 100% Company Sponsored (Zero Fees)</span>
+      </a>
+      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
+      <a href="/jobs?country=UAE" class="ticker-job-item">
+        <span>🇦🇪 Commercial MEP Electrician & Plumber (Dubai)</span>
+        <span class="ticker-job-tag">AED 3,100 – 4,800</span>
+      </a>
+      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
+      <a href="/jobs?country=United+States" class="ticker-job-item">
+        <span>🇺🇸 Hospitality & Resort Services Crew (USA H-2B)</span>
+        <span class="ticker-job-tag">$2,200 – $3,200</span>
+      </a>
+      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
+      <a href="/jobs?country=New+Zealand" class="ticker-job-item">
+        <span>🇳🇿 Heavy Crane Mechanic (New Zealand)</span>
+        <span class="ticker-job-tag">NZ$ 3,400 – $5,000</span>
+      </a>
+      
+      <!-- Duplicate items for seamless continuous ticker loop -->
+      <span class="ticker-lead-badge"><i class="fa-solid fa-bolt"></i> Fast-Track Quotas</span>
+      <a href="/jobs?country=Saudi" class="ticker-job-item">
+        <span>🇸🇦 Heavy Trailer & Tanker Driver (NEOM Project)</span>
+        <span class="ticker-job-tag">₹85,000 – ₹1.25L / mo</span>
+      </a>
+      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
+      <a href="/jobs?country=Germany" class="ticker-job-item">
+        <span>🇩🇪 6G TIG & ARC Pipe Welder (EU Germany)</span>
+        <span class="ticker-job-tag">€1,600 – €2,500</span>
+      </a>
+      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
+      <a href="/jobs?country=Qatar" class="ticker-job-item">
+        <span>🇶🇦 Construction Helpers & Riggers</span>
+        <span class="ticker-sponsored-pill">100% Company Sponsored</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Top Announcement Bar -->
+  <header class="top-bar">
+    <div class="container top-bar-content">
+      <div class="top-badge-pulse">
+        <span class="pulse-dot"></span>
+        <span>Transparent & Regulated Service Charges • 100% Company-Sponsored Quotas Available • Official Embassy Processing</span>
+      </div>
+      <div class="top-bar-links">
+        <span><i class="fa-solid fa-phone"></i> Helpline: <%= typeof settings !== 'undefined' && settings.helplinePhone ? settings.helplinePhone : '+91 80800 25670' %></span>
+        <a href="/#fraud-advisory"><i class="fa-solid fa-shield-halved"></i> Anti-Fraud Advisory</a>
+        <% if (typeof user !== 'undefined' && user) { %>
+          <a href="/admin/dashboard" style="color: var(--gold-primary); font-weight: 600;"><i class="fa-solid fa-user-shield"></i> Recruiter Portal</a>
+        <% } %>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky Luxury Navbar with Mobile Menu Support -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo">
+        <div class="logo-icon" style="background: rgba(255, 255, 255, 0.08); border: 1.5px solid var(--border-gold); padding: 3px; box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);">
+          <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+        </div>
+        <div class="brand-text">
+          <h2>NG GLOBAL <span>MANPOWER SERVICES</span></h2>
+        </div>
+      </a>
+
+      <!-- Desktop Links -->
+      <ul class="nav-links">
+        <li><a href="/#why-us">Trust Model</a></li>
+        <li><a href="/jobs">Job Openings</a></li>
+        <li><a href="/#timelines">Processing Tracks</a></li>
+        <li><a href="/#testimonials">Worker Stories</a></li>
+        <li><a href="/#faq">FAQ</a></li>
+      </ul>
+
+      <!-- Desktop CTA -->
+      <div class="nav-cta-group">
+        <a href="/#lead-funnel" class="btn btn-gold">
+          <span>Check Eligibility Free</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button type="button" class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Open Navigation Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </nav>

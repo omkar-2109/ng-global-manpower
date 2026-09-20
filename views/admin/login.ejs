@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title : 'Staff Sign In | NG Global Manpower' %></title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Admin Stylesheet -->
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-body" style="justify-content: center; align-items: center; background: radial-gradient(circle at 50% 20%, #081636 0%, #030A1A 50%, #020612 100%);">
+
+  <div style="max-width: 440px; width: 100%; padding: 24px;">
+    
+    <!-- Brand Emblem -->
+    <div style="text-align: center; margin-bottom: 28px;">
+      <a href="/" style="display: inline-block; text-decoration: none;">
+        <div style="width: 56px; height: 56px; margin: 0 auto 14px auto; background: rgba(255, 255, 255, 0.08); border: 1.5px solid var(--admin-border-gold); padding: 4px; border-radius: 16px; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);">
+          <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+        </div>
+        <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; color: #fff; margin: 0; font-weight: 800; letter-spacing: -0.01em;">
+          NG GLOBAL <span style="color: var(--admin-gold); font-weight: 600;">CRM</span>
+        </h1>
+      </a>
+      <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-top: 6px;">
+        Recruiter & Staff Command Center Access
+      </p>
+    </div>
+
+    <!-- Login Box -->
+    <div class="card-panel" style="border: 1.5px solid var(--admin-border-gold); box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);">
+      
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="admin-alert admin-alert-error">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span><%= error %></span>
+        </div>
+      <% } %>
+
+      <form action="/auth/login" method="POST">
+        <input type="hidden" name="redirect" value="<%= typeof redirect !== 'undefined' ? redirect : '/admin/dashboard' %>" />
+
+        <div class="form-group">
+          <label class="form-label" for="email">Staff Email Address</label>
+          <div style="position: relative;">
+            <input type="email" id="email" name="email" class="form-control" placeholder="admin@ngglobal.com" required autofocus value="admin@ngglobal.com" />
+            <i class="fa-solid fa-envelope" style="position: absolute; right: 14px; top: 13px; color: var(--admin-text-muted);"></i>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div style="position: relative;">
+            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••••••" required value="Admin@12345" />
+            <i class="fa-solid fa-lock" style="position: absolute; right: 14px; top: 13px; color: var(--admin-text-muted);"></i>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem; margin-top: 10px;">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Sign In Securely</span>
+        </button>
+      </form>
+
+      <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--admin-border); text-align: center;">
+        <p style="font-size: 0.8rem; color: var(--admin-text-muted); margin: 0;">
+          <i class="fa-solid fa-lock" style="margin-right: 4px;"></i> Enterprise 256-bit Encrypted Session
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Quick Return Link -->
+    <div style="text-align: center; margin-top: 16px;">
+      <a href="/" style="color: var(--admin-text-muted); text-decoration: none; font-size: 0.88rem; transition: color 0.2s;">
+        &larr; Back to Public Portal
+      </a>
+    </div>
+
+  </div>
+
+</body>
+</html>

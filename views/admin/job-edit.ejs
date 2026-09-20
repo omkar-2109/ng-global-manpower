@@ -1,0 +1,116 @@
+<%- include('../partials/admin-header') %>
+
+<main class="admin-container">
+
+  <div class="admin-page-header">
+    <div class="admin-page-title">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+        <a href="/admin/jobs" style="color: var(--admin-text-muted); text-decoration: none; font-size: 0.9rem;">
+          &larr; Back to Job Quotas
+        </a>
+      </div>
+      <h1><%= isEdit ? 'Edit Job Quota: ' + job.title : 'Create New Overseas Job Quota' %></h1>
+      <p>Configure employer demands, salary packages, and perks for the candidate portal.</p>
+    </div>
+  </div>
+
+  <div style="max-width: 800px;">
+    <div class="card-panel">
+      
+      <form action="<%= isEdit ? '/admin/jobs/' + job.id + '/edit' : '/admin/jobs' %>" method="POST">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label" for="title">Job Designation / Title *</label>
+            <input type="text" id="title" name="title" class="form-control" placeholder="e.g. Heavy Trailer Driver" value="<%= job.title || '' %>" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="job_code">Quota / Job Code</label>
+            <input type="text" id="job_code" name="job_code" class="form-control" placeholder="e.g. NG-KSA-9041 (Auto-generated if empty)" value="<%= job.job_code || '' %>" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label" for="category">Trade Category *</label>
+            <select id="category" name="category" class="form-control" style="background: #081636;" required>
+              <option value="Logistics & Heavy Driving" <%= job.category === 'Logistics & Heavy Driving' ? 'selected' : '' %>>Logistics & Heavy Driving</option>
+              <option value="Manufacturing & Industrial" <%= job.category === 'Manufacturing & Industrial' ? 'selected' : '' %>>Manufacturing & Industrial</option>
+              <option value="Electrical, Plumbing & MEP" <%= job.category === 'Electrical, Plumbing & MEP' ? 'selected' : '' %>>Electrical, Plumbing & MEP</option>
+              <option value="Construction & Infrastructure" <%= job.category === 'Construction & Infrastructure' ? 'selected' : '' %>>Construction & Infrastructure</option>
+              <option value="Hospitality & Catering" <%= job.category === 'Hospitality & Catering' ? 'selected' : '' %>>Hospitality & Catering</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="country">Destination Country / Region *</label>
+            <input type="text" id="country" name="country" class="form-control" placeholder="e.g. Saudi Arabia (NEOM Mega Project)" value="<%= job.country || '' %>" required />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label" for="flag">Flag Emoji</label>
+            <input type="text" id="flag" name="flag" class="form-control" placeholder="e.g. 🇸🇦" value="<%= job.flag || '🌐' %>" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="salary_inr">Estimated INR Salary *</label>
+            <input type="text" id="salary_inr" name="salary_inr" class="form-control" placeholder="e.g. ₹85,000 – ₹1,25,000 / mo" value="<%= job.salary_inr || '' %>" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="salary_foreign">Foreign Currency Package</label>
+            <input type="text" id="salary_foreign" name="salary_foreign" class="form-control" placeholder="e.g. SAR 3,800 – 5,500" value="<%= job.salary_foreign || '' %>" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="perks">Perks & Benefits (Comma separated)</label>
+          <input type="text" id="perks" name="perks" class="form-control" placeholder="Free Food, Camp Accommodation, 2-Year Contract, Overtime Extra" value="<%= Array.isArray(job.perks) ? job.perks.join(', ') : (job.perks || '') %>" />
+          <small style="color: var(--admin-text-muted); font-size: 0.8rem;">Enter features separated by commas.</small>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label" for="badge_text">Display Badge Tag</label>
+            <input type="text" id="badge_text" name="badge_text" class="form-control" placeholder="e.g. Fast-Track Gulf or High Earning" value="<%= job.badge_text || '' %>" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Funding Model</label>
+            <label style="display: flex; align-items: center; gap: 10px; margin-top: 10px; cursor: pointer; color: #fff;">
+              <input type="checkbox" name="employer_funded" value="1" <%= job.employer_funded ? 'checked' : '' %> style="width: 18px; height: 18px; accent-color: var(--admin-gold);" />
+              <span>100% Employer Funded (Zero Candidate Charge)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 10px;">
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #fff;">
+            <input type="checkbox" name="active" value="1" <%= job.active !== 0 ? 'checked' : '' %> style="width: 18px; height: 18px; accent-color: var(--admin-gold);" />
+            <span>Publish immediately (Make live on website)</span>
+          </label>
+        </div>
+
+        <div style="display: flex; gap: 14px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--admin-border);">
+          <button type="submit" class="btn-admin btn-admin-primary" style="padding: 12px 28px;">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span><%= isEdit ? 'Save Changes' : 'Publish Job Opening' %></span>
+          </button>
+
+          <a href="/admin/jobs" class="btn-admin btn-admin-secondary" style="padding: 12px 20px;">
+            Cancel
+          </a>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>

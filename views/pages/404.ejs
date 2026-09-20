@@ -1,0 +1,26 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/mobile-drawer') %>
+
+<main style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 60px 24px;">
+  <div class="glass-card" style="max-width: 600px; width: 100%; text-align: center; padding: 50px 30px; border: 1.5px solid var(--border-gold);">
+    <div style="font-family: 'Space Grotesk', monospace; font-size: 5rem; font-weight: 700; color: var(--gold-primary); line-height: 1; margin-bottom: 12px;">404</div>
+    <h1 style="font-size: 1.8rem; color: #fff; margin-bottom: 14px;">Page Not Found</h1>
+    <p style="color: var(--text-body); line-height: 1.7; margin-bottom: 30px;">
+      The requested international recruitment resource or job quota link does not exist or has been relocated. Return to the portal homepage or browse active overseas opportunities.
+    </p>
+    <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+      <a href="/" class="btn btn-gold" style="padding: 12px 24px;">
+        <i class="fa-solid fa-house"></i>
+        <span>Return to Homepage</span>
+      </a>
+      <a href="/jobs" class="btn btn-secondary" style="padding: 12px 24px; background: rgba(255, 255, 255, 0.08); color: #fff;">
+        <i class="fa-solid fa-briefcase"></i>
+        <span>Browse Job Openings</span>
+      </a>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>

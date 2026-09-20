@@ -1,0 +1,33 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/mobile-drawer') %>
+
+<main style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 60px 24px;">
+  <div class="glass-card" style="max-width: 640px; width: 100%; text-align: center; padding: 50px 30px; border: 1.5px solid rgba(244, 63, 94, 0.4);">
+    <div style="font-family: 'Space Grotesk', monospace; font-size: 5rem; font-weight: 700; color: #FB7185; line-height: 1; margin-bottom: 12px;">500</div>
+    <h1 style="font-size: 1.8rem; color: #fff; margin-bottom: 14px;">Server Exception Encountered</h1>
+    <p style="color: var(--text-body); line-height: 1.7; margin-bottom: 24px;">
+      Our recruitment services platform encountered an unexpected error processing your request. Our technical staff has been alerted.
+    </p>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+      <div style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; color: #FECDD3; margin-bottom: 24px; text-align: left; overflow-x: auto;">
+        <%= message %>
+      </div>
+    <% } %>
+
+    <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+      <a href="/" class="btn btn-gold" style="padding: 12px 24px;">
+        <i class="fa-solid fa-house"></i>
+        <span>Return to Homepage</span>
+      </a>
+      <a href="https://wa.me/919876543210" target="_blank" class="btn btn-whatsapp" style="padding: 12px 24px;">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span>Contact Technical Helpline</span>
+      </a>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>

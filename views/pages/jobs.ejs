@@ -1,0 +1,176 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/mobile-drawer') %>
+
+<main style="padding-top: 40px; padding-bottom: 80px;">
+  <div class="container">
+    
+    <!-- Page Header Banner -->
+    <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+      <div class="section-badge" style="background: rgba(30, 64, 175, 0.15); border-color: rgba(56, 189, 248, 0.35); color: var(--sapphire-glow);">
+        <i class="fa-solid fa-briefcase"></i>
+        <span>Verified Employer Quotas</span>
+      </div>
+      <h1 class="section-title" style="font-size: 2.6rem;">International <span class="gold-gradient-text">Job Vacancies</span></h1>
+      <p class="section-subtitle" style="max-width: 760px; margin: 0 auto;">
+        Explore current employer-sponsored and verified agency openings across the Gulf, Europe, USA, and New Zealand. Transparent regulated service fees with select 100% employer-funded quotas. Official visa and medical processing fees are paid directly to authorized government embassies.
+      </p>
+    </div>
+
+    <!-- Filter & Search Toolbar -->
+    <div class="glass-card" style="padding: 24px; margin-bottom: 40px; border-radius: 16px;">
+      <form action="/jobs" method="GET" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between;">
+        
+        <div style="display: flex; flex-wrap: wrap; gap: 14px; flex: 1;">
+          <!-- Category Filter -->
+          <div style="min-width: 200px; flex: 1;">
+            <label style="display: block; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Trade Category</label>
+            <select name="category" onchange="this.form.submit()" style="width: 100%; background: #07132C; border: 1px solid var(--border-light); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.95rem; outline: none;">
+              <option value="">All Trade Categories</option>
+              <option value="Logistics" <%= selectedCategory === 'Logistics' ? 'selected' : '' %>>Logistics & Heavy Driving</option>
+              <option value="Manufacturing" <%= selectedCategory === 'Manufacturing' ? 'selected' : '' %>>Manufacturing & Welding</option>
+              <option value="Electrical" <%= selectedCategory === 'Electrical' ? 'selected' : '' %>>Electrical & MEP</option>
+              <option value="Construction" <%= selectedCategory === 'Construction' ? 'selected' : '' %>>Construction & Infrastructure</option>
+              <option value="Hospitality" <%= selectedCategory === 'Hospitality' ? 'selected' : '' %>>Hospitality & Catering</option>
+            </select>
+          </div>
+
+          <!-- Country Filter -->
+          <div style="min-width: 200px; flex: 1;">
+            <label style="display: block; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Destination Region</label>
+            <select name="country" onchange="this.form.submit()" style="width: 100%; background: #07132C; border: 1px solid var(--border-light); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.95rem; outline: none;">
+              <option value="">All Destination Regions</option>
+              <option value="Saudi" <%= selectedCountry === 'Saudi' ? 'selected' : '' %>>Saudi Arabia (KSA)</option>
+              <option value="UAE" <%= selectedCountry === 'UAE' ? 'selected' : '' %>>United Arab Emirates (UAE)</option>
+              <option value="Qatar" <%= selectedCountry === 'Qatar' ? 'selected' : '' %>>Qatar</option>
+              <option value="Germany" <%= selectedCountry === 'Germany' ? 'selected' : '' %>>Germany & EU</option>
+              <option value="United States" <%= selectedCountry === 'United States' ? 'selected' : '' %>>United States (USA)</option>
+              <option value="New Zealand" <%= selectedCountry === 'New Zealand' ? 'selected' : '' %>>New Zealand & Australia</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 10px; align-items: flex-end;">
+          <button type="submit" class="btn btn-gold" style="padding: 10px 20px; font-size: 0.92rem;">
+            <i class="fa-solid fa-filter"></i>
+            <span>Filter</span>
+          </button>
+          <% if (selectedCategory || selectedCountry) { %>
+            <a href="/jobs" class="btn btn-secondary" style="padding: 10px 16px; font-size: 0.92rem; background: rgba(255, 255, 255, 0.08); color: #fff;">
+              <i class="fa-solid fa-rotate-left"></i>
+              <span>Clear</span>
+            </a>
+          <% } %>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Active Job Postings Counter -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
+        Showing <strong style="color: #fff;"><%= jobs.length %></strong> active international job openings
+      </p>
+      <a href="/#lead-funnel" class="top-badge-pulse" style="text-decoration: none; padding: 6px 14px; font-size: 0.85rem;">
+        <span class="pulse-dot"></span>
+        <span>Not sure which job fits? Take the 30s Free Assessment &rarr;</span>
+      </a>
+    </div>
+
+    <!-- Jobs Grid -->
+    <div class="jobs-grid">
+      <% if (jobs.length > 0) { %>
+        <% jobs.forEach(job => { %>
+          <div class="job-card card-3d-interactive" style="padding: 0; overflow: hidden; border-radius: 16px; display: flex; flex-direction: column;">
+            
+            <!-- Card Image Box -->
+            <div class="job-card-image-box">
+              <img src="<%= job.image || '/images/job_saudi_driver.jpg' %>" alt="<%= job.title %> in <%= job.country %>" loading="lazy">
+              <div class="job-card-image-overlay">
+                <div class="card-top-badges">
+                  <span class="card-country-flag-badge">
+                    <span><%= job.flag || '🌐' %></span>
+                    <span><%= job.country %></span>
+                  </span>
+                  <% if (job.employer_funded) { %>
+                    <span class="card-fee-pill sponsored"><i class="fa-solid fa-sparkles"></i> 100% Free Quota</span>
+                  <% } else { %>
+                    <span class="card-fee-pill standard"><i class="fa-solid fa-shield-halved"></i> Regulated Fee</span>
+                  <% } %>
+                </div>
+                <div>
+                  <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold-300); background: rgba(0,0,0,0.6); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(212,175,55,0.3);">
+                    <%= job.job_code %>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="job-card-body">
+              <div>
+                <h3 class="job-card-title"><%= job.title %></h3>
+                <div class="job-card-category">
+                  <i class="fa-solid fa-wrench" style="color: var(--gold-amber);"></i>
+                  <span><%= job.category %></span>
+                </div>
+
+                <div class="job-card-salary-box">
+                  <div>
+                    <span style="display: block; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Est. Monthly Earning</span>
+                    <span class="job-card-inr"><%= job.salary_inr %></span>
+                  </div>
+                  <% if (job.salary_foreign) { %>
+                    <span class="job-card-foreign"><%= job.salary_foreign %></span>
+                  <% } %>
+                </div>
+
+                <div class="job-card-perks">
+                  <% (job.perks || []).forEach(perk => { %>
+                    <span class="job-card-perk-tag"><i class="fa-solid fa-circle-check" style="color: #10B981;"></i> <%= perk %></span>
+                  <% }); %>
+                </div>
+              </div>
+
+              <div class="job-card-actions" style="margin-top: 14px;">
+                <button type="button" class="btn btn-gold" style="width: 100%; justify-content: center; padding: 12px 16px; font-size: 0.92rem;" onclick="applyForJob('<%= job.job_code %>', '<%= job.title.replace(/'/g, "\\\\'") %>', '<%= job.country.replace(/'/g, "\\\\'") %>', '<%= job.salary_inr.replace(/'/g, "\\\\'") %>')">
+                  <i class="fa-brands fa-whatsapp" style="font-size: 1.1rem;"></i>
+                  <span>Apply on WhatsApp</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 60px 24px;">
+          <i class="fa-solid fa-magnifying-glass" style="font-size: 3rem; color: var(--gold-primary); margin-bottom: 16px;"></i>
+          <h3 style="font-size: 1.4rem; color: #fff; margin-bottom: 8px;">No Quotas Found For Selected Filter</h3>
+          <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 24px auto;">
+            We update employer quotas weekly. Try clearing your filters or complete the general eligibility questionnaire to be matched automatically.
+          </p>
+          <a href="/jobs" class="btn btn-gold" style="padding: 12px 24px;">View All Available Openings</a>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Trust Reminder Banner -->
+    <div class="glass-card" style="margin-top: 60px; padding: 32px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; border: 1.5px solid var(--border-gold);">
+      <div>
+        <h3 style="font-size: 1.4rem; color: #fff; margin-bottom: 6px;">Transparent Service Fees & Company-Funded Quotas</h3>
+        <p style="color: var(--text-body); margin: 0; max-width: 650px;">
+          NG Global operates with complete transparency and government-regulated agency fees. For designated project orders, hiring companies fully sponsor recruitment expenses with zero fees for candidates. All embassy and GAMCA medical fees are processed directly through authorized government channels.
+        </p>
+      </div>
+      <a href="/#lead-funnel" class="btn btn-gold" style="padding: 14px 28px;">
+        <span>Start Free Eligibility Check</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>

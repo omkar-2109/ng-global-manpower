@@ -1,0 +1,65 @@
+<%- include('../partials/admin-header') %>
+
+<main class="admin-container">
+
+  <div class="admin-page-header">
+    <div class="admin-page-title">
+      <h1>Platform & Lead Routing Settings</h1>
+      <p>Configure candidate helpline contacts, WhatsApp desk numbers, and anti-fraud advisories.</p>
+    </div>
+  </div>
+
+  <% if (saved) { %>
+    <div class="admin-alert admin-alert-success" style="max-width: 750px;">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>Settings successfully saved and propagated across website buttons and API endpoints.</span>
+    </div>
+  <% } %>
+
+  <div style="max-width: 750px;">
+    <div class="card-panel">
+      
+      <form action="/admin/settings" method="POST">
+        
+        <div class="form-group">
+          <label class="form-label" for="whatsapp_number">Central WhatsApp Helpline Number (Digits only, including country code)</label>
+          <input type="text" id="whatsapp_number" name="whatsapp_number" class="form-control" placeholder="919876543210" value="<%= settings.whatsapp_number || '' %>" required />
+          <small style="color: var(--admin-text-muted); font-size: 0.8rem;">
+            This number receives all candidate eligibility applications and quick-apply inquiries.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="helpline_phone">Public Candidate Helpline (Formatted for display)</label>
+          <input type="text" id="helpline_phone" name="helpline_phone" class="form-control" placeholder="+91 98765 43210" value="<%= settings.helpline_phone || '' %>" required />
+          <small style="color: var(--admin-text-muted); font-size: 0.8rem;">
+            Displayed in the top announcement bar, header, and contact sections.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="support_email">Official Verification & Support Email</label>
+          <input type="email" id="support_email" name="support_email" class="form-control" placeholder="verification@ngglobalmanpower.com" value="<%= settings.support_email || '' %>" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="anti_fraud_notice">Global Anti-Fraud & Direct Embassy Advisory Notice</label>
+          <textarea id="anti_fraud_notice" name="anti_fraud_notice" class="form-control" rows="4"><%= settings.anti_fraud_notice || '' %></textarea>
+        </div>
+
+        <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--admin-border);">
+          <button type="submit" class="btn-admin btn-admin-primary" style="padding: 12px 28px;">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Update Platform Settings</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>

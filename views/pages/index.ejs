@@ -1,0 +1,1245 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/mobile-drawer') %>
+
+<main>
+
+  <!-- ==========================================================================
+       1. HERO SECTION (JOB-FIRST & SEARCH DRIVEN)
+       ========================================================================== -->
+  <section class="hero-job-first">
+    <div class="container" style="text-align: center; position: relative; z-index: 2;">
+      
+      <!-- Top Pulsing Active Jobs Badge -->
+      <div>
+        <div class="hero-job-badge-pill">
+          <span class="pulse-dot-green"></span>
+          <span><strong><%= (typeof stats !== 'undefined' && stats.totalActive) ? stats.totalActive : jobs.length %></strong> Verified Live Overseas Openings</span>
+        </div>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="hero-job-headline">
+        Find Verified <span class="gold-gradient-text">Overseas Jobs</span>
+      </h1>
+
+      <p class="hero-job-subhead">
+        Direct employment quotas with accredited employers in the Gulf, Europe, USA, and New Zealand. Transparent regulated service charges with select 100% employer-funded positions.
+      </p>
+
+      <!-- Unified Modern Search Bar (Stripe UI Style) -->
+      <form class="hero-search-bar" onsubmit="handleHeroSearch(event)">
+        <div class="search-input-group">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="heroSearchInput" placeholder="Search job title, trade, skill (e.g. Welder, Driver, Electrician)..." oninput="handleHeroSearch(event)" />
+        </div>
+
+        <div class="search-divider"></div>
+
+        <div class="search-select-group">
+          <i class="fa-solid fa-earth-americas"></i>
+          <select id="heroCountrySelect" onchange="handleHeroSearch(event)">
+            <option value="">All Destination Countries</option>
+            <option value="UAE">🇦🇪 United Arab Emirates</option>
+            <option value="Saudi">🇸🇦 Saudi Arabia (KSA)</option>
+            <option value="Qatar">🇶🇦 Qatar</option>
+            <option value="Germany">🇩🇪 Germany & EU</option>
+            <option value="United States">🇺🇸 United States (H-2B)</option>
+            <option value="New Zealand">🇳🇿 New Zealand & Australia</option>
+          </select>
+        </div>
+
+        <button type="submit" class="search-submit-btn">
+          <span>Search Jobs</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <!-- Popular Country Quick Chips -->
+      <div class="hero-country-chips">
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-right: 6px;">Top Destinations:</span>
+        <button type="button" class="hero-country-chip" onclick="filterByCountryPill('UAE', this)">
+          <span class="chip-flag">🇦🇪</span>
+          <span>UAE</span>
+        </button>
+        <button type="button" class="hero-country-chip" onclick="filterByCountryPill('Germany', this)">
+          <span class="chip-flag">🇩🇪</span>
+          <span>Germany</span>
+        </button>
+        <button type="button" class="hero-country-chip" onclick="filterByCountryPill('Qatar', this)">
+          <span class="chip-flag">🇶🇦</span>
+          <span>Qatar</span>
+        </button>
+        <button type="button" class="hero-country-chip" onclick="filterByCountryPill('Saudi', this)">
+          <span class="chip-flag">🇸🇦</span>
+          <span>Saudi Arabia</span>
+        </button>
+        <button type="button" class="hero-country-chip" onclick="filterByCountryPill('United States', this)">
+          <span class="chip-flag">🇺🇸</span>
+          <span>USA</span>
+        </button>
+        <button type="button" class="hero-country-chip" onclick="filterByCountryPill('New Zealand', this)">
+          <span class="chip-flag">🇳🇿</span>
+          <span>New Zealand</span>
+        </button>
+      </div>
+
+      <!-- Visual Trust Badges Strip -->
+      <div class="trust-badges-strip">
+        <div class="trust-badge-item">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Government Registered</span>
+        </div>
+        <div class="trust-badge-item">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Official Visa Guidance</span>
+        </div>
+        <div class="trust-badge-item">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Verified Direct Employers</span>
+        </div>
+        <div class="trust-badge-item">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Transparent Charges</span>
+        </div>
+        <div class="trust-badge-item">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Anti-Fraud Advisory</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       2. LIVE JOBS DASHBOARD SECTION (GLOWING CARDS)
+       ========================================================================== -->
+  <section class="live-pulse-section">
+    <div class="container">
+      <div class="live-pulse-grid">
+        
+        <!-- Metric 1: Active Jobs -->
+        <div class="live-pulse-card">
+          <div class="pulse-card-header">
+            <div class="pulse-card-icon pulse-icon-gold">
+              <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <span class="pulse-status-badge">
+              <span class="pulse-dot-live"></span>
+              <span>Live Database</span>
+            </span>
+          </div>
+          <div class="pulse-card-value"><%= (typeof stats !== 'undefined' && stats.totalActive) ? stats.totalActive : jobs.length %></div>
+          <p class="pulse-card-label">Active Verified Overseas Jobs</p>
+        </div>
+
+        <!-- Metric 2: New Today -->
+        <div class="live-pulse-card">
+          <div class="pulse-card-header">
+            <div class="pulse-card-icon pulse-icon-blue">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <span class="pulse-status-badge" style="color: #BAE6FD;">
+              <i class="fa-solid fa-clock"></i> Last 24 Hours
+            </span>
+          </div>
+          <div class="pulse-card-value"><%= (typeof stats !== 'undefined' && stats.newToday) ? stats.newToday : 3 %></div>
+          <p class="pulse-card-label">New Quotas Received Today</p>
+        </div>
+
+        <!-- Metric 3: Countries -->
+        <div class="live-pulse-card">
+          <div class="pulse-card-header">
+            <div class="pulse-card-icon pulse-icon-purple">
+              <i class="fa-solid fa-earth-americas"></i>
+            </div>
+            <span class="pulse-status-badge" style="color: #E9D5FF;">
+              Global Network
+            </span>
+          </div>
+          <div class="pulse-card-value"><%= (typeof stats !== 'undefined' && stats.countriesCount) ? stats.countriesCount : 6 %></div>
+          <p class="pulse-card-label">Overseas Destination Countries</p>
+        </div>
+
+        <!-- Metric 4: Sponsored Jobs -->
+        <div class="live-pulse-card">
+          <div class="pulse-card-header">
+            <div class="pulse-card-icon pulse-icon-green">
+              <i class="fa-solid fa-gift"></i>
+            </div>
+            <span class="pulse-status-badge" style="color: #6EE7B7;">
+              Zero Fee Quotas
+            </span>
+          </div>
+          <div class="pulse-card-value"><%= (typeof stats !== 'undefined' && stats.sponsoredCount) ? stats.sponsoredCount : 2 %></div>
+          <p class="pulse-card-label">100% Employer-Funded Openings</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       3. POPULAR CATEGORIES (INTERACTIVE QUICK FILTERS)
+       ========================================================================== -->
+  <section class="popular-categories-section">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div class="section-badge" style="background: rgba(212, 175, 55, 0.12); border-color: var(--border-gold); color: var(--gold-300);">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Browse By Trade</span>
+          </div>
+          <h2 class="section-title" style="margin-bottom: 0;">Popular <span class="gold-gradient-text">Job Categories</span></h2>
+        </div>
+        <button type="button" class="btn btn-secondary" style="font-size: 0.88rem; padding: 8px 16px;" onclick="filterJobsLive('', '', '')">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span>Reset All Filters</span>
+        </button>
+      </div>
+
+      <div class="popular-categories-grid">
+        
+        <!-- Category 1: Construction -->
+        <div class="category-chip-card" onclick="filterByCategoryPill('Construction', this)">
+          <div class="category-chip-icon"><i class="fa-solid fa-trowel-bricks"></i></div>
+          <h3 class="category-chip-title">Construction</h3>
+          <span class="category-chip-count">Helpers, Riggers, Steel</span>
+        </div>
+
+        <!-- Category 2: Drivers -->
+        <div class="category-chip-card" onclick="filterByCategoryPill('Logistics', this)">
+          <div class="category-chip-icon"><i class="fa-solid fa-truck-fast"></i></div>
+          <h3 class="category-chip-title">Drivers</h3>
+          <span class="category-chip-count">Heavy, Trailer & Tanker</span>
+        </div>
+
+        <!-- Category 3: Warehouse -->
+        <div class="category-chip-card" onclick="filterByCategoryPill('Warehouse', this)">
+          <div class="category-chip-icon"><i class="fa-solid fa-warehouse"></i></div>
+          <h3 class="category-chip-title">Warehouse</h3>
+          <span class="category-chip-count">Loaders, Logistics, Forklift</span>
+        </div>
+
+        <!-- Category 4: Hospitality -->
+        <div class="category-chip-card" onclick="filterByCategoryPill('Hospitality', this)">
+          <div class="category-chip-icon"><i class="fa-solid fa-utensils"></i></div>
+          <h3 class="category-chip-title">Hospitality</h3>
+          <span class="category-chip-count">Chefs, Resort Crew, Waiters</span>
+        </div>
+
+        <!-- Category 5: Oil & Gas -->
+        <div class="category-chip-card" onclick="filterByCategoryPill('Oil & Gas', this)">
+          <div class="category-chip-icon"><i class="fa-solid fa-gas-pump"></i></div>
+          <h3 class="category-chip-title">Oil & Gas</h3>
+          <span class="category-chip-count">Refinery, Valve, Piping</span>
+        </div>
+
+        <!-- Category 6: Manufacturing -->
+        <div class="category-chip-card" onclick="filterByCategoryPill('Manufacturing', this)">
+          <div class="category-chip-icon"><i class="fa-solid fa-industry"></i></div>
+          <h3 class="category-chip-title">Manufacturing</h3>
+          <span class="category-chip-count">6G Welders, Mechanics, CNC</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       4. LIVE OPENINGS (JOB CARDS ARE THE HERO)
+       ========================================================================== -->
+  <section id="live-openings" class="section-spacing" style="padding-top: 20px;">
+    <div class="container">
+      
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+        <div>
+          <div class="section-badge" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); color: #34D399;">
+            <i class="fa-solid fa-fire"></i>
+            <span>Featured International Openings</span>
+          </div>
+          <h2 class="section-title">Latest Verified <span class="gold-gradient-text">Job Vacancies</span></h2>
+          <p class="section-subtitle" style="margin: 0;">
+            Apply directly with our 5-step quick candidate intake. Opens immediately with the recruiter on WhatsApp.
+          </p>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <span id="liveJobsCountLabel" style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--gold-light); font-weight: 700;">
+            <%= jobs.length %> openings available
+          </span>
+          <a href="/jobs" class="btn btn-secondary" style="padding: 10px 18px; font-size: 0.9rem;">
+            <span>View All Jobs &rarr;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Job Cards Grid -->
+      <div class="job-cards-hero-grid" id="liveJobsGrid">
+        <% if (jobs && jobs.length > 0) { %>
+          <% jobs.forEach(job => { %>
+            <div class="job-card-premium job-filter-target" 
+                 data-title="<%= job.title %>" 
+                 data-country="<%= job.country %>" 
+                 data-category="<%= job.category %>">
+              
+              <!-- Card Photo Header -->
+              <div class="card-photo-header">
+                <img src="<%= job.image || '/images/corporate_hero_bg.jpg' %>" alt="<%= job.title %> in <%= job.country %>" loading="lazy" />
+                <div class="card-photo-overlay">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="card-country-flag-badge">
+                      <span><%= job.flag || '🌐' %></span>
+                      <span><%= job.country.split('(')[0].trim() %></span>
+                    </span>
+                    <% if (job.employer_funded) { %>
+                      <span class="card-fee-pill sponsored"><i class="fa-solid fa-gift"></i> 100% Free Quota</span>
+                    <% } else { %>
+                      <span class="card-fee-pill standard"><i class="fa-solid fa-shield-halved"></i> Regulated Fee</span>
+                    <% } %>
+                  </div>
+                  <div>
+                    <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold-300); background: rgba(0,0,0,0.65); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(212,175,55,0.3);">
+                      Ref: <%= job.job_code %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Content -->
+              <div class="job-card-content">
+                <div>
+                  <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff; margin: 0 0 6px 0; line-height: 1.35;">
+                    <%= job.title %>
+                  </h3>
+                  <div style="font-size: 0.82rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-wrench" style="color: var(--gold-amber);"></i>
+                    <span><%= job.category %></span>
+                  </div>
+
+                  <!-- Salary Badge -->
+                  <div class="salary-badge-glow">
+                    <span><%= job.salary_foreign || job.salary_inr %></span>
+                    <span style="font-size: 0.82rem; color: #BAE6FD; font-weight: 600; font-family: var(--font-body); margin-left: 6px;">
+                      (<%= job.salary_inr.split('/')[0].trim() %>)
+                    </span>
+                  </div>
+
+                  <!-- Key Perks -->
+                  <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;">
+                    <% (job.perks || []).slice(0, 3).forEach(perk => { %>
+                      <span style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); color: #CBD5E1; padding: 4px 9px; border-radius: 8px; font-size: 0.78rem;">
+                        <i class="fa-solid fa-check" style="color: #10B981; margin-right: 4px;"></i> <%= perk %>
+                      </span>
+                    <% }); %>
+                  </div>
+                </div>
+
+                <!-- Apply Trigger -->
+                <div>
+                  <button type="button" class="btn btn-gold" style="width: 100%; justify-content: center; padding: 13px; font-size: 0.95rem; border-radius: 14px;" 
+                          data-job-code="<%= job.job_code %>" 
+                          data-job-title="<%= job.title %>" 
+                          data-job-country="<%= job.country %>" 
+                          data-job-salary="<%= job.salary_foreign || job.salary_inr %>" 
+                          data-job-category="<%= job.category %>" 
+                          onclick="triggerJobApply(this)">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 1.1rem;"></i>
+                    <span>Apply for this Job</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          <% }); %>
+        <% } %>
+      </div>
+
+      <!-- No Results Feedback State -->
+      <div id="liveJobsNoResults" class="glass-card" style="display: none; text-align: center; padding: 60px 24px; margin-top: 24px; border-radius: 20px;">
+        <i class="fa-solid fa-magnifying-glass" style="font-size: 3rem; color: var(--gold-primary); margin-bottom: 16px;"></i>
+        <h3 style="font-size: 1.35rem; color: #fff; margin-bottom: 8px;">No Openings Match Your Filter</h3>
+        <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto 20px auto;">
+          Try adjusting your search terms or clearing your country and trade filters to see all available international vacancies.
+        </p>
+        <button type="button" class="btn btn-gold" onclick="filterJobsLive('', '', '')">Show All Openings</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       5. INTERACTIVE WORLD MAP & REGIONAL HUB (REPLACING 3D GLOBE)
+       ========================================================================== -->
+  <section id="world-map-hub" class="regional-hub-section">
+    <div class="container">
+      
+      <div class="section-header" style="text-align: center; margin-bottom: 30px;">
+        <div class="section-badge" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.35); color: #38BDF8;">
+          <i class="fa-solid fa-map-location-dot"></i>
+          <span>Global Deployment Hubs</span>
+        </div>
+        <h2 class="section-title">Explore Jobs by <span class="gold-gradient-text">World Region</span></h2>
+        <p class="section-subtitle" style="max-width: 680px; margin: 0 auto;">
+          Direct recruitment programs across four dedicated overseas hubs. Select your target region to filter live openings.
+        </p>
+      </div>
+
+      <div class="regional-hub-layout">
+        
+        <!-- Left: Stylized Interactive SVG World Map -->
+        <div class="world-map-svg-container">
+          <svg viewBox="0 0 1000 500" class="world-map-svg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="mapBg" cx="50%" cy="50%" r="60%">
+                <stop offset="0%" stop-color="#0D1F4A" stop-opacity="1"/>
+                <stop offset="100%" stop-color="#030A1A" stop-opacity="1"/>
+              </radialGradient>
+              <filter id="nodeGlow" x="-80%" y="-80%" width="260%" height="260%">
+                <feGaussianBlur stdDeviation="4" result="glow"/>
+                <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="continentShadow" x="-5%" y="-5%" width="110%" height="110%">
+                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.5"/>
+              </filter>
+              <style>
+                .continent { stroke-linejoin: round; stroke-linecap: round; }
+                @keyframes nodePulse { 0%,100%{r:14;opacity:0.6} 50%{r:20;opacity:0.15} }
+                .node-ring { animation: nodePulse 2.5s infinite ease-in-out; }
+                @keyframes dashMove { from{stroke-dashoffset:0} to{stroke-dashoffset:-24} }
+                .arc-line { animation: dashMove 2s linear infinite; }
+              </style>
+            </defs>
+
+            <!-- Ocean background -->
+            <rect width="1000" height="500" fill="url(#mapBg)"/>
+            <!-- Latitude grid lines -->
+            <line x1="0" y1="125" x2="1000" y2="125" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
+            <line x1="0" y1="250" x2="1000" y2="250" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
+            <line x1="0" y1="375" x2="1000" y2="375" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
+            <!-- Longitude grid lines -->
+            <line x1="250" y1="0" x2="250" y2="500" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
+            <line x1="500" y1="0" x2="500" y2="500" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
+            <line x1="750" y1="0" x2="750" y2="500" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
+            <!-- Equator -->
+            <line x1="0" y1="265" x2="1000" y2="265" stroke="rgba(56,189,248,0.12)" stroke-width="1" stroke-dasharray="6,6"/>
+
+            <!-- ===== CONTINENTS ===== -->
+            <!-- North America -->
+            <path class="continent" d="M 95 55 L 115 50 L 140 45 L 175 50 L 200 48 L 215 55 L 220 65 L 210 72 L 218 78 L 215 90 L 205 98 L 196 108 L 200 118 L 192 128 L 188 140 L 178 148 L 175 160 L 165 168 L 162 178 L 155 185 L 148 195 L 138 210 L 130 225 L 122 240 L 118 255 L 112 268 L 105 278 L 95 285 L 88 278 L 92 268 L 98 258 L 96 245 L 90 240 L 85 232 L 80 225 L 78 215 L 82 205 L 88 195 L 90 185 L 85 178 L 78 170 L 72 160 L 70 148 L 68 135 L 72 122 L 75 110 L 72 98 L 70 88 L 75 78 L 82 68 L 90 60 Z" fill="#0C2A5F" stroke="rgba(56,189,248,0.3)" stroke-width="1.2" filter="url(#continentShadow)"/>
+            <!-- Alaska/Canada extension -->
+            <path class="continent" d="M 95 55 L 85 48 L 70 42 L 55 38 L 45 42 L 40 50 L 45 58 L 55 62 L 65 60 L 75 58 L 85 55 Z" fill="#0C2A5F" stroke="rgba(56,189,248,0.25)" stroke-width="1"/>
+            <!-- Greenland -->
+            <path class="continent" d="M 195 25 L 215 20 L 235 22 L 248 30 L 252 42 L 245 52 L 230 58 L 218 55 L 205 48 L 198 38 Z" fill="#0A2250" stroke="rgba(56,189,248,0.2)" stroke-width="1"/>
+            <!-- Central America & Caribbean -->
+            <path class="continent" d="M 138 210 L 148 215 L 155 218 L 158 228 L 155 235 L 148 240 L 142 235 L 138 225 Z" fill="#0C2A5F" stroke="rgba(56,189,248,0.2)" stroke-width="1"/>
+            <!-- South America -->
+            <path class="continent" d="M 200 268 L 215 262 L 228 265 L 240 272 L 250 282 L 255 295 L 260 310 L 262 325 L 258 340 L 252 355 L 242 370 L 230 382 L 218 390 L 208 395 L 198 392 L 188 385 L 180 375 L 175 360 L 172 345 L 175 330 L 180 318 L 178 305 L 175 292 L 178 280 L 185 272 Z" fill="#0A1E48" stroke="rgba(56,189,248,0.25)" stroke-width="1.2" filter="url(#continentShadow)"/>
+
+            <!-- Europe (highlighted - has hiring) -->
+            <path class="continent" d="M 445 85 L 458 80 L 472 78 L 485 82 L 498 80 L 512 78 L 525 82 L 530 92 L 528 102 L 520 110 L 518 120 L 512 128 L 505 132 L 498 128 L 492 135 L 485 140 L 478 135 L 472 128 L 465 122 L 458 118 L 452 112 L 448 105 L 445 98 Z" fill="#1A4080" stroke="rgba(212,175,55,0.55)" stroke-width="1.8" filter="url(#continentShadow)"/>
+            <!-- Scandinavia -->
+            <path class="continent" d="M 480 58 L 492 52 L 505 55 L 512 62 L 510 72 L 505 78 L 498 80 L 490 75 L 482 68 Z" fill="#143368" stroke="rgba(212,175,55,0.4)" stroke-width="1.2"/>
+            <!-- UK & Ireland -->
+            <path class="continent" d="M 432 88 L 438 84 L 442 90 L 440 98 L 435 102 L 430 98 L 430 92 Z" fill="#143368" stroke="rgba(212,175,55,0.35)" stroke-width="1"/>
+
+            <!-- Africa -->
+            <path class="continent" d="M 448 148 L 462 142 L 478 140 L 495 142 L 510 148 L 520 158 L 525 172 L 528 188 L 525 205 L 518 220 L 510 235 L 505 250 L 502 265 L 498 280 L 492 295 L 485 310 L 475 320 L 462 325 L 450 322 L 440 312 L 432 300 L 428 285 L 428 270 L 432 255 L 435 240 L 432 225 L 428 210 L 425 195 L 425 180 L 428 168 L 432 158 L 440 150 Z" fill="#0A1E48" stroke="rgba(56,189,248,0.25)" stroke-width="1.2" filter="url(#continentShadow)"/>
+            <!-- Madagascar -->
+            <path class="continent" d="M 535 282 L 540 278 L 545 285 L 545 295 L 540 302 L 535 298 L 533 290 Z" fill="#0A1E48" stroke="rgba(56,189,248,0.2)" stroke-width="0.8"/>
+
+            <!-- Middle East & Arabian Peninsula (highlighted - major hiring) -->
+            <path class="continent" d="M 535 135 L 548 130 L 562 128 L 578 130 L 592 138 L 602 148 L 605 160 L 600 172 L 592 182 L 582 190 L 572 195 L 560 198 L 548 195 L 538 188 L 530 178 L 528 168 L 530 158 L 535 148 Z" fill="#1A4A8F" stroke="rgba(212,175,55,0.6)" stroke-width="2" filter="url(#continentShadow)"/>
+
+            <!-- Asia (Russia/Central/East) -->
+            <path class="continent" d="M 535 55 L 560 48 L 590 42 L 625 40 L 660 42 L 695 45 L 725 50 L 752 55 L 775 62 L 792 72 L 800 85 L 802 98 L 798 110 L 788 120 L 778 130 L 765 138 L 752 142 L 738 148 L 722 152 L 708 155 L 695 158 L 682 162 L 668 165 L 655 168 L 642 165 L 628 158 L 615 152 L 602 148 L 590 138 L 578 130 L 562 128 L 548 130 L 535 135 L 530 125 L 530 112 L 532 100 L 530 88 L 532 75 L 535 62 Z" fill="#0D2455" stroke="rgba(56,189,248,0.28)" stroke-width="1.3" filter="url(#continentShadow)"/>
+            <!-- Indian Subcontinent -->
+            <path class="continent" d="M 608 162 L 622 158 L 635 162 L 642 172 L 642 185 L 638 198 L 630 210 L 618 218 L 608 215 L 600 205 L 598 192 L 600 178 L 605 168 Z" fill="#0D2455" stroke="rgba(56,189,248,0.25)" stroke-width="1"/>
+            <!-- Southeast Asia -->
+            <path class="continent" d="M 695 165 L 712 162 L 725 168 L 730 180 L 725 192 L 715 200 L 705 202 L 695 198 L 688 188 L 688 178 L 692 170 Z" fill="#0D2455" stroke="rgba(56,189,248,0.22)" stroke-width="1"/>
+            <!-- Japan/Korea -->
+            <path class="continent" d="M 775 108 L 785 105 L 792 110 L 792 118 L 785 122 L 778 118 L 775 112 Z" fill="#0D2455" stroke="rgba(56,189,248,0.2)" stroke-width="0.8"/>
+            <!-- Sri Lanka -->
+            <path class="continent" d="M 628 222 L 632 218 L 636 222 L 635 228 L 630 230 L 627 227 Z" fill="#0D2455" stroke="rgba(56,189,248,0.18)" stroke-width="0.8"/>
+
+            <!-- Indonesia / Philippines -->
+            <path class="continent" d="M 725 235 L 738 228 L 748 232 L 755 242 L 752 252 L 740 255 L 728 252 L 722 242 Z" fill="#0A1E48" stroke="rgba(56,189,248,0.2)" stroke-width="0.8"/>
+            <path class="continent" d="M 760 198 L 770 195 L 778 200 L 778 210 L 770 215 L 762 210 L 760 204 Z" fill="#0A1E48" stroke="rgba(56,189,248,0.2)" stroke-width="0.8"/>
+
+            <!-- Australia (highlighted - NZ hiring) -->
+            <path class="continent" d="M 778 295 L 798 288 L 818 285 L 840 288 L 858 298 L 870 312 L 875 328 L 872 345 L 862 360 L 848 370 L 830 375 L 812 372 L 795 362 L 782 348 L 775 332 L 774 315 L 778 300 Z" fill="#0E2855" stroke="rgba(56,189,248,0.38)" stroke-width="1.5" filter="url(#continentShadow)"/>
+            <!-- New Zealand -->
+            <path class="continent" d="M 895 348 L 900 342 L 908 345 L 912 355 L 908 362 L 900 365 L 895 358 Z" fill="#0E2855" stroke="rgba(16,185,129,0.5)" stroke-width="1.2"/>
+            <path class="continent" d="M 903 330 L 908 325 L 914 328 L 916 335 L 912 340 L 905 338 Z" fill="#0E2855" stroke="rgba(16,185,129,0.5)" stroke-width="1"/>
+
+            <!-- ===== CONNECTING FLIGHT ARCS ===== -->
+            <!-- Middle East → Europe -->
+            <path class="arc-line" d="M 568 162 Q 545 120 490 112" fill="none" stroke="#D4AF37" stroke-width="1.8" stroke-dasharray="6,4" opacity="0.8"/>
+            <!-- Middle East → North America -->
+            <path class="arc-line" d="M 568 162 Q 400 100 160 190" fill="none" stroke="#38BDF8" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.65"/>
+            <!-- Middle East → Australia -->
+            <path class="arc-line" d="M 568 162 Q 700 200 825 330" fill="none" stroke="#10B981" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.7"/>
+
+            <!-- ===== HIRING REGION NODES ===== -->
+            <!-- 1. Gulf / Middle East (UAE, Saudi, Qatar) -->
+            <g transform="translate(568, 165)" filter="url(#nodeGlow)" onclick="filterByCountryPill('UAE', null)" style="cursor:pointer">
+              <circle class="node-ring" cx="0" cy="0" r="14" fill="rgba(212,175,55,0.18)" stroke="rgba(212,175,55,0.5)" stroke-width="1"/>
+              <circle cx="0" cy="0" r="8" fill="rgba(212,175,55,0.9)"/>
+              <circle cx="0" cy="0" r="3.5" fill="#fff"/>
+              <text x="12" y="5" fill="#FDE047" font-size="11" font-weight="700" font-family="Inter,sans-serif">Gulf Hub (UAE &amp; KSA)</text>
+            </g>
+
+            <!-- 2. Europe (Germany) -->
+            <g transform="translate(490, 112)" filter="url(#nodeGlow)" onclick="filterByCountryPill('Germany', null)" style="cursor:pointer">
+              <circle class="node-ring" cx="0" cy="0" r="12" fill="rgba(56,189,248,0.18)" stroke="rgba(56,189,248,0.5)" stroke-width="1"/>
+              <circle cx="0" cy="0" r="7" fill="rgba(56,189,248,0.9)"/>
+              <circle cx="0" cy="0" r="3" fill="#fff"/>
+              <text x="-95" y="-14" fill="#BAE6FD" font-size="11" font-weight="700" font-family="Inter,sans-serif">Europe (Germany/EU)</text>
+            </g>
+
+            <!-- 3. North America (USA) -->
+            <g transform="translate(160, 192)" filter="url(#nodeGlow)" onclick="filterByCountryPill('United States', null)" style="cursor:pointer">
+              <circle class="node-ring" cx="0" cy="0" r="12" fill="rgba(56,189,248,0.18)" stroke="rgba(56,189,248,0.5)" stroke-width="1"/>
+              <circle cx="0" cy="0" r="7" fill="rgba(56,189,248,0.9)"/>
+              <circle cx="0" cy="0" r="3" fill="#fff"/>
+              <text x="12" y="-8" fill="#BAE6FD" font-size="11" font-weight="700" font-family="Inter,sans-serif">USA (H-2B)</text>
+            </g>
+
+            <!-- 4. Oceania (NZ / Australia) -->
+            <g transform="translate(825, 332)" filter="url(#nodeGlow)" onclick="filterByCountryPill('New Zealand', null)" style="cursor:pointer">
+              <circle class="node-ring" cx="0" cy="0" r="12" fill="rgba(16,185,129,0.18)" stroke="rgba(16,185,129,0.5)" stroke-width="1"/>
+              <circle cx="0" cy="0" r="7" fill="rgba(16,185,129,0.9)"/>
+              <circle cx="0" cy="0" r="3" fill="#fff"/>
+              <text x="-125" y="22" fill="#6EE7B7" font-size="11" font-weight="700" font-family="Inter,sans-serif">NZ &amp; Australia</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Right: Interactive Region Cards with Live Database Counts -->
+        <div class="regional-cards-list">
+          
+          <!-- Middle East -->
+          <div class="regional-hub-card" onclick="filterByCountryPill('UAE', this)">
+            <div class="region-card-left">
+              <div class="region-flag-group">🇦🇪 🇸🇦 🇶🇦</div>
+              <div>
+                <h3 class="region-name">Middle East & Gulf</h3>
+                <p class="region-countries-sub">UAE, Saudi Arabia, Qatar, Kuwait • Express e-Visa</p>
+              </div>
+            </div>
+            <div class="region-jobs-badge">
+              <%= (typeof stats !== 'undefined' && stats.regions && stats.regions.middleEast) ? stats.regions.middleEast : 5 %> Jobs Available
+            </div>
+          </div>
+
+          <!-- Europe & UK -->
+          <div class="regional-hub-card" onclick="filterByCountryPill('Germany', this)">
+            <div class="region-card-left">
+              <div class="region-flag-group">🇩🇪 🇵🇱 🇪🇺</div>
+              <div>
+                <h3 class="region-name">Europe & EU</h3>
+                <p class="region-countries-sub">Germany, Poland, Czechia • Work Permits</p>
+              </div>
+            </div>
+            <div class="region-jobs-badge">
+              <%= (typeof stats !== 'undefined' && stats.regions && stats.regions.europe) ? stats.regions.europe : 1 %> Job Available
+            </div>
+          </div>
+
+          <!-- Australia & New Zealand -->
+          <div class="regional-hub-card" onclick="filterByCountryPill('New Zealand', this)">
+            <div class="region-card-left">
+              <div class="region-flag-group">🇳🇿 🇦🇺</div>
+              <div>
+                <h3 class="region-name">Australia & New Zealand</h3>
+                <p class="region-countries-sub">Accredited Employer Work Visas (AEWV)</p>
+              </div>
+            </div>
+            <div class="region-jobs-badge">
+              <%= (typeof stats !== 'undefined' && stats.regions && stats.regions.oceania) ? stats.regions.oceania : 1 %> Job Available
+            </div>
+          </div>
+
+          <!-- North America -->
+          <div class="regional-hub-card" onclick="filterByCountryPill('United States', this)">
+            <div class="region-card-left">
+              <div class="region-flag-group">🇺🇸 🇨🇦</div>
+              <div>
+                <h3 class="region-name">North America</h3>
+                <p class="region-countries-sub">United States (H-2B Seasonal) & Canada</p>
+              </div>
+            </div>
+            <div class="region-jobs-badge">
+              <%= (typeof stats !== 'undefined' && stats.regions && stats.regions.northAmerica) ? stats.regions.northAmerica : 1 %> Job Available
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       6. DUAL-TRACK TIMELINES (TRANSPARENT PROCESSING SPEED)
+       ========================================================================== -->
+  <section id="timelines" class="section-spacing section-corporate-bg timeline-corporate-bg">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-solid fa-timeline"></i>
+          <span>Transparent Speed</span>
+        </div>
+        <h2 class="section-title">Two Distinct Processing <span class="sapphire-gradient-text">Tracks</span></h2>
+        <p class="section-subtitle">
+          We offer clear, honest deployment expectations. Compare the fast-track Gulf channel with our comprehensive Western programs.
+        </p>
+      </div>
+
+      <!-- Timeline Tabs Control -->
+      <div class="timeline-tabs-control">
+        <button class="timeline-tab-btn active" onclick="switchTimelineTrack('gulf')">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Gulf Countries Track</span>
+          <span class="badge-pill">1–15 Days</span>
+        </button>
+        <button class="timeline-tab-btn" onclick="switchTimelineTrack('western')">
+          <i class="fa-solid fa-earth-americas"></i>
+          <span>EU, USA & New Zealand Track</span>
+          <span class="badge-pill">~3 Months</span>
+        </button>
+      </div>
+
+      <!-- Track A: Gulf Countries (Fast Track 1-15 Days) -->
+      <div id="track-gulf" class="timeline-track-container active">
+        <div class="timeline-track-card card-3d-interactive">
+          <div class="timeline-header-meta">
+            <div class="track-badge-large">
+              <i class="fa-solid fa-gas-pump"></i>
+              <div>
+                <h3>Gulf Cooperation Council (UAE, Saudi, Qatar, Kuwait, Oman)</h3>
+                <p>Express electronic e-Visa systems and direct corporate allocation quotas</p>
+              </div>
+            </div>
+            <div class="track-duration-pill duration-fast">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Total Duration: 1 to 15 Days</span>
+            </div>
+          </div>
+
+          <div class="steps-pipeline">
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-id-card"></i></div>
+              <div>
+                <span class="step-time-label">Day 1</span>
+                <h4 class="step-title">Profile Screening</h4>
+                <p class="step-desc">Trade background, passport validity check, and direct resume review.</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-user-tie"></i></div>
+              <div>
+                <span class="step-time-label">Day 2–4</span>
+                <h4 class="step-title">Employer Interview</h4>
+                <p class="step-desc">Direct client interview or practical trade test. Formal job offer letter signed.</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-stethoscope"></i></div>
+              <div>
+                <span class="step-time-label">Day 5–8</span>
+                <h4 class="step-title">Medical & e-Visa</h4>
+                <p class="step-desc">GAMCA medical test and electronic ministry visa approval submission.</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-plane-departure"></i></div>
+              <div>
+                <span class="step-time-label">Day 9–15</span>
+                <h4 class="step-title">Visa Handover & Fly</h4>
+                <p class="step-desc">Candidate verifies visa on official portal, completes direct embassy processing, and boards flight.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Track B: Western Nations (Comprehensive 3 Months) -->
+      <div id="track-western" class="timeline-track-container">
+        <div class="timeline-track-card card-3d-interactive">
+          <div class="timeline-header-meta">
+            <div class="track-badge-large">
+              <i class="fa-solid fa-monument"></i>
+              <div>
+                <h3>Europe, United States & New Zealand</h3>
+                <p>Consular labor market certifications, work permits & embassy biometric verification</p>
+              </div>
+            </div>
+            <div class="track-duration-pill duration-standard">
+              <i class="fa-solid fa-clock"></i>
+              <span>Total Duration: Approx. 3 Months (90 Days)</span>
+            </div>
+          </div>
+
+          <div class="steps-pipeline">
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-certificate"></i></div>
+              <div>
+                <span class="step-time-label">Month 1</span>
+                <h4 class="step-title">Trade Assessment</h4>
+                <p class="step-desc">Skills translation, criminal record clearance, and employer quota filing.</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-landmark"></i></div>
+              <div>
+                <span class="step-time-label">Month 2</span>
+                <h4 class="step-title">Work Permit Grant</h4>
+                <p class="step-desc">Labor Ministry work approval issued (e.g. ZAV Germany, AEWV New Zealand).</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-fingerprint"></i></div>
+              <div>
+                <span class="step-time-label">Month 2.5</span>
+                <h4 class="step-title">Embassy Biometrics</h4>
+                <p class="step-desc">Direct consulate appointment for biometric enrollment and passport submission.</p>
+              </div>
+            </div>
+            <div class="step-node">
+              <div class="step-circle"><i class="fa-solid fa-passport"></i></div>
+              <div>
+                <span class="step-time-label">Month 3</span>
+                <h4 class="step-title">Stamped Visa & Fly</h4>
+                <p class="step-desc">National work visa stamped in passport. Direct embassy flight dispatch.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       7. ABSOLUTE CANDIDATE TRUST (WHY NG GLOBAL)
+       ========================================================================== -->
+  <section id="why-us" class="section-spacing section-corporate-bg trust-corporate-bg">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-solid fa-handshake"></i>
+          <span>Candidate Protection</span>
+        </div>
+        <h2 class="section-title">Why Global Workers Choose <span class="gold-gradient-text">NG Global</span></h2>
+        <p class="section-subtitle">
+          We operate with 100% financial clarity, official receipts, and direct embassy processing.
+        </p>
+      </div>
+
+      <div class="value-grid">
+        
+        <!-- Card 1 -->
+        <div class="glass-card-premium value-card card-3d-interactive">
+          <div class="value-step-num">01</div>
+          <div class="value-icon-box">
+            <i class="fa-solid fa-network-wired"></i>
+          </div>
+          <h3>Global Network</h3>
+          <p>
+            Direct corporate tie-ups with tier-1 construction contractors, logistics operators, hospitality chains, and industrial factories worldwide. Zero unverified sub-agents.
+          </p>
+          <div>
+            <span class="value-pill"><i class="fa-solid fa-check"></i> 150+ Direct Employer Partners</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-card-premium value-card card-3d-interactive">
+          <div class="value-step-num">02</div>
+          <div class="value-icon-box">
+            <i class="fa-solid fa-building-circle-check"></i>
+          </div>
+          <h3>Verified Employers</h3>
+          <p>
+            Every single job order is authenticated by government labor ministries and embassy attested. Guaranteed food, accommodation, health insurance, and paid overtime explicitly written in contracts.
+          </p>
+          <div>
+            <span class="value-pill"><i class="fa-solid fa-file-contract"></i> Ministry Attested Contracts</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-card-premium value-card card-3d-interactive">
+          <div class="value-step-num">03</div>
+          <div class="value-icon-box">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3>Transparent Fees & Company Quotas</h3>
+          <p>
+            Unlike middle-brokers who demand cash advances, NG Global provides written agreements and regulated milestone charges. In addition, select high-demand project quotas are 100% Employer-Funded with zero fees for candidates.
+          </p>
+          <div>
+            <span class="value-pill"><i class="fa-solid fa-lock"></i> Transparent Agreement & No Hidden Surcharges</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       8. WORKER SUCCESS STORIES (TESTIMONIALS)
+       ========================================================================== -->
+  <section id="testimonials" class="testimonials-section section-spacing section-corporate-bg testimonials-corporate-bg">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-solid fa-star"></i>
+          <span>Worker Testimonials</span>
+        </div>
+        <h2 class="section-title">Trusted by Thousands of <span class="gold-gradient-text">Overseas Tradesmen</span></h2>
+        <p class="section-subtitle">
+          Real feedback from skilled personnel deployed to leading infrastructure and industrial employers worldwide.
+        </p>
+      </div>
+
+      <div class="testimonials-grid">
+        
+        <!-- Story 1 -->
+        <div class="glass-card-premium testimonial-card card-3d-interactive">
+          <div class="testimonial-quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">
+            "NG Global gave me a clear written fee agreement with zero hidden charges. My visa and GAMCA fees were paid directly to official clinics. Today I drive heavy trailer trucks in Dammam earning 3,800 SAR with free housing!"
+          </p>
+          <div class="testimonial-author-box">
+            <div class="author-avatar-badge">RK</div>
+            <div class="author-details">
+              <h5>Rajesh Kumar</h5>
+              <p>Heavy Trailer Driver • Saudi Arabia (NEOM)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story 2 -->
+        <div class="glass-card-premium testimonial-card card-3d-interactive">
+          <div class="testimonial-quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">
+            "Getting a European work permit seemed difficult until NG Global matched my 6G pipe welding certifications directly with a Polish and German industrial contractor. Transparent guidance and embassy appointment support."
+          </p>
+          <div class="testimonial-author-box">
+            <div class="author-avatar-badge" style="background: linear-gradient(135deg, #059669 0%, #10B981 100%);">MA</div>
+            <div class="author-details">
+              <h5>Mohd. Aslam Ansari</h5>
+              <p>6G Pipe Welder • Germany & Poland</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story 3 -->
+        <div class="glass-card-premium testimonial-card card-3d-interactive">
+          <div class="testimonial-quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">
+            "Applied through the WhatsApp intake for Dubai logistics. The executive verified my credentials and matched me with a Dubai fulfillment hub with free accommodation. My visa was approved in 11 days!"
+          </p>
+          <div class="testimonial-author-box">
+            <div class="author-avatar-badge" style="background: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);">GS</div>
+            <div class="author-details">
+              <h5>Gurpreet Singh</h5>
+              <p>Warehouse Inventory Lead • UAE (Dubai)</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       9. GENERAL ELIGIBILITY ASSESSMENT WIZARD (OPTIONAL FULL MATCH)
+       ========================================================================== -->
+  <section id="lead-funnel" class="section-spacing">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Personal Assessment</span>
+        </div>
+        <h2 class="section-title">Check Your Overseas <span class="gold-gradient-text">Eligibility</span></h2>
+        <p class="section-subtitle">
+          Not sure which opening matches your trade experience? Complete this 30-second assessment for personal WhatsApp guidance.
+        </p>
+      </div>
+
+      <div class="funnel-wrapper">
+        <div class="wizard-progress-header">
+          <div class="wizard-steps-indicator">
+            <div class="wizard-progress-line"><div id="wizardFill" class="wizard-progress-fill"></div></div>
+            <div id="stepBubble1" class="wizard-step-bubble active">1</div>
+            <div id="stepBubble2" class="wizard-step-bubble">2</div>
+            <div id="stepBubble3" class="wizard-step-bubble">3</div>
+          </div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div id="panelStep1" class="funnel-step-panel active">
+          <h3 class="panel-question-title">Step 1: What is your primary skill or trade?</h3>
+          <p class="panel-question-desc">Select the occupational category that best matches your experience.</p>
+          <div class="trade-options-grid">
+            <div class="trade-card-btn selected" onclick="selectTrade(this, 'Construction & Infrastructure')">
+              <i class="fa-solid fa-trowel-bricks trade-card-icon"></i>
+              <span class="trade-card-name">Construction</span>
+              <span class="trade-card-badge">High Demand</span>
+            </div>
+            <div class="trade-card-btn" onclick="selectTrade(this, 'Hospitality & Catering')">
+              <i class="fa-solid fa-utensils trade-card-icon"></i>
+              <span class="trade-card-name">Hospitality</span>
+              <span class="trade-card-badge">Employer-Sponsored</span>
+            </div>
+            <div class="trade-card-btn" onclick="selectTrade(this, 'Logistics & Heavy Driving')">
+              <i class="fa-solid fa-truck-fast trade-card-icon"></i>
+              <span class="trade-card-name">Logistics</span>
+              <span class="trade-card-badge">Express Processing</span>
+            </div>
+            <div class="trade-card-btn" onclick="selectTrade(this, 'Manufacturing & Industrial')">
+              <i class="fa-solid fa-industry trade-card-icon"></i>
+              <span class="trade-card-name">Manufacturing</span>
+              <span class="trade-card-badge">Active Quotas</span>
+            </div>
+            <div class="trade-card-btn" onclick="selectTrade(this, 'Electrical, Plumbing & MEP')">
+              <i class="fa-solid fa-plug-circle-bolt trade-card-icon"></i>
+              <span class="trade-card-name">MEP / Technical</span>
+              <span class="trade-card-badge">High Salary</span>
+            </div>
+            <div class="trade-card-btn" onclick="selectTrade(this, 'Other Skilled Trades')">
+              <i class="fa-solid fa-screwdriver-wrench trade-card-icon"></i>
+              <span class="trade-card-name">Other Trades</span>
+              <span class="trade-card-badge">Open Categories</span>
+            </div>
+          </div>
+          <div class="funnel-nav-actions" style="justify-content: flex-end;">
+            <button type="button" class="btn btn-gold" onclick="goToStep(2)">
+              <span>Next: Select Destination</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div id="panelStep2" class="funnel-step-panel">
+          <h3 class="panel-question-title">Step 2: Where do you want to work?</h3>
+          <p class="panel-question-desc">Choose your preferred international region for visa sponsorship.</p>
+          <div class="dest-options-grid">
+            <div class="dest-card-btn selected" onclick="selectDest(this, 'Gulf Countries (UAE, Saudi, Qatar)')">
+              <div class="dest-flag-icon">⚡</div>
+              <div class="dest-info">
+                <h4>Gulf Countries</h4>
+                <p>UAE, Saudi Arabia, Qatar, Kuwait, Oman</p>
+                <span class="dest-badge-time time-badge-fast"><i class="fa-solid fa-bolt"></i> 1 to 15 Days Fast-Track</span>
+              </div>
+            </div>
+            <div class="dest-card-btn" onclick="selectDest(this, 'Europe (Germany, Poland, UK)')">
+              <div class="dest-flag-icon">🇪🇺</div>
+              <div class="dest-info">
+                <h4>Europe</h4>
+                <p>Germany, Poland, Czechia, Romania</p>
+                <span class="dest-badge-time time-badge-std"><i class="fa-solid fa-clock"></i> ~3 Months Processing</span>
+              </div>
+            </div>
+            <div class="dest-card-btn" onclick="selectDest(this, 'United States (H-2B / Industry)')">
+              <div class="dest-flag-icon">🇺🇸</div>
+              <div class="dest-info">
+                <h4>United States</h4>
+                <p>H-2B Seasonal, Construction & Logistics</p>
+                <span class="dest-badge-time time-badge-std"><i class="fa-solid fa-clock"></i> ~3 Months Processing</span>
+              </div>
+            </div>
+            <div class="dest-card-btn" onclick="selectDest(this, 'New Zealand & Australia')">
+              <div class="dest-flag-icon">🇳🇿</div>
+              <div class="dest-info">
+                <h4>New Zealand / Australia</h4>
+                <p>Accredited Employer Work Visa Programs</p>
+                <span class="dest-badge-time time-badge-std"><i class="fa-solid fa-clock"></i> ~3 Months Processing</span>
+              </div>
+            </div>
+          </div>
+          <div class="funnel-nav-actions">
+            <button type="button" class="btn btn-secondary" onclick="goToStep(1)">
+              <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+            </button>
+            <button type="button" class="btn btn-gold" onclick="goToStep(3)">
+              <span>Next: Contact Details</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div id="panelStep3" class="funnel-step-panel">
+          <h3 class="panel-question-title">Step 3: Your Contact Details</h3>
+          <p class="panel-question-desc">We will verify your profile and connect you directly to our official career executive on WhatsApp.</p>
+          <form id="leadCaptureForm" onsubmit="handleFormSubmission(event)">
+            <div class="contact-form-grid">
+              <div class="form-group">
+                <label class="form-label" for="candidateName">Full Name *</label>
+                <input type="text" id="candidateName" class="form-input-box" placeholder="e.g. Ramesh Patel" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="candidatePhone">WhatsApp Phone Number *</label>
+                <input type="tel" id="candidatePhone" class="form-input-box" placeholder="e.g. +91 98765 43210" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="candidateExp">Years of Experience</label>
+                <select id="candidateExp" class="form-input-box">
+                  <option value="1 to 2 Years">1 to 2 Years (Junior)</option>
+                  <option value="3 to 5 Years" selected>3 to 5 Years (Experienced)</option>
+                  <option value="5+ Years GCC / Overseas">5+ Years (Overseas Returned / Senior)</option>
+                  <option value="Fresher with Certificate">Fresher with Trade ITI / Diploma</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="candidateCity">Your Current City / State</label>
+                <input type="text" id="candidateCity" class="form-input-box" placeholder="e.g. Mumbai, Maharashtra" />
+              </div>
+            </div>
+            <div class="funnel-nav-actions">
+              <button type="button" class="btn btn-secondary" onclick="goToStep(2)">
+                <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+              </button>
+              <button type="submit" class="btn btn-whatsapp" style="font-size: 1.02rem; padding: 16px 28px; width: 100%;">
+                <i class="fa-brands fa-whatsapp" style="font-size: 1.3rem;"></i>
+                <span>Check Eligibility & Connect on WhatsApp</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       10. ANTI-FRAUD ADVISORY BANNER
+       ========================================================================== -->
+  <section id="fraud-advisory" class="fraud-banner-section">
+    <div class="container">
+      <div class="fraud-banner-content">
+        <div class="fraud-icon-shield">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="fraud-text-box">
+          <h3>Beware of Fraudulent Recruitment Agents Demanding Upfront Cash Deposits</h3>
+          <p>
+            NG Global Manpower Services maintains transparent, regulated service charges, with selected overseas project quotas 100% sponsored by employers. Official visa application, consular biometrics, and GAMCA medical fees are payable directly to government portals and authorized medical clinics—never into personal bank accounts of unverified middlemen. Report any suspicious agent immediately to our official helpline.
+          </p>
+        </div>
+        <div>
+          <a href="https://wa.me/918080025670?text=Hello%20NG%20Global,%20I%20want%20to%20verify%20a%20recruitment%20agent%20claim." target="_blank" class="btn btn-secondary">
+            <i class="fa-solid fa-shield"></i>
+            <span>Verify Official Agent</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       11. FAQ ACCORDION
+       ========================================================================== -->
+  <section id="faq" class="section-spacing">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-solid fa-circle-question"></i>
+          <span>Common Queries</span>
+        </div>
+        <h2 class="section-title">Frequently Asked <span class="gold-gradient-text">Questions</span></h2>
+        <p class="section-subtitle">
+          Everything you need to know about our candidate coordination, employer allocations, and official embassy processing.
+        </p>
+      </div>
+
+      <div class="faq-grid">
+        <div class="faq-item active">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How are NG Global agency service charges structured?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </div>
+          <div class="faq-answer">
+            NG Global operates with transparent, government-compliant service charges. We do not demand unaccounted advance deposits. Once you register, our career executive coordinates 1-on-1 on WhatsApp to evaluate your trade credentials and explain the exact milestone-based fee structure before you commit. In addition, we regularly offer 100% Company-Sponsored Quotas where overseas employers cover all agency expenses for selected trades.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Why are some international jobs completely free with zero service charges?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </div>
+          <div class="faq-answer">
+            A select few international positions have zero service charges because overseas principal companies fully sponsor the recruitment and hiring costs directly to us for those specific project quotas. In these specific cases, candidates do not pay any service charges.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How do official visa application and processing payments work?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </div>
+          <div class="faq-answer">
+            Candidates pay all official visa application fees, GAMCA medical examinations, and consular biometric processing charges directly to the relevant foreign embassies, government portals, or authorized diagnostic clinics. You never pay government visa fees to personal accounts of unverified agents.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Why is the Gulf process so fast (1 to 15 days) compared to Western countries?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </div>
+          <div class="faq-answer">
+            Gulf nations use streamlined electronic e-Visa portals directly connected to employer corporate block visas. In contrast, European countries, the USA, and New Zealand require formal labor market certifications, consular interviews, and biometric physical passport submissions, which take approximately 90 days.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Are food, accommodation, and transport provided by the employer?</span>
+            <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+          </div>
+          <div class="faq-answer">
+            Yes! All contracts secured through NG Global include free bachelor accommodation, duty transportation, medical health insurance, and either free meals or a generous monthly food allowance on top of your base salary.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ==========================================================================
+     SPECIAL FEATURE: INTERACTIVE 5-STEP JOB APPLICATION MODAL
+     ========================================================================== -->
+<div id="job-apply-modal" class="apply-modal-backdrop" onclick="if(event.target === this) closeApplyModal()">
+  <div class="apply-modal-box">
+    
+    <!-- Modal Header Banner -->
+    <div class="modal-head-banner">
+      <div class="modal-head-info">
+        <h3 id="modal-job-title">Job Application</h3>
+        <p><span id="modal-job-country">Overseas Opening</span> • <span id="modal-job-code" style="color: var(--gold-primary); font-family: var(--font-mono);">NG-VACANCY</span></p>
+      </div>
+      <button type="button" class="modal-close-btn" onclick="closeApplyModal()" aria-label="Close modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Progress Indicator Bar -->
+    <div class="modal-steps-bar">
+      <div class="modal-step-dots-wrap">
+        <div class="modal-step-dot active"></div>
+        <div class="modal-step-dot"></div>
+        <div class="modal-step-dot"></div>
+        <div class="modal-step-dot"></div>
+        <div class="modal-step-dot"></div>
+      </div>
+      <div id="modal-step-counter" class="modal-step-counter">Step 1 of 5</div>
+    </div>
+
+    <!-- Modal Body (5 Steps) -->
+    <div class="modal-step-body">
+      
+      <!-- STEP 1: Name -->
+      <div id="modal-step-1">
+        <label class="modal-step-label" for="step-name">What is your Full Name?</label>
+        <p class="modal-step-desc">Enter your name as printed on your passport or official identity card.</p>
+        <input type="text" id="step-name" class="modal-text-input" placeholder="e.g. Omkar Sharma" required />
+        <div id="step-1-error" style="color: #EF4444; font-size: 0.82rem; margin-top: 8px; display: none;"></div>
+      </div>
+
+      <!-- STEP 2: Experience -->
+      <div id="modal-step-2" style="display: none;">
+        <label class="modal-step-label">Total Trade Experience</label>
+        <p class="modal-step-desc">Select your experience level in this technical or skilled trade.</p>
+        <div class="radio-card-options">
+          <label class="radio-card-label">
+            <input type="radio" name="apply-experience" value="Fresher / Trainee" />
+            <span>Fresher / Trainee</span>
+          </label>
+          <label class="radio-card-label">
+            <input type="radio" name="apply-experience" value="1 - 2 Years" />
+            <span>1 - 2 Years</span>
+          </label>
+          <label class="radio-card-label">
+            <input type="radio" name="apply-experience" value="3 Years" checked />
+            <span>3 Years</span>
+          </label>
+          <label class="radio-card-label">
+            <input type="radio" name="apply-experience" value="5+ Years (Overseas Return)" />
+            <span>5+ Years (Overseas)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- STEP 3: Passport Available? -->
+      <div id="modal-step-3" style="display: none;">
+        <label class="modal-step-label">Do you have a valid Passport?</label>
+        <p class="modal-step-desc">A valid passport accelerates employer block visa stamping.</p>
+        <div class="radio-card-options">
+          <label class="radio-card-label">
+            <input type="radio" name="apply-passport" value="Yes" checked />
+            <span>Yes (Ready)</span>
+          </label>
+          <label class="radio-card-label">
+            <input type="radio" name="apply-passport" value="In Process" />
+            <span>In Process / Applied</span>
+          </label>
+          <label class="radio-card-label" style="grid-column: 1 / -1;">
+            <input type="radio" name="apply-passport" value="No (Need Assistance)" />
+            <span>No (Need Guidance to Apply)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- STEP 4: Current Location -->
+      <div id="modal-step-4" style="display: none;">
+        <label class="modal-step-label" for="step-location">What is your Current Location?</label>
+        <p class="modal-step-desc">Enter your current city and state in India or abroad.</p>
+        <input type="text" id="step-location" class="modal-text-input" placeholder="e.g. Mumbai, Delhi, Punjab, Kerala..." required />
+        <div id="step-4-error" style="color: #EF4444; font-size: 0.82rem; margin-top: 8px; display: none;"></div>
+      </div>
+
+      <!-- STEP 5: Expected Salary -->
+      <div id="modal-step-5" style="display: none;">
+        <label class="modal-step-label" for="step-expected-salary">Expected Monthly Salary</label>
+        <p class="modal-step-desc">Confirm the offered package or state your minimum expected salary.</p>
+        <input type="text" id="step-expected-salary" class="modal-text-input" placeholder="e.g. AED 1,800 or €2,500" />
+      </div>
+
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="modal-foot-actions">
+      <button type="button" id="modal-prev-btn" class="btn btn-secondary" onclick="prevApplyStep()" style="visibility: hidden; padding: 10px 18px; font-size: 0.88rem;">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Back</span>
+      </button>
+
+      <button type="button" id="modal-next-btn" class="btn btn-gold" onclick="nextApplyStep()" style="padding: 10px 22px; font-size: 0.92rem;">
+        <span>Continue</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>

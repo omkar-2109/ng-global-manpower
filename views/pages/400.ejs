@@ -1,0 +1,27 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/mobile-drawer') %>
+
+<main style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 60px 24px;">
+  <div class="glass-card" style="max-width: 600px; width: 100%; text-align: center; padding: 50px 30px; border: 1.5px solid rgba(245, 158, 11, 0.4);">
+    <div style="font-family: 'Space Grotesk', monospace; font-size: 5rem; font-weight: 700; color: var(--gold-primary); line-height: 1; margin-bottom: 12px;">400</div>
+    <h1 style="font-size: 1.8rem; color: #fff; margin-bottom: 14px;">Invalid Form Submission</h1>
+    <p style="color: var(--text-body); line-height: 1.7; margin-bottom: 24px;">
+      <%= typeof message !== 'undefined' ? message : 'Some required fields were missing or formatted incorrectly in your submission.' %>
+    </p>
+
+    <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+      <a href="javascript:history.back()" class="btn btn-gold" style="padding: 12px 24px;">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Go Back & Correct</span>
+      </a>
+      <a href="/" class="btn btn-secondary" style="padding: 12px 24px; background: rgba(255, 255, 255, 0.08); color: #fff;">
+        <i class="fa-solid fa-house"></i>
+        <span>Return to Homepage</span>
+      </a>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>

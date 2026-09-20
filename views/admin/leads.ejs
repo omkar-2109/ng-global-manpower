@@ -1,0 +1,152 @@
+<%- include('../partials/admin-header') %>
+
+<main class="admin-container">
+  
+  <div class="admin-page-header">
+    <div class="admin-page-title">
+      <h1>Candidate Application Dossiers</h1>
+      <p>Filter, evaluate trade credentials, and coordinate official embassy visa processing.</p>
+    </div>
+    <div style="display: flex; gap: 12px;">
+      <a href="/admin/leads/export" class="btn-admin btn-admin-primary">
+        <i class="fa-solid fa-download"></i>
+        <span>Download CSV Roster</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Filter Toolbar -->
+  <div class="filter-bar">
+    <form action="/admin/leads" method="GET" style="display: flex; align-items: center; justify-content: space-between; width: 100%; flex-wrap: wrap; gap: 14px;">
+      
+      <div class="filter-group">
+        <!-- Search -->
+        <input 
+          type="text" 
+          name="search" 
+          class="filter-input" 
+          placeholder="Search by candidate name, phone, or city..." 
+          value="<%= filter && filter.search ? filter.search : '' %>" 
+          style="min-width: 260px;"
+        />
+
+        <!-- Status Filter -->
+        <select name="status" class="filter-select" onchange="this.form.submit()">
+          <option value="">All Pipeline Stages</option>
+          <option value="New" <%= filter && filter.status === 'New' ? 'selected' : '' %>>New (<%= metrics.new %>)</option>
+          <option value="Contacted" <%= filter && filter.status === 'Contacted' ? 'selected' : '' %>>Contacted (<%= metrics.contacted %>)</option>
+          <option value="In-Progress" <%= filter && filter.status === 'In-Progress' ? 'selected' : '' %>>In-Progress (<%= metrics.inProgress %>)</option>
+          <option value="Placed" <%= filter && filter.status === 'Placed' ? 'selected' : '' %>>Placed (<%= metrics.placed %>)</option>
+        </select>
+
+        <!-- Trade Filter -->
+        <select name="trade" class="filter-select" onchange="this.form.submit()">
+          <option value="">All Trade Categories</option>
+          <option value="Construction" <%= filter && filter.trade === 'Construction' ? 'selected' : '' %>>Construction & Infrastructure</option>
+          <option value="Manufacturing" <%= filter && filter.trade === 'Manufacturing' ? 'selected' : '' %>>Manufacturing & Welding</option>
+          <option value="Logistics" <%= filter && filter.trade === 'Logistics' ? 'selected' : '' %>>Logistics & Heavy Driving</option>
+          <option value="Electrical" <%= filter && filter.trade === 'Electrical' ? 'selected' : '' %>>Electrical & MEP</option>
+          <option value="Hospitality" <%= filter && filter.trade === 'Hospitality' ? 'selected' : '' %>>Hospitality & Catering</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="submit" class="btn-admin btn-admin-secondary">
+          <i class="fa-solid fa-filter"></i>
+          <span>Apply Filters</span>
+        </button>
+        <% if (filter && (filter.status || filter.trade || filter.search)) { %>
+          <a href="/admin/leads" class="btn-admin btn-admin-secondary" title="Clear all filters">
+            <i class="fa-solid fa-rotate-left"></i>
+            <span>Reset</span>
+          </a>
+        <% } %>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Candidates Table -->
+  <div class="table-card">
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Application Ref</th>
+            <th>Candidate Profile</th>
+            <th>Phone / WhatsApp</th>
+            <th>Trade Skill</th>
+            <th>Target Region</th>
+            <th>Experience</th>
+            <th>Registered Date</th>
+            <th>Stage</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (leads && leads.length > 0) { %>
+            <% leads.forEach(lead => { %>
+              <tr>
+                <td>
+                  <strong style="font-family: 'Space Grotesk', monospace; color: var(--admin-gold);">#NG-<%= lead.id %></strong>
+                  <% if (lead.job_code) { %>
+                    <br><small style="color: var(--admin-cyan);">Quota: <%= lead.job_code %></small>
+                  <% } %>
+                </td>
+                <td>
+                  <div style="font-weight: 600; color: #fff;"><%= lead.full_name %></div>
+                  <small style="color: var(--admin-text-muted);"><i class="fa-solid fa-location-dot"></i> <%= lead.city %></small>
+                </td>
+                <td>
+                  <a href="https://wa.me/<%= lead.phone.replace(/[^0-9]/g, '') %>" target="_blank" style="color: #34D399; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span><%= lead.phone %></span>
+                  </a>
+                </td>
+                <td><%= lead.trade %></td>
+                <td><%= lead.destination %></td>
+                <td><%= lead.experience %></td>
+                <td>
+                  <small style="color: var(--admin-text-muted);">
+                    <%= new Date(lead.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                  </small>
+                </td>
+                <td>
+                  <% 
+                    let statusClass = 'new';
+                    if (lead.status === 'Contacted') statusClass = 'contacted';
+                    if (lead.status === 'In-Progress') statusClass = 'in-progress';
+                    if (lead.status === 'Placed') statusClass = 'placed';
+                  %>
+                  <span class="status-badge <%= statusClass %>"><%= lead.status %></span>
+                </td>
+                <td style="text-align: right; white-space: nowrap;">
+                  <a href="/admin/leads/<%= lead.id %>" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.82rem;">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>Open Dossier</span>
+                  </a>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="9" style="text-align: center; padding: 50px 20px; color: var(--admin-text-muted);">
+                <i class="fa-solid fa-user-slash" style="font-size: 2.5rem; margin-bottom: 12px; color: var(--admin-border-gold);"></i>
+                <p style="margin: 0; font-size: 1rem; color: #fff;">No candidate records found matching this criteria.</p>
+                <small>Try clearing your filters or check back once candidates complete the eligibility funnel.</small>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px; color: var(--admin-text-muted); font-size: 0.85rem;">
+    Displaying <%= leads.length %> candidate records
+  </div>
+
+</main>
+
+</body>
+</html>

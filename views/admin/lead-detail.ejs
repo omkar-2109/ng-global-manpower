@@ -1,0 +1,173 @@
+<%- include('../partials/admin-header') %>
+
+<main class="admin-container">
+
+  <!-- Header & Back Navigation -->
+  <div class="admin-page-header">
+    <div class="admin-page-title">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+        <a href="/admin/leads" style="color: var(--admin-text-muted); text-decoration: none; font-size: 0.9rem;">
+          &larr; Back to Candidates
+        </a>
+        <span style="color: var(--admin-border);">/</span>
+        <span style="font-family: 'Space Grotesk', monospace; color: var(--admin-gold); font-size: 0.9rem;">#NG-<%= lead.id %></span>
+      </div>
+      <h1><%= lead.full_name %></h1>
+      <p>Candidate Profile & Overseas Eligibility Assessment</p>
+    </div>
+
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <a href="<%= quickWhatsAppUrl %>" target="_blank" class="btn-admin btn-admin-whatsapp">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span>Direct WhatsApp Candidate</span>
+      </a>
+      
+      <form action="/admin/leads/<%= lead.id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to remove this candidate dossier?');">
+        <button type="submit" class="btn-admin btn-admin-danger" style="padding: 8px 14px;">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Detail Grid -->
+  <div class="detail-grid">
+    
+    <!-- Left Column: Detailed Information -->
+    <div>
+      <div class="card-panel">
+        <h2>Trade Qualifications & Assessment</h2>
+
+        <div class="info-row">
+          <span class="info-label">Candidate Full Name</span>
+          <span class="info-value" style="font-size: 1.05rem;"><%= lead.full_name %></span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">WhatsApp Contact Number</span>
+          <span class="info-value">
+            <a href="https://wa.me/<%= (lead.phone || '').replace(/[^0-9]/g, '') %>" target="_blank" style="color: #34D399; text-decoration: none;">
+              <i class="fa-brands fa-whatsapp"></i> <%= lead.phone %>
+            </a>
+          </span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Primary Skill / Trade</span>
+          <span class="info-value" style="color: var(--admin-gold); font-weight: 600;"><%= lead.trade %></span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Preferred Overseas Region</span>
+          <span class="info-value"><%= lead.destination %></span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Verified Experience</span>
+          <span class="info-value"><%= lead.experience %></span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Current City / Residence</span>
+          <span class="info-value"><%= lead.city %></span>
+        </div>
+
+        <% if (lead.job_code) { %>
+        <div class="info-row">
+          <span class="info-label">Direct Quota Code</span>
+          <span class="info-value" style="font-family: 'Space Grotesk', monospace; color: var(--admin-cyan);"><%= lead.job_code %></span>
+        </div>
+        <% } %>
+
+        <div class="info-row">
+          <span class="info-label">Lead Acquisition Channel</span>
+          <span class="info-value" style="text-transform: capitalize;"><%= (lead.source || 'Website').replace('_', ' ') %></span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Registered Timestamp</span>
+          <span class="info-value"><%= new Date(lead.created_at).toLocaleString('en-IN') %></span>
+        </div>
+
+        <% if (lead.ip_address) { %>
+        <div class="info-row">
+          <span class="info-label">Client IP</span>
+          <span class="info-value" style="font-family: monospace; font-size: 0.85rem; color: var(--admin-text-muted);"><%= lead.ip_address %></span>
+        </div>
+        <% } %>
+      </div>
+
+      <!-- Process Workflow Checklist -->
+      <div class="card-panel">
+        <h2>Recruiter Overseas Verification Milestones</h2>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; color: var(--admin-text-main);">
+            <input type="checkbox" <%= lead.status !== 'New' ? 'checked' : '' %> disabled style="width: 18px; height: 18px; accent-color: var(--admin-gold);" />
+            <span>1. Initial WhatsApp Verification Call Completed</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; color: var(--admin-text-main);">
+            <input type="checkbox" <%= lead.status === 'In-Progress' || lead.status === 'Placed' ? 'checked' : '' %> disabled style="width: 18px; height: 18px; accent-color: var(--admin-gold);" />
+            <span>2. Trade Test / Skill Certificate Validated</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; color: var(--admin-text-main);">
+            <input type="checkbox" <%= lead.status === 'In-Progress' || lead.status === 'Placed' ? 'checked' : '' %> disabled style="width: 18px; height: 18px; accent-color: var(--admin-gold);" />
+            <span>3. GAMCA Medical & Embassy Direct Appointment Scheduled</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; color: var(--admin-text-main);">
+            <input type="checkbox" <%= lead.status === 'Placed' ? 'checked' : '' %> disabled style="width: 18px; height: 18px; accent-color: var(--admin-gold);" />
+            <span>4. Stamped Visa Received & Flight Deployment Complete</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Status & Recruiter Notes -->
+    <div>
+      <div class="card-panel">
+        <h2>Update Pipeline Stage</h2>
+
+        <form action="/admin/leads/<%= lead.id %>/status" method="POST">
+          
+          <div class="form-group">
+            <label class="form-label" for="status">Current Status</label>
+            <select name="status" id="status" class="form-control" style="font-weight: 600; color: #fff; background: #081636;">
+              <option value="New" <%= lead.status === 'New' ? 'selected' : '' %>>New (Pending)</option>
+              <option value="Contacted" <%= lead.status === 'Contacted' ? 'selected' : '' %>>Contacted (In Discussion)</option>
+              <option value="In-Progress" <%= lead.status === 'In-Progress' ? 'selected' : '' %>>In-Progress (Trade/Embassy)</option>
+              <option value="Placed" <%= lead.status === 'Placed' ? 'selected' : '' %>>Placed (Visa Issued)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="notes">Internal Recruiter Notes</label>
+            <textarea name="notes" id="notes" class="form-control" placeholder="Add confidential recruiter notes regarding trade test, GAMCA medical fitness, passport validity..."><%= lead.notes || '' %></textarea>
+          </div>
+
+          <button type="submit" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center;">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Save Status Updates</span>
+          </button>
+        </form>
+
+      </div>
+
+      <!-- Quick Communication Helper -->
+      <div class="card-panel">
+        <h3 style="font-size: 1.05rem; margin-top: 0; color: #fff;">Instant WhatsApp Templates</h3>
+        <p style="font-size: 0.85rem; color: var(--admin-text-muted); line-height: 1.6;">
+          One-click preformatted message for official communication with candidate.
+        </p>
+
+        <a href="<%= quickWhatsAppUrl %>" target="_blank" class="btn-admin btn-admin-secondary" style="width: 100%; justify-content: center; margin-top: 10px;">
+          <i class="fa-brands fa-whatsapp" style="color: #34D399;"></i>
+          <span>Send Verification Greeting</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>
