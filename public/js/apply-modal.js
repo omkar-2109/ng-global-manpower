@@ -277,4 +277,15 @@
     openApplyModal(code, title, country, salary, category);
   };
 
+  // Delegated click listener for all job apply buttons across the page
+  document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('click', function (e) {
+      const applyBtn = e.target.closest('.job-card-apply-btn');
+      if (applyBtn) {
+        e.preventDefault();
+        triggerJobApply(applyBtn);
+      }
+    });
+  });
+
 })();

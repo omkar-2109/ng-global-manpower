@@ -118,7 +118,8 @@
     const modalStatus = modal ? modal.querySelector('.sim-status-text') : null;
     if (modal) modal.classList.add('active');
 
-    let whatsappRedirectUrl = `https://wa.me/919876543210?text=${encodeURIComponent(
+    const recruiterNumber = window.NG_SETTINGS?.whatsappNumber || '918080025670';
+    let whatsappRedirectUrl = `https://wa.me/${recruiterNumber}?text=${encodeURIComponent(
       `*APPLICATION FOR OVERSEAS RECRUITMENT (NG GLOBAL)*\n` +
       `👤 Name: ${candidateName}\n📞 Phone: ${candidatePhone}\n🛠️ Trade: ${selectedTradeValue}\n🌍 Destination: ${selectedDestValue}\n⏱️ Experience: ${candidateExp}\n📍 Location: ${candidateCity}`
     )}`;
@@ -180,7 +181,32 @@
       `*Candidate Note:* Hello NG Global, I want to apply for this opening. Please connect with me to assess my credentials, discuss terms, and guide me on embassy processing.`;
 
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/919876543210?text=${encodedMessage}`;
+    const recruiterNumber = window.NG_SETTINGS?.whatsappNumber || '918080025670';
+    const whatsappUrl = `https://wa.me/${recruiterNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
   };
+
+  // Event Delegation for Lead Funnel clicks
+  document.addEventListener('DOMContentLoaded', () => {
+    const funnel = document.getElementById('lead-funnel');
+    if (!funnel) return;
+
+    funnel.addEventListener('click', (e) => {
+      // Step 1: Trade selection
+      const tradeCard = e.target.closest('.trade-card-btn');
+      if (tradeCard) {
+        const tradeTitle = tradeCard.querySelector('h4');
+        if (tradeTitle) selectTrade(tradeCard, tradeTitle.textContent.trim());
+        return;
+      }
+
+      // Step 2: Destination selection
+      const destCard = e.target.closest('.dest-card-btn');
+      if (destCard) {
+        const destTitle = destCard.querySelector('h4');
+        if (destTitle) selectDest(destCard, destTitle.textContent.trim());
+        return;
+      }
+    });
+  });
 })();

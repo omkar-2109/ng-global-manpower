@@ -215,5 +215,37 @@
         }
       });
     });
+
+    // Delegated click listeners as a robust backup to inline handlers
+    document.addEventListener('click', (e) => {
+      // Mobile Drawer Toggle
+      if (e.target.closest('.mobile-menu-btn') || e.target.closest('.mobile-drawer-close') || e.target.closest('.mobile-drawer-overlay')) {
+        toggleMobileMenu();
+        return;
+      }
+
+      // Hero Search Submit Button
+      if (e.target.closest('.search-submit-btn')) {
+        e.preventDefault();
+        handleHeroSearch(e);
+        return;
+      }
+
+      // Timeline Switcher
+      const timelineBtn = e.target.closest('.timeline-tab-btn');
+      if (timelineBtn) {
+        const isGulf = timelineBtn.textContent.toLowerCase().includes('gulf');
+        switchTimelineTrack(isGulf ? 'gulf' : 'western');
+        return;
+      }
+    });
+
+    // Hero search form submit
+    const heroForm = document.querySelector('.hero-search-form');
+    if (heroForm) {
+      heroForm.addEventListener('submit', (e) => {
+        handleHeroSearch(e);
+      });
+    }
   });
 })();
