@@ -2,12 +2,43 @@
 
 <main class="admin-container">
 
+  <!-- Status Feedback Alerts -->
+  <% if (typeof query !== 'undefined' && query) { %>
+    <% if (query.bulk_deleted) { %>
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34D399; padding: 14px 20px; border-radius: 12px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; font-weight: 500;">
+        <i class="fa-solid fa-circle-check" style="font-size: 1.2rem;"></i>
+        <span>Successfully deleted <strong><%= query.bulk_deleted %></strong> job opening(s). Database updated.</span>
+      </div>
+    <% } else if (query.deleted) { %>
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34D399; padding: 14px 20px; border-radius: 12px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; font-weight: 500;">
+        <i class="fa-solid fa-circle-check" style="font-size: 1.2rem;"></i>
+        <span>Job opening removed successfully.</span>
+      </div>
+    <% } else if (query.created) { %>
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34D399; padding: 14px 20px; border-radius: 12px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; font-weight: 500;">
+        <i class="fa-solid fa-circle-check" style="font-size: 1.2rem;"></i>
+        <span>New overseas job opening published successfully.</span>
+      </div>
+    <% } else if (query.updated) { %>
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34D399; padding: 14px 20px; border-radius: 12px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; font-weight: 500;">
+        <i class="fa-solid fa-circle-check" style="font-size: 1.2rem;"></i>
+        <span>Job opening details updated.</span>
+      </div>
+    <% } %>
+  <% } %>
+
   <div class="admin-page-header">
     <div class="admin-page-title">
       <h1>Verified Overseas Job Quotas</h1>
       <p>Manage employer openings displayed on the public website and candidate search directory.</p>
     </div>
-    <div style="display: flex; gap: 10px;">
+    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+      <!-- Bulk Delete Trigger Button (Hidden until checkboxes are selected) -->
+      <button type="button" id="bulkDeleteBtn" class="btn-admin btn-admin-danger" style="display: none; padding: 10px 18px; font-weight: 600; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);" onclick="executeBulkDelete()">
+        <i class="fa-solid fa-trash-can"></i>
+        <span>Delete Selected (<span id="selectedCountBadge">0</span>)</span>
+      </button>
+
       <a href="/admin/jobs/new" class="btn-admin btn-admin-primary" style="background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); border: none; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);">
         <i class="fa-solid fa-wand-magic-sparkles"></i>
         <span>⚡ Generate with Qwen AI</span>
@@ -21,10 +52,28 @@
 
   <!-- Jobs Table -->
   <div class="table-card">
+    <!-- Bulk Selection Status Bar -->
+    <div id="selectionStatusBar" style="display: none; padding: 12px 20px; background: rgba(239, 68, 68, 0.1); border-bottom: 1px solid rgba(239, 68, 68, 0.2); justify-content: space-between; align-items: center;">
+      <span style="font-size: 0.9rem; color: #fca5a5;">
+        <strong id="barSelectedCount">0</strong> job opening(s) selected
+      </span>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <button type="button" onclick="clearAllSelections()" style="background: none; border: none; color: var(--admin-text-muted); cursor: pointer; font-size: 0.85rem; text-decoration: underline;">
+          Deselect All
+        </button>
+        <button type="button" onclick="executeBulkDelete()" class="btn-admin btn-admin-danger" style="padding: 6px 14px; font-size: 0.85rem;">
+          <i class="fa-solid fa-trash-can"></i> Delete Selected
+        </button>
+      </div>
+    </div>
+
     <div class="table-responsive">
       <table class="admin-table">
         <thead>
           <tr>
+            <th style="width: 44px; text-align: center;">
+              <input type="checkbox" id="selectAllCheckbox" title="Select All Jobs" onchange="toggleSelectAll(this)" style="cursor: pointer; width: 17px; height: 17px; accent-color: #ef4444;" />
+            </th>
             <th>Quota ID</th>
             <th>Job Title & Category</th>
             <th>Country / Region</th>
@@ -38,7 +87,10 @@
         <tbody>
           <% if (jobs && jobs.length > 0) { %>
             <% jobs.forEach(job => { %>
-              <tr>
+              <tr id="job-row-<%= job.id %>" class="job-data-row">
+                <td style="text-align: center;">
+                  <input type="checkbox" name="selectedJobIds" value="<%= job.id %>" class="job-checkbox" onchange="updateBulkToolbar()" style="cursor: pointer; width: 17px; height: 17px; accent-color: #ef4444;" />
+                </td>
                 <td>
                   <strong style="font-family: 'Space Grotesk', monospace; color: var(--admin-gold);"><%= job.job_code %></strong>
                 </td>
@@ -96,8 +148,15 @@
             <% }); %>
           <% } else { %>
             <tr>
-              <td colspan="8" style="text-align: center; padding: 40px; color: var(--admin-text-muted);">
-                No job quotas created yet. Click "Create New Job Quota" to add your first opening.
+              <td colspan="9" style="text-align: center; padding: 48px 24px; color: var(--admin-text-muted);">
+                <i class="fa-solid fa-briefcase" style="font-size: 2.5rem; color: var(--admin-gold); opacity: 0.4; margin-bottom: 14px; display: block;"></i>
+                <div style="font-size: 1.1rem; color: #fff; font-weight: 600; margin-bottom: 6px;">0 Job Openings in System</div>
+                <p style="margin: 0 0 16px 0; font-size: 0.9rem;">
+                  No overseas job quotas exist right now. Click "Create Job Quota" or "⚡ Generate with Qwen AI" to publish your first verified opening.
+                </p>
+                <a href="/admin/jobs/new" class="btn-admin btn-admin-primary" style="display: inline-flex;">
+                  <i class="fa-solid fa-plus"></i> Post New Job Quota
+                </a>
               </td>
             </tr>
           <% } %>
@@ -106,7 +165,95 @@
     </div>
   </div>
 
+  <!-- Hidden Form for Bulk Delete Submission -->
+  <form id="bulkDeleteForm" action="/admin/jobs/bulk-delete" method="POST" style="display: none;">
+    <input type="hidden" name="jobIds" id="bulkJobIdsInput" value="" />
+  </form>
+
 </main>
+
+<script>
+  function toggleSelectAll(masterCheckbox) {
+    const checkboxes = document.querySelectorAll('.job-checkbox');
+    checkboxes.forEach(cb => {
+      cb.checked = masterCheckbox.checked;
+      const row = document.getElementById('job-row-' + cb.value);
+      if (row) {
+        if (cb.checked) {
+          row.style.background = 'rgba(239, 68, 68, 0.08)';
+        } else {
+          row.style.background = '';
+        }
+      }
+    });
+    updateBulkToolbar();
+  }
+
+  function updateBulkToolbar() {
+    const checked = Array.from(document.querySelectorAll('.job-checkbox:checked'));
+    const count = checked.length;
+    const total = document.querySelectorAll('.job-checkbox').length;
+    
+    const bulkBtn = document.getElementById('bulkDeleteBtn');
+    const badge = document.getElementById('selectedCountBadge');
+    const statusBar = document.getElementById('selectionStatusBar');
+    const barCount = document.getElementById('barSelectedCount');
+    const masterCheckbox = document.getElementById('selectAllCheckbox');
+
+    if (badge) badge.textContent = count;
+    if (barCount) barCount.textContent = count;
+
+    if (masterCheckbox) {
+      masterCheckbox.checked = total > 0 && count === total;
+      masterCheckbox.indeterminate = count > 0 && count < total;
+    }
+
+    // Highlight rows
+    document.querySelectorAll('.job-checkbox').forEach(cb => {
+      const row = document.getElementById('job-row-' + cb.value);
+      if (row) {
+        row.style.background = cb.checked ? 'rgba(239, 68, 68, 0.08)' : '';
+      }
+    });
+
+    if (count > 0) {
+      if (bulkBtn) bulkBtn.style.display = 'inline-flex';
+      if (statusBar) statusBar.style.display = 'flex';
+    } else {
+      if (bulkBtn) bulkBtn.style.display = 'none';
+      if (statusBar) statusBar.style.display = 'none';
+    }
+  }
+
+  function clearAllSelections() {
+    const masterCheckbox = document.getElementById('selectAllCheckbox');
+    if (masterCheckbox) masterCheckbox.checked = false;
+    document.querySelectorAll('.job-checkbox').forEach(cb => {
+      cb.checked = false;
+    });
+    updateBulkToolbar();
+  }
+
+  function executeBulkDelete() {
+    const checked = Array.from(document.querySelectorAll('.job-checkbox:checked')).map(cb => cb.value);
+    if (checked.length === 0) {
+      alert('Please select at least one job quota to delete.');
+      return;
+    }
+
+    const confirmMsg = `Are you sure you want to permanently delete the ${checked.length} selected job opening(s)?\n\nThis will remove them immediately from the website directory.`;
+    if (!confirm(confirmMsg)) {
+      return;
+    }
+
+    const input = document.getElementById('bulkJobIdsInput');
+    const form = document.getElementById('bulkDeleteForm');
+    if (input && form) {
+      input.value = checked.join(',');
+      form.submit();
+    }
+  }
+</script>
 
 </body>
 </html>

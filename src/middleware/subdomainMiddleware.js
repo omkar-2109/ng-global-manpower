@@ -8,10 +8,10 @@ function subdomainMiddleware(req, res, next) {
 
   // Check if subdomain is present
   // Examples:
+  // admin.ngglobalmp.in -> ['admin', 'ngglobalmp', 'in']
   // agents.ngglobalmp.in -> ['agents', 'ngglobalmp', 'in']
-  // vikram.ngglobalmp.in -> ['vikram', 'ngglobalmp', 'in']
-  // agents.localhost -> ['agents', 'localhost']
-  // vikram.localhost -> ['vikram', 'localhost']
+  // apex-global.ngglobalmp.in -> ['apex-global', 'ngglobalmp', 'in']
+  // apex-global.localhost -> ['apex-global', 'localhost']
 
   let subdomain = null;
   if (hostname.endsWith('localhost') && parts.length > 1) {
@@ -20,19 +20,31 @@ function subdomainMiddleware(req, res, next) {
     subdomain = parts[0];
   }
 
-  // Handle 'agents' or 'agent' subdomain
+  // 1. Handle 'admin' subdomain: admin.yourdomain.com or admin.localhost
+  if (subdomain === 'admin') {
+    req.isAdminPortal = true;
+    res.locals.isAdminPortal = true;
+
+    // If accessing root of admin subdomain, redirect to admin dashboard
+    if (req.path === '/') {
+      return res.redirect('/admin/dashboard');
+    }
+    return next();
+  }
+
+  // 2. Handle 'agents' or 'agent' subdomain: agents.yourdomain.com or agents.localhost
   if (subdomain === 'agents' || subdomain === 'agent') {
     req.isAgentPortal = true;
     res.locals.isAgentPortal = true;
 
-    // If accessing root of agents subdomain, redirect/rewrite to agent dashboard or login
+    // If accessing root of agents subdomain, redirect to agent dashboard or login
     if (req.path === '/') {
       return res.redirect('/agent/dashboard');
     }
     return next();
   }
 
-  // Handle agent custom subdomain e.g. [username].ngglobalmp.in or [username].localhost
+  // 3. Handle agent custom subdomain: [username].yourdomain.com or [username].localhost
   const reserved = ['www', 'admin', 'api', 'mail', 'app', 'portal', 'agents', 'agent', 'static'];
   if (subdomain && !reserved.includes(subdomain)) {
     const agent = Agent.findByUsername(subdomain);
@@ -40,9 +52,19 @@ function subdomainMiddleware(req, res, next) {
       req.subdomainAgent = agent;
       res.locals.subdomainAgent = agent;
 
-      // If at root of agent subdomain, rewrite or redirect to their agency landing page
+      // Handle root access on agent's named subdomain:
       if (req.path === '/') {
+        // If the logged-in agent matches this subdomain, open their private Dashboard
+        if (req.agent && req.agent.id === agent.id) {
+          return res.redirect('/agent/dashboard');
+        }
+        // Otherwise, open their branded public agency intake page for candidates
         return res.redirect(`/agency/${agent.username}`);
+      }
+
+      // If user accesses /dashboard on the agent's subdomain
+      if (req.path === '/dashboard') {
+        return res.redirect('/agent/dashboard');
       }
     }
   }

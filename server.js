@@ -20,6 +20,7 @@ const adminRoutes = require('./src/routes/adminRoutes');
 const agentRoutes = require('./src/routes/agentRoutes');
 const apiRoutes = require('./src/routes/apiRoutes');
 const agentController = require('./src/controllers/agentController');
+const jobService = require('./src/services/jobService');
 
 const app = express();
 
@@ -59,14 +60,24 @@ app.use('/NG_Global_Manpower_Logo_Kit', express.static(path.join(__dirname, 'pub
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // 6. Subdomain Routing & Global View Context
-app.use(subdomainMiddleware);
 app.use(optionalAuth);
+app.use(subdomainMiddleware);
 app.use((req, res, next) => {
   res.locals.appName = env.appName;
   res.locals.appUrl = env.appUrl;
   res.locals.currentYear = new Date().getFullYear();
   res.locals.user = req.user || null;
   res.locals.agent = req.agent || null;
+  
+  const host = (req.headers.host || '').split(':')[0].toLowerCase();
+  const parts = host.split('.');
+  res.locals.rootHostname = host.endsWith('localhost') ? `localhost:${env.port}` : (parts.length > 2 ? parts.slice(1).join('.') : host);
+
+  try {
+    res.locals.tickerJobs = jobService.getActiveJobs().slice(0, 10);
+  } catch (err) {
+    res.locals.tickerJobs = [];
+  }
   next();
 });
 

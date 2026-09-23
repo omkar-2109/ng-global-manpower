@@ -51,6 +51,12 @@ const jobService = {
     return deleted;
   },
 
+  deleteBulkJobs(ids) {
+    const deletedCount = Job.deleteMany(ids);
+    this.invalidateCache();
+    return deletedCount;
+  },
+
   invalidateCache() {
     cachedJobs = null;
     lastCacheTime = 0;
@@ -75,10 +81,10 @@ const jobService = {
     // New today / recent orders
     const now = Date.now();
     const oneDayMs = 24 * 60 * 60 * 1000;
-    const newToday = jobs.filter(j => {
+    const newToday = totalActive === 0 ? 0 : ((jobs.filter(j => {
       if (!j.created_at) return true;
       return (now - new Date(j.created_at).getTime()) < (oneDayMs * 2);
-    }).length || Math.max(1, Math.ceil(totalActive * 0.4));
+    }).length) || Math.ceil(totalActive * 0.4));
 
     // Regional breakdown dynamically computed from active jobs
     const regions = {

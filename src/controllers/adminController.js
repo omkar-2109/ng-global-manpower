@@ -102,6 +102,7 @@ const adminController = {
       res.render('admin/jobs', {
         title: 'Overseas Job Openings | NG Global',
         jobs,
+        query: req.query,
         path: '/admin/jobs'
       });
     } catch (err) {

@@ -58,7 +58,7 @@
           <span>Frequently Asked Questions</span>
         </a>
       </li>
-      <% if (typeof user !== 'undefined' && user) { %>
+      <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
       <li>
         <a href="/admin/dashboard" style="color: var(--gold-primary);">
           <i class="fa-solid fa-user-shield"></i>
@@ -68,8 +68,24 @@
       <% } else { %>
       <li>
         <a href="/admin/login">
-          <i class="fa-solid fa-lock"></i>
-          <span>Staff Login</span>
+          <i class="fa-solid fa-shield-halved" style="color: var(--gold-primary);"></i>
+          <span>HR &amp; Admin Login</span>
+        </a>
+      </li>
+      <% } %>
+
+      <% if (typeof agent !== 'undefined' && agent) { %>
+      <li>
+        <a href="/agent/dashboard" style="color: #38bdf8;">
+          <i class="fa-solid fa-handshake"></i>
+          <span>Agent Dashboard (<%= agent.agency_name %>)</span>
+        </a>
+      </li>
+      <% } else { %>
+      <li>
+        <a href="/agent/login">
+          <i class="fa-solid fa-handshake" style="color: #38bdf8;"></i>
+          <span>Agent Partner Portal</span>
         </a>
       </li>
       <% } %>

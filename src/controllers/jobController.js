@@ -84,6 +84,34 @@ const jobController = {
     } catch (err) {
       next(err);
     }
+  },
+
+  // Admin: Bulk delete multiple jobs
+  deleteBulkJobs(req, res, next) {
+    try {
+      let ids = req.body.jobIds;
+      if (!ids) {
+        if (req.xhr || req.headers.accept?.includes('json')) {
+          return res.status(400).json({ success: false, message: 'No job IDs selected.' });
+        }
+        return res.redirect('/admin/jobs');
+      }
+
+      if (typeof ids === 'string') {
+        ids = ids.split(',').map(s => s.trim()).filter(Boolean);
+      } else if (!Array.isArray(ids)) {
+        ids = [ids];
+      }
+
+      const deletedCount = jobService.deleteBulkJobs(ids);
+
+      if (req.xhr || req.headers.accept?.includes('json')) {
+        return res.json({ success: true, message: `Successfully deleted ${deletedCount} job opening(s).`, deletedCount });
+      }
+      res.redirect(`/admin/jobs?bulk_deleted=${deletedCount}`);
+    } catch (err) {
+      next(err);
+    }
   }
 };
 

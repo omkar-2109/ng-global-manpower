@@ -122,6 +122,19 @@ function createTableInterface(tableName) {
       items.splice(index, 1);
       persist();
       return true;
+    },
+
+    deleteMany(ids) {
+      if (!Array.isArray(ids) || ids.length === 0) return 0;
+      const items = store[tableName] || [];
+      const idSet = new Set(ids.map(id => String(id)));
+      const initialLength = items.length;
+      store[tableName] = items.filter(item => !idSet.has(String(item.id)));
+      const deletedCount = initialLength - store[tableName].length;
+      if (deletedCount > 0) {
+        persist();
+      }
+      return deletedCount;
     }
   };
 }

@@ -67,6 +67,10 @@ const Job = {
     return db.jobs.delete(id);
   },
 
+  deleteMany(ids) {
+    return db.jobs.deleteMany(ids);
+  },
+
   count(activeOnly = false) {
     if (activeOnly) {
       return db.jobs.count(j => j.active === 1);

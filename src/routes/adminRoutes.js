@@ -48,6 +48,7 @@ router.post('/agents/:id/delete', adminController.deleteAgent);
 router.get('/jobs', adminController.showJobs);
 router.get('/jobs/new', adminController.showJobForm);
 router.post('/jobs', documentService.uploadJobGraphic, validate(jobValidation), jobController.createJob);
+router.post('/jobs/bulk-delete', jobController.deleteBulkJobs);
 router.get('/jobs/:id/edit', adminController.showJobForm);
 router.post('/jobs/:id/edit', documentService.uploadJobGraphic, validate(jobValidation), jobController.updateJob);
 router.post('/jobs/:id/delete', jobController.deleteJob);

@@ -171,13 +171,25 @@
           </div>
         <% }); %>
       <% } else { %>
-        <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 60px 24px;">
-          <i class="fa-solid fa-magnifying-glass" style="font-size: 3rem; color: var(--gold-primary); margin-bottom: 16px;"></i>
-          <h3 style="font-size: 1.4rem; color: #fff; margin-bottom: 8px;">No Quotas Found For Selected Filter</h3>
-          <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 24px auto;">
-            We update employer quotas weekly. Try clearing your filters or complete the general eligibility questionnaire to be matched automatically.
-          </p>
-          <a href="/jobs" class="btn btn-gold" style="padding: 12px 24px;">View All Available Openings</a>
+        <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 60px 24px; border-radius: 20px;">
+          <% if (selectedCategory || selectedCountry) { %>
+            <i class="fa-solid fa-magnifying-glass" style="font-size: 3rem; color: var(--gold-primary); margin-bottom: 16px;"></i>
+            <h3 style="font-size: 1.4rem; color: #fff; margin-bottom: 8px;">No Quotas Found For Selected Filter</h3>
+            <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 24px auto;">
+              We update employer quotas continuously. Try clearing your filters or complete the general eligibility questionnaire to be matched automatically.
+            </p>
+            <a href="/jobs" class="btn btn-gold" style="padding: 12px 24px;">View All Available Openings</a>
+          <% } else { %>
+            <i class="fa-solid fa-briefcase" style="font-size: 3rem; color: var(--gold-amber); margin-bottom: 16px; opacity: 0.85;"></i>
+            <h3 style="font-size: 1.4rem; color: #fff; margin-bottom: 8px;">No Active Overseas Openings Right Now</h3>
+            <p style="color: var(--text-muted); max-width: 520px; margin: 0 auto 24px auto;">
+              New verified international vacancies are published directly by our HR recruitment operations team. Submit your candidate profile to be matched when suitable quotas open.
+            </p>
+            <a href="/#lead-funnel" class="btn btn-gold" style="padding: 12px 24px;">
+              <span>Submit Candidate Profile</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          <% } %>
         </div>
       <% } %>
     </div>

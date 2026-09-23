@@ -1,55 +1,40 @@
-  <!-- Top Live Trending Latest Jobs Ticker -->
+  <!-- Top Live Trending Latest Jobs Ticker (Dynamic Real Openings) -->
+  <% if (typeof tickerJobs !== 'undefined' && tickerJobs && tickerJobs.length > 0) { %>
   <div class="trending-ticker-wrapper">
     <div class="trending-ticker-inner">
       <span class="ticker-lead-badge"><i class="fa-solid fa-fire"></i> Trending Openings</span>
-      <a href="/jobs?country=Saudi" class="ticker-job-item">
-        <span>🇸🇦 Heavy Trailer & Tanker Driver (NEOM Project)</span>
-        <span class="ticker-job-tag">₹85,000 – ₹1.25L / mo</span>
-      </a>
-      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
-      <a href="/jobs?country=Germany" class="ticker-job-item">
-        <span>🇩🇪 6G TIG & ARC Pipe Welder (EU Germany & Poland)</span>
-        <span class="ticker-job-tag">€1,600 – €2,500</span>
-      </a>
-      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
-      <a href="/jobs?country=Qatar" class="ticker-job-item">
-        <span>🇶🇦 Construction Helpers & Riggers (Qatar)</span>
-        <span class="ticker-sponsored-pill"><i class="fa-solid fa-gift"></i> 100% Company Sponsored (Zero Fees)</span>
-      </a>
-      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
-      <a href="/jobs?country=UAE" class="ticker-job-item">
-        <span>🇦🇪 Commercial MEP Electrician & Plumber (Dubai)</span>
-        <span class="ticker-job-tag">AED 3,100 – 4,800</span>
-      </a>
-      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
-      <a href="/jobs?country=United+States" class="ticker-job-item">
-        <span>🇺🇸 Hospitality & Resort Services Crew (USA H-2B)</span>
-        <span class="ticker-job-tag">$2,200 – $3,200</span>
-      </a>
-      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
-      <a href="/jobs?country=New+Zealand" class="ticker-job-item">
-        <span>🇳🇿 Heavy Crane Mechanic (New Zealand)</span>
-        <span class="ticker-job-tag">NZ$ 3,400 – $5,000</span>
-      </a>
+      <% tickerJobs.forEach(tJob => { %>
+        <a href="/jobs/<%= tJob.job_code || tJob.id %>" class="ticker-job-item">
+          <span><%= tJob.flag || '🌐' %> <%= tJob.title %> (<%= (tJob.country || '').split('(')[0].trim() %>)</span>
+          <% if (tJob.employer_funded) { %>
+            <span class="ticker-sponsored-pill"><i class="fa-solid fa-gift"></i> 100% Free Quota</span>
+          <% } else if (tJob.salary_foreign) { %>
+            <span class="ticker-job-tag"><%= tJob.salary_foreign %></span>
+          <% } else if (tJob.salary_inr) { %>
+            <span class="ticker-job-tag"><%= tJob.salary_inr %></span>
+          <% } %>
+        </a>
+        <span style="color: var(--border-gold); opacity: 0.5;">•</span>
+      <% }); %>
       
       <!-- Duplicate items for seamless continuous ticker loop -->
       <span class="ticker-lead-badge"><i class="fa-solid fa-bolt"></i> Fast-Track Quotas</span>
-      <a href="/jobs?country=Saudi" class="ticker-job-item">
-        <span>🇸🇦 Heavy Trailer & Tanker Driver (NEOM Project)</span>
-        <span class="ticker-job-tag">₹85,000 – ₹1.25L / mo</span>
-      </a>
-      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
-      <a href="/jobs?country=Germany" class="ticker-job-item">
-        <span>🇩🇪 6G TIG & ARC Pipe Welder (EU Germany)</span>
-        <span class="ticker-job-tag">€1,600 – €2,500</span>
-      </a>
-      <span style="color: var(--border-gold); opacity: 0.5;">•</span>
-      <a href="/jobs?country=Qatar" class="ticker-job-item">
-        <span>🇶🇦 Construction Helpers & Riggers</span>
-        <span class="ticker-sponsored-pill">100% Company Sponsored</span>
-      </a>
+      <% tickerJobs.forEach(tJob => { %>
+        <a href="/jobs/<%= tJob.job_code || tJob.id %>" class="ticker-job-item">
+          <span><%= tJob.flag || '🌐' %> <%= tJob.title %> (<%= (tJob.country || '').split('(')[0].trim() %>)</span>
+          <% if (tJob.employer_funded) { %>
+            <span class="ticker-sponsored-pill"><i class="fa-solid fa-gift"></i> 100% Free Quota</span>
+          <% } else if (tJob.salary_foreign) { %>
+            <span class="ticker-job-tag"><%= tJob.salary_foreign %></span>
+          <% } else if (tJob.salary_inr) { %>
+            <span class="ticker-job-tag"><%= tJob.salary_inr %></span>
+          <% } %>
+        </a>
+        <span style="color: var(--border-gold); opacity: 0.5;">•</span>
+      <% }); %>
     </div>
   </div>
+  <% } %>
 
   <!-- Top Announcement Bar -->
   <header class="top-bar">
