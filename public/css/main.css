@@ -4211,3 +4211,54 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* Universal High-Contrast Select & Form Control Styling */
+    html, body, select, input, textarea {
+      color-scheme: dark;
+    }
+
+    select,
+    select.form-control {
+      background-color: #081636 !important;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      border-radius: 10px !important;
+      accent-color: #d4af37 !important;
+      cursor: pointer;
+    }
+
+    select option {
+      background-color: #081636 !important;
+      color: #ffffff !important;
+      padding: 12px 14px !important;
+      font-size: 0.95rem !important;
+      line-height: 1.5 !important;
+    }
+
+    select option:hover,
+    select option:focus,
+    select option:checked {
+      background-color: #1e40af !important;
+      color: #ffffff !important;
+    }
+
+    .form-control {
+      width: 100%;
+      background: #081636 !important;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      border-radius: 10px !important;
+      padding: 11px 14px !important;
+      font-size: 0.92rem !important;
+      outline: none !important;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .form-control:focus {
+      border-color: #d4af37 !important;
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.25) !important;
+    }

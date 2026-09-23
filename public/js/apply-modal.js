@@ -15,11 +15,12 @@
   };
 
   let currentStep = 1;
-  const totalSteps = 5;
+  const totalSteps = 6;
 
   const candidateData = {
     name: '',
-    experience: '3 - 5 Years',
+    phone: '',
+    experience: '3 to 5 Years',
     passport: 'Yes, Ready with Passport',
     location: '',
     expectedSalary: ''
@@ -74,28 +75,38 @@
     if (currentStep === 1) {
       const nameInput = document.getElementById('step-name');
       const val = nameInput ? nameInput.value.trim() : '';
-      if (!val) {
-        showStepError('step-1', 'Please enter your full name to proceed.');
+      if (!val || val.length < 2) {
+        showStepError('step-1', 'Please enter your full legal name as in Passport.');
         return;
       }
       candidateData.name = val;
       clearStepError('step-1');
     } else if (currentStep === 2) {
-      const expSelected = document.querySelector('input[name="apply-experience"]:checked');
-      candidateData.experience = expSelected ? expSelected.value : '3 - 5 Years';
+      const phoneInput = document.getElementById('step-phone');
+      const val = phoneInput ? phoneInput.value.trim() : '';
+      const digitsOnly = val.replace(/\D/g, '');
+      if (!val || digitsOnly.length < 8 || digitsOnly.length > 15) {
+        showStepError('step-2', 'Please enter a valid mobile / WhatsApp number (at least 8 to 12 digits).');
+        return;
+      }
+      candidateData.phone = val;
+      clearStepError('step-2');
     } else if (currentStep === 3) {
+      const expSelected = document.querySelector('input[name="apply-experience"]:checked');
+      candidateData.experience = expSelected ? expSelected.value : '3 to 5 Years';
+    } else if (currentStep === 4) {
       const passSelected = document.querySelector('input[name="apply-passport"]:checked');
       candidateData.passport = passSelected ? passSelected.value : 'Yes, Ready with Passport';
-    } else if (currentStep === 4) {
+    } else if (currentStep === 5) {
       const locInput = document.getElementById('step-location');
       const val = locInput ? locInput.value.trim() : '';
-      if (!val) {
-        showStepError('step-4', 'Please enter your current city or state.');
+      if (!val || val.length < 2) {
+        showStepError('step-5', 'Please enter your current city & state.');
         return;
       }
       candidateData.location = val;
-      clearStepError('step-4');
-    } else if (currentStep === 5) {
+      clearStepError('step-5');
+    } else if (currentStep === 6) {
       const salInput = document.getElementById('step-expected-salary');
       candidateData.expectedSalary = salInput && salInput.value.trim() ? salInput.value.trim() : currentJob.salary;
       submitAndOpenWhatsApp();
@@ -164,17 +175,15 @@
       }
     }
 
-    // Auto focus appropriate input
-    if (currentStep === 4) {
-      setTimeout(() => {
-        const loc = document.getElementById('step-location');
-        if (loc) loc.focus();
-      }, 100);
+    // Auto focus appropriate inputs
+    if (currentStep === 1) {
+      setTimeout(() => { const el = document.getElementById('step-name'); if (el) el.focus(); }, 100);
+    } else if (currentStep === 2) {
+      setTimeout(() => { const el = document.getElementById('step-phone'); if (el) el.focus(); }, 100);
     } else if (currentStep === 5) {
-      setTimeout(() => {
-        const sal = document.getElementById('step-expected-salary');
-        if (sal) sal.focus();
-      }, 100);
+      setTimeout(() => { const loc = document.getElementById('step-location'); if (loc) loc.focus(); }, 100);
+    } else if (currentStep === 6) {
+      setTimeout(() => { const sal = document.getElementById('step-expected-salary'); if (sal) sal.focus(); }, 100);
     }
   }
 
@@ -197,14 +206,17 @@
   async function submitAndOpenWhatsApp() {
     // 1. Generate the exact formatted message requested by the user:
     const message = 
-      `Hello,\n\n` +
-      `I am interested in the ${currentJob.title} role in ${currentJob.country}.\n\n` +
-      `Name: ${candidateData.name}\n` +
-      `Experience: ${candidateData.experience}\n` +
-      `Passport: ${candidateData.passport}\n` +
-      `Location: ${candidateData.location}\n` +
-      `Expected Salary: ${candidateData.expectedSalary}\n\n` +
-      `Please share further details.`;
+      `Hello NG Global Overseas Recruitment Team,\n\n` +
+      `I am applying for the verified opening: *${currentJob.title}*\n` +
+      `📌 *Country / Quota:* ${currentJob.country}\n` +
+      `🆔 *Job Code:* ${currentJob.code}\n\n` +
+      `👤 *Full Name:* ${candidateData.name}\n` +
+      `📞 *WhatsApp / Phone:* ${candidateData.phone}\n` +
+      `🛠️ *Trade Experience:* ${candidateData.experience}\n` +
+      `🛂 *Passport Status:* ${candidateData.passport}\n` +
+      `📍 *Location:* ${candidateData.location}\n` +
+      `💰 *Offered/Expected Salary:* ${candidateData.expectedSalary}\n\n` +
+      `My documents are ready. Please guide me with the interview process and visa documentation.`;
 
     // 2. Asynchronously record the lead into the database for the recruiter CRM
     try {
@@ -213,12 +225,13 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           full_name: candidateData.name,
-          phone: '+91 (WhatsApp Direct)',
+          phone: candidateData.phone,
           trade: currentJob.category || currentJob.title,
           destination: currentJob.country,
           experience: candidateData.experience,
           city: candidateData.location,
           job_code: currentJob.code,
+          source: 'apply_modal',
           notes: `Passport: ${candidateData.passport} | Expected: ${candidateData.expectedSalary}`
         })
       }).catch(err => console.warn('[Apply Modal] Background lead sync note:', err));

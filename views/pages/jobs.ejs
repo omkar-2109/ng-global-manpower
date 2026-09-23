@@ -1,3 +1,17 @@
+<%
+  function cleanText(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&amp;/g, '&')
+      .replace(/&#x2F;/g, '/')
+      .replace(/&#47;/g, '/')
+      .replace(/&#x27;/g, "'")
+      .replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>');
+  }
+%>
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 <%- include('../partials/mobile-drawer') %>
@@ -25,7 +39,7 @@
           <!-- Category Filter -->
           <div style="min-width: 200px; flex: 1;">
             <label style="display: block; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Trade Category</label>
-            <select name="category" onchange="this.form.submit()" style="width: 100%; background: #07132C; border: 1px solid var(--border-light); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.95rem; outline: none;">
+            <select name="category" onchange="this.form.submit()" class="form-control" style="width: 100%; padding: 10px 14px; font-size: 0.95rem;">
               <option value="">All Trade Categories</option>
               <option value="Logistics" <%= selectedCategory === 'Logistics' ? 'selected' : '' %>>Logistics & Heavy Driving</option>
               <option value="Manufacturing" <%= selectedCategory === 'Manufacturing' ? 'selected' : '' %>>Manufacturing & Welding</option>
@@ -38,7 +52,7 @@
           <!-- Country Filter -->
           <div style="min-width: 200px; flex: 1;">
             <label style="display: block; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Destination Region</label>
-            <select name="country" onchange="this.form.submit()" style="width: 100%; background: #07132C; border: 1px solid var(--border-light); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.95rem; outline: none;">
+            <select name="country" onchange="this.form.submit()" class="form-control" style="width: 100%; padding: 10px 14px; font-size: 0.95rem;">
               <option value="">All Destination Regions</option>
               <option value="Singapore" <%= selectedCountry === 'Singapore' ? 'selected' : '' %>>Singapore 🇸🇬 (Work Permit / E-Pass)</option>
               <option value="Saudi" <%= selectedCountry === 'Saudi' ? 'selected' : '' %>>Saudi Arabia (KSA)</option>
@@ -87,12 +101,12 @@
             
             <!-- Card Image Box -->
             <a href="/jobs/<%= job.job_code || job.id %>" class="job-card-image-box" style="text-decoration: none; display: block;">
-              <img src="<%= job.image || '/images/job_saudi_driver.jpg' %>" alt="<%= job.title %> in <%= job.country %>" loading="lazy">
+              <img src="<%= job.image || '/images/job_saudi_driver.jpg' %>" alt="<%= cleanText(job.title) %> in <%= cleanText(job.country) %>" loading="lazy">
               <div class="job-card-image-overlay">
                 <div class="card-top-badges">
                   <span class="card-country-flag-badge">
                     <span><%= job.flag || '🌐' %></span>
-                    <span><%= job.country %></span>
+                    <span><%= cleanText(job.country) %></span>
                   </span>
                   <% if (job.employer_funded) { %>
                     <span class="card-fee-pill sponsored"><i class="fa-solid fa-sparkles"></i> 100% Free Quota</span>
@@ -112,26 +126,26 @@
             <div class="job-card-body">
               <div>
                 <a href="/jobs/<%= job.job_code || job.id %>" style="text-decoration: none; color: inherit;">
-                  <h3 class="job-card-title" style="transition: color 0.2s ease;"><%= job.title %></h3>
+                  <h3 class="job-card-title" style="transition: color 0.2s ease;"><%= cleanText(job.title) %></h3>
                 </a>
                 <div class="job-card-category">
                   <i class="fa-solid fa-wrench" style="color: var(--gold-amber);"></i>
-                  <span><%= job.category %></span>
+                  <span><%= cleanText(job.category) %></span>
                 </div>
 
                 <div class="job-card-salary-box">
                   <div>
                     <span style="display: block; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Est. Monthly Earning</span>
-                    <span class="job-card-inr"><%= job.salary_inr %></span>
+                    <span class="job-card-inr"><%= cleanText(job.salary_inr) %></span>
                   </div>
                   <% if (job.salary_foreign) { %>
-                    <span class="job-card-foreign"><%= job.salary_foreign %></span>
+                    <span class="job-card-foreign"><%= cleanText(job.salary_foreign) %></span>
                   <% } %>
                 </div>
 
                 <div class="job-card-perks">
                   <% (job.perks || []).forEach(perk => { %>
-                    <span class="job-card-perk-tag"><i class="fa-solid fa-circle-check" style="color: #10B981;"></i> <%= perk %></span>
+                    <span class="job-card-perk-tag"><i class="fa-solid fa-circle-check" style="color: #10B981;"></i> <%= cleanText(perk) %></span>
                   <% }); %>
                 </div>
               </div>
@@ -141,7 +155,13 @@
                   <i class="fa-solid fa-circle-info"></i>
                   <span>View Details</span>
                 </a>
-                <button type="button" class="btn btn-gold" style="flex: 1.2; justify-content: center; padding: 11px 10px; font-size: 0.85rem;" onclick="applyForJob('<%= job.job_code %>', '<%= job.title.replace(/'/g, "\\\\'") %>', '<%= job.country.replace(/'/g, "\\\\'") %>', '<%= job.salary_inr.replace(/'/g, "\\\\'") %>')">
+                <button type="button" class="btn btn-gold" style="flex: 1.2; justify-content: center; padding: 11px 10px; font-size: 0.85rem;"
+                  data-code="<%= job.job_code %>"
+                  data-title="<%= cleanText(job.title) %>"
+                  data-country="<%= cleanText(job.country) %>"
+                  data-salary="<%= cleanText(job.salary_inr) %>"
+                  data-category="<%= cleanText(job.category) %>"
+                  onclick="openApplyModal(this.dataset.code, this.dataset.title, this.dataset.country, this.dataset.salary, this.dataset.category)">
                   <i class="fa-brands fa-whatsapp" style="font-size: 1rem;"></i>
                   <span>Apply Now</span>
                 </button>
@@ -179,5 +199,6 @@
   </div>
 </main>
 
+<%- include('../partials/apply-modal') %>
 <%- include('../partials/footer') %>
 <%- include('../partials/scripts') %>

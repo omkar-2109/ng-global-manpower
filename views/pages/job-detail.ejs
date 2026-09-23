@@ -1,3 +1,17 @@
+<%
+  function cleanText(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&amp;/g, '&')
+      .replace(/&#x2F;/g, '/')
+      .replace(/&#47;/g, '/')
+      .replace(/&#x27;/g, "'")
+      .replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>');
+  }
+%>
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 <%- include('../partials/mobile-drawer') %>
@@ -11,9 +25,9 @@
       <span>&rsaquo;</span>
       <a href="/jobs" style="color: var(--text-muted); text-decoration: none;">International Jobs</a>
       <span>&rsaquo;</span>
-      <a href="/jobs?country=<%= encodeURIComponent(job.country.split('(')[0].trim()) %>" style="color: var(--text-muted); text-decoration: none;"><%= job.country.split('(')[0].trim() %></a>
+      <a href="/jobs?country=<%= encodeURIComponent(cleanText(job.country).split('(')[0].trim()) %>" style="color: var(--text-muted); text-decoration: none;"><%= cleanText(job.country).split('(')[0].trim() %></a>
       <span>&rsaquo;</span>
-      <span style="color: var(--gold-amber);"><%= job.title %></span>
+      <span style="color: var(--gold-amber);"><%= cleanText(job.title) %></span>
     </nav>
 
     <!-- Main Grid: Left Column (Details) + Right Column (Sidebar CTA) -->
@@ -29,12 +43,12 @@
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap;">
             <span style="background: rgba(30, 64, 175, 0.3); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8; font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
               <span><%= job.flag || '🌐' %></span>
-              <span><%= job.country %></span>
+              <span><%= cleanText(job.country) %></span>
             </span>
 
             <% if (job.badge_text) { %>
               <span style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
-                <%= job.badge_text %>
+                <%= cleanText(job.badge_text) %>
               </span>
             <% } %>
 
@@ -54,12 +68,12 @@
           </div>
 
           <h1 style="font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 12px;">
-            <%= job.title %>
+            <%= cleanText(job.title) %>
           </h1>
 
           <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.92rem; margin-bottom: 22px;">
             <i class="fa-solid fa-wrench" style="color: var(--gold-amber);"></i>
-            <span><%= job.category %></span>
+            <span><%= cleanText(job.category) %></span>
             <span>&bull;</span>
             <i class="fa-solid fa-calendar-check" style="color: #10b981;"></i>
             <span>Active Quota (Immediate Deployment)</span>
@@ -72,9 +86,9 @@
                 Monthly Earning Package
               </span>
               <div style="font-size: 1.6rem; font-weight: 800; color: #fff; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-                <span><%= job.salary_inr %></span>
+                <span><%= cleanText(job.salary_inr) %></span>
                 <% if (job.salary_foreign) { %>
-                  <span style="font-size: 1.15rem; color: #34d399; font-weight: 600;">(<%= job.salary_foreign %>)</span>
+                  <span style="font-size: 1.15rem; color: #34d399; font-weight: 600;">(<%= cleanText(job.salary_foreign) %>)</span>
                 <% } %>
               </div>
             </div>
@@ -100,7 +114,7 @@
               </a>
             </div>
             <div style="text-align: center; background: rgba(0, 0, 0, 0.4); border-radius: 12px; overflow: hidden; padding: 12px;">
-              <img src="<%= job.image %>" alt="<%= job.title %> Vacancy Poster" style="max-width: 100%; max-height: 520px; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+              <img src="<%= job.image %>" alt="<%= cleanText(job.title) %> Vacancy Poster" style="max-width: 100%; max-height: 520px; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
             </div>
           </div>
         <% } %>
@@ -114,7 +128,7 @@
               <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">DUTY & SHIFTS</span>
             </div>
             <div style="font-size: 1rem; color: #fff; font-weight: 600;">
-              <%= job.working_hours || '10 Hours Duty / 2 Days Off' %>
+              <%= cleanText(job.working_hours) || '10 Hours Duty / 2 Days Off' %>
             </div>
           </div>
 
@@ -124,7 +138,7 @@
               <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">AGE CRITERIA</span>
             </div>
             <div style="font-size: 1rem; color: #fff; font-weight: 600;">
-              <%= job.age_limit || '18 – 49 Years' %>
+              <%= cleanText(job.age_limit) || '18 – 49 Years' %>
             </div>
           </div>
 
@@ -134,7 +148,7 @@
               <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">ELIGIBLE NATIONALITIES</span>
             </div>
             <div style="font-size: 0.95rem; color: #fff; font-weight: 600;">
-              <%= job.eligibility_notes || 'Indians, Bangladeshis, Nepalis' %>
+              <%= cleanText(job.eligibility_notes) || 'Indians, Bangladeshis, Nepalis' %>
             </div>
           </div>
 
@@ -177,7 +191,7 @@
             <span>Role Scope & Responsibilities</span>
           </h3>
           <div style="font-size: 0.95rem; color: #cbd5e1; line-height: 1.7; white-space: pre-line;">
-            <%= job.description || 'Full scope of duties includes day-to-day operational support, adherence to workplace safety regulations, equipment operation, and team coordination under employer guidance.' %>
+            <%= cleanText(job.description) || 'Full scope of duties includes day-to-day operational support, adherence to workplace safety regulations, equipment operation, and team coordination under employer guidance.' %>
           </div>
         </div>
 
@@ -192,7 +206,7 @@
               <% job.perks.forEach(perk => { %>
                 <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px 14px; border-radius: 10px; display: flex; align-items: center; gap: 10px; color: #e2e8f0; font-size: 0.9rem;">
                   <i class="fa-solid fa-circle-check" style="color: #10b981;"></i>
-                  <span><%= perk %></span>
+                  <span><%= cleanText(perk) %></span>
                 </div>
               <% }); %>
             </div>
@@ -271,11 +285,11 @@
               APPLY FOR THIS QUOTA
             </span>
             <div style="font-size: 1.8rem; font-weight: 800; color: #fff;">
-              <%= job.salary_inr.split('/')[0].trim() %>
+              <%= cleanText(job.salary_inr).split('/')[0].trim() %>
             </div>
             <% if (job.salary_foreign) { %>
               <div style="font-size: 1rem; color: #34d399; font-weight: 600; margin-top: 2px;">
-                <%= job.salary_foreign %>
+                <%= cleanText(job.salary_foreign) %>
               </div>
             <% } %>
           </div>
@@ -283,7 +297,7 @@
           <!-- WhatsApp Apply Action -->
           <% 
             const waNumber = settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '918080025670';
-            const waMessage = `Hello NG Global Manpower Team,%0A%0AI am applying for the following verified overseas opening:%0A*Position:* ${encodeURIComponent(job.title)}%0A*Quota Code:* ${job.job_code}%0A*Country:* ${encodeURIComponent(job.country)}%0A*Salary:* ${encodeURIComponent(job.salary_foreign || job.salary_inr)}%0A%0AMy Passport and documents are ready for immediate deployment. Please share interview instructions.`;
+            const waMessage = `Hello NG Global Manpower Team,%0A%0AI am applying for the following verified overseas opening:%0A*Position:* ${encodeURIComponent(cleanText(job.title))}%0A*Quota Code:* ${job.job_code}%0A*Country:* ${encodeURIComponent(cleanText(job.country))}%0A*Salary:* ${encodeURIComponent(cleanText(job.salary_foreign || job.salary_inr))}%0A%0AMy Passport and documents are ready for immediate deployment. Please share interview instructions.`;
             const waLink = `https://wa.me/${waNumber}?text=${waMessage}`;
           %>
 
@@ -292,42 +306,75 @@
             <span>Apply on WhatsApp</span>
           </a>
 
-          <!-- Quick Portal Apply Form -->
+          <!-- Quick Portal Apply Form (Candidate Inquiry Leads) -->
           <div style="border-top: 1px solid var(--border-light); padding-top: 20px; margin-top: 20px;">
-            <span style="font-size: 0.85rem; color: #fff; font-weight: 600; display: block; margin-bottom: 12px; text-align: center;">
-              Or Submit Direct Web Inquiry:
-            </span>
+            <div style="text-align: center; margin-bottom: 14px;">
+              <span style="font-size: 0.9rem; color: #fff; font-weight: 700; display: block;">
+                Direct Candidate Inquiry
+              </span>
+              <span style="font-size: 0.76rem; color: var(--text-muted); display: block; margin-top: 2px;">
+                Mandatory candidate details for verified recruiter contact
+              </span>
+            </div>
 
-            <form action="/api/v1/leads" method="POST" id="job-quick-apply-form">
+            <!-- Success Box -->
+            <div id="quick-apply-success-box" style="display: none; background: rgba(16, 185, 129, 0.15); border: 1.5px solid #10b981; border-radius: 12px; padding: 18px; text-align: center; margin-bottom: 16px;">
+              <i class="fa-solid fa-circle-check" style="font-size: 2.2rem; color: #34d399; margin-bottom: 8px; display: block;"></i>
+              <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 1.05rem;">Inquiry Registered!</h4>
+              <p style="color: #cbd5e1; font-size: 0.82rem; margin: 0 0 12px 0;">
+                Application Reference: <strong id="success-app-ref" style="color: var(--gold-amber); font-family: var(--font-mono);">#NG-LEAD</strong>. Our overseas team will review your dossier.
+              </p>
+              <a id="success-wa-btn" href="<%= waLink %>" target="_blank" class="btn btn-gold" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.88rem;">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>Continue on WhatsApp Now</span>
+              </a>
+            </div>
+
+            <!-- Error Box -->
+            <div id="quick-apply-error-box" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; color: #fca5a5; font-size: 0.82rem; font-weight: 600;"></div>
+
+            <form id="job-quick-apply-form" novalidate>
               <input type="hidden" name="job_code" value="<%= job.job_code %>" />
-              <input type="hidden" name="trade" value="<%= job.category %>" />
-              <input type="hidden" name="destination" value="<%= job.country %>" />
+              <input type="hidden" name="trade" value="<%= cleanText(job.category) %>" />
+              <input type="hidden" name="destination" value="<%= cleanText(job.country) %>" />
               <input type="hidden" name="source" value="job_detail_page" />
 
               <div class="form-group" style="margin-bottom: 12px;">
-                <input type="text" name="full_name" class="form-control" placeholder="Full Name as in Passport *" required style="font-size: 0.88rem; padding: 10px 12px;" />
+                <label style="display: block; font-size: 0.78rem; color: #cbd5e1; margin-bottom: 4px; font-weight: 600;">
+                  Full Name (as in Passport) <span style="color: var(--gold-amber);">*</span>
+                </label>
+                <input type="text" name="full_name" class="form-control" placeholder="e.g. Ramesh Chandra Verma" required style="font-size: 0.88rem; padding: 10px 12px;" />
               </div>
 
               <div class="form-group" style="margin-bottom: 12px;">
-                <input type="tel" name="phone" class="form-control" placeholder="Mobile / WhatsApp Number *" required style="font-size: 0.88rem; padding: 10px 12px;" />
+                <label style="display: block; font-size: 0.78rem; color: #cbd5e1; margin-bottom: 4px; font-weight: 600;">
+                  Mobile / WhatsApp Number <span style="color: var(--gold-amber);">*</span>
+                </label>
+                <input type="tel" name="phone" class="form-control" placeholder="e.g. +91 98765 43210" required style="font-size: 0.88rem; padding: 10px 12px;" />
               </div>
 
               <div class="form-group" style="margin-bottom: 12px;">
-                <input type="text" name="city" class="form-control" placeholder="Your City & State *" required style="font-size: 0.88rem; padding: 10px 12px;" />
+                <label style="display: block; font-size: 0.78rem; color: #cbd5e1; margin-bottom: 4px; font-weight: 600;">
+                  Current City & State <span style="color: var(--gold-amber);">*</span>
+                </label>
+                <input type="text" name="city" class="form-control" placeholder="e.g. Gorakhpur, UP" required style="font-size: 0.88rem; padding: 10px 12px;" />
               </div>
 
               <div class="form-group" style="margin-bottom: 16px;">
-                <select name="experience" class="form-control" style="font-size: 0.88rem; padding: 10px 12px; background: #081636;">
-                  <option value="Fresher / Initial Trade">Fresher / Initial Trade</option>
-                  <option value="1 to 2 Years">1 to 2 Years</option>
-                  <option value="3 to 5 Years" selected>3 to 5 Years Experience</option>
-                  <option value="5+ Years GCC / Overseas">5+ Years GCC / Overseas</option>
+                <label style="display: block; font-size: 0.78rem; color: #cbd5e1; margin-bottom: 4px; font-weight: 600;">
+                  Total Experience Level <span style="color: var(--gold-amber);">*</span>
+                </label>
+                <select name="experience" class="form-control" style="font-size: 0.88rem; padding: 10px 12px; background-color: #081636 !important; color: #ffffff !important;">
+                  <option value="Fresher / Initial Trade" style="background-color: #081636; color: #ffffff;">Fresher / Initial Trade</option>
+                  <option value="1 to 2 Years" style="background-color: #081636; color: #ffffff;">1 to 2 Years</option>
+                  <option value="3 to 5 Years" selected style="background-color: #081636; color: #ffffff;">3 to 5 Years Experience</option>
+                  <option value="5+ Years GCC / Overseas" style="background-color: #081636; color: #ffffff;">5+ Years GCC / Overseas</option>
                 </select>
               </div>
 
-              <button type="submit" class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.92rem; border-color: rgba(255,255,255,0.25);">
+              <button type="submit" id="quick-apply-submit-btn" class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.92rem; border-color: rgba(255,255,255,0.25); background: rgba(255, 255, 255, 0.08); color: #fff;">
                 <i class="fa-solid fa-paper-plane"></i>
-                <span>Submit Quick Application</span>
+                <span>Submit Candidate Inquiry</span>
               </button>
             </form>
           </div>
@@ -336,7 +383,7 @@
           <div style="margin-top: 20px; border-top: 1px solid var(--border-light); padding-top: 16px; text-align: center;">
             <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 8px;">Share This Opportunity:</span>
             <div style="display: flex; gap: 8px; justify-content: center;">
-              <a href="https://api.whatsapp.com/send?text=<%= encodeURIComponent('Check out this verified opening: ' + job.title + ' in ' + job.country + ' (Salary: ' + (job.salary_foreign || job.salary_inr) + ')\nApply here: https://ngglobalmp.in/jobs/' + (job.job_code || job.id)) %>" target="_blank" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem; border-color: #25D366; color: #25D366;">
+              <a href="https://api.whatsapp.com/send?text=<%= encodeURIComponent('Check out this verified opening: ' + cleanText(job.title) + ' in ' + cleanText(job.country) + ' (Salary: ' + cleanText(job.salary_foreign || job.salary_inr) + ')\nApply here: https://ngglobalmp.in/jobs/' + (job.job_code || job.id)) %>" target="_blank" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem; border-color: #25D366; color: #25D366;">
                 <i class="fa-brands fa-whatsapp"></i> WhatsApp
               </a>
               <button type="button" onclick="navigator.clipboard.writeText(window.location.href); alert('Job link copied to clipboard!');" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
@@ -361,15 +408,15 @@
               <div>
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
                   <span style="font-size: 0.8rem; color: #38bdf8; background: rgba(56, 189, 248, 0.15); padding: 3px 10px; border-radius: 12px;">
-                    <%= rel.flag %> <%= rel.country %>
+                    <%= rel.flag %> <%= cleanText(rel.country) %>
                   </span>
                   <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold-amber);">
                     <%= rel.job_code %>
                   </span>
                 </div>
-                <h4 style="font-size: 1.1rem; color: #fff; margin: 0 0 8px 0;"><%= rel.title %></h4>
+                <h4 style="font-size: 1.1rem; color: #fff; margin: 0 0 8px 0;"><%= cleanText(rel.title) %></h4>
                 <div style="font-size: 0.95rem; font-weight: 700; color: #34d399; margin-bottom: 14px;">
-                  <%= rel.salary_foreign || rel.salary_inr %>
+                  <%= cleanText(rel.salary_foreign || rel.salary_inr) %>
                 </div>
               </div>
               <a href="/jobs/<%= rel.job_code || rel.id %>" class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.88rem;">
@@ -384,4 +431,79 @@
   </div>
 </main>
 
+<script>
+  (function() {
+    const form = document.getElementById('job-quick-apply-form');
+    if (!form) return;
+    
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const errBox = document.getElementById('quick-apply-error-box');
+      const succBox = document.getElementById('quick-apply-success-box');
+      const submitBtn = document.getElementById('quick-apply-submit-btn');
+      
+      errBox.style.display = 'none';
+      errBox.textContent = '';
+      
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      
+      // Client-side quick check
+      if (!data.full_name || data.full_name.trim().length < 2) {
+        errBox.textContent = 'Please enter candidate full name as in Passport.';
+        errBox.style.display = 'block';
+        return;
+      }
+      const digits = (data.phone || '').replace(/\D/g, '');
+      if (digits.length < 8) {
+        errBox.textContent = 'Please enter a valid mobile / WhatsApp number (minimum 8-10 digits).';
+        errBox.style.display = 'block';
+        return;
+      }
+      if (!data.city || data.city.trim().length < 2) {
+        errBox.textContent = 'Please enter current city & state.';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      // Submit
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Submitting Inquiry...</span>';
+      
+      try {
+        const res = await fetch('/api/v1/leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        
+        if (res.ok && json.success) {
+          form.style.display = 'none';
+          document.getElementById('success-app-ref').textContent = '#' + (json.applicationRef || 'NG-LEAD');
+          if (json.whatsappUrl) {
+            document.getElementById('success-wa-btn').href = json.whatsappUrl;
+          }
+          succBox.style.display = 'block';
+          if (typeof confetti === 'function') {
+            confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+          }
+        } else {
+          errBox.textContent = json.message || 'Error registering inquiry. Please verify all fields.';
+          errBox.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Submit Candidate Inquiry</span>';
+        }
+      } catch (err) {
+        errBox.textContent = 'Connection error. Please try again or apply directly via WhatsApp.';
+        errBox.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Submit Candidate Inquiry</span>';
+      }
+    });
+  })();
+</script>
+
+<%- include('../partials/apply-modal') %>
 <%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>

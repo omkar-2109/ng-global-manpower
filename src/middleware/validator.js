@@ -32,12 +32,12 @@ function validate(validations) {
 
 // Validation schemas
 const leadValidation = [
-  body('full_name').trim().notEmpty().withMessage('Full Name is required.').escape(),
-  body('phone').trim().notEmpty().withMessage('Phone / WhatsApp number is required.').isLength({ min: 8, max: 20 }).withMessage('Please enter a valid phone number.'),
-  body('trade').trim().notEmpty().withMessage('Please select your trade or occupational skill.').escape(),
-  body('destination').trim().notEmpty().withMessage('Please select your preferred destination.').escape(),
-  body('experience').trim().optional().escape(),
-  body('city').trim().optional().escape()
+  body('full_name').trim().notEmpty().withMessage('Full Name as in Passport is mandatory.'),
+  body('phone').trim().notEmpty().withMessage('Phone / WhatsApp number is mandatory.').isLength({ min: 8, max: 20 }).withMessage('Please enter a valid phone number with country code.'),
+  body('city').trim().notEmpty().withMessage('City & State is mandatory.'),
+  body('experience').trim().notEmpty().withMessage('Please select your experience level.'),
+  body('trade').trim().notEmpty().withMessage('Please select your trade or occupational skill.'),
+  body('destination').trim().notEmpty().withMessage('Please select your preferred destination.')
 ];
 
 const loginValidation = [
@@ -46,10 +46,10 @@ const loginValidation = [
 ];
 
 const jobValidation = [
-  body('title').trim().notEmpty().withMessage('Job title is required.').escape(),
-  body('category').trim().notEmpty().withMessage('Trade category is required.').escape(),
-  body('country').trim().notEmpty().withMessage('Country destination is required.').escape(),
-  body('salary_inr').trim().notEmpty().withMessage('INR salary range is required.').escape()
+  body('title').trim().notEmpty().withMessage('Job title is required.'),
+  body('category').trim().notEmpty().withMessage('Trade category is required.'),
+  body('country').trim().notEmpty().withMessage('Country destination is required.'),
+  body('salary_inr').trim().notEmpty().withMessage('INR salary range is required.')
 ];
 
 module.exports = {

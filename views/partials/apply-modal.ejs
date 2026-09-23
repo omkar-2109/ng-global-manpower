@@ -1,0 +1,150 @@
+<!-- ==========================================================================
+     NG Global Manpower Services - Interactive Job Application Modal Component
+     Captures mandatory candidate contact details (Name, Phone, City, Experience)
+     ========================================================================== -->
+<div id="job-apply-modal" class="apply-modal-backdrop" onclick="if(event.target === this) closeApplyModal()">
+  <div class="apply-modal-box">
+    
+    <!-- Modal Header Banner -->
+    <div class="modal-head-banner">
+      <div class="modal-head-info">
+        <h3 id="modal-job-title" style="color: #fff; margin: 0 0 4px 0; font-size: 1.22rem;">Job Application</h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">
+          <span id="modal-job-country">Overseas Opening</span> &bull; 
+          <span id="modal-job-code" style="color: var(--gold-primary); font-family: var(--font-mono); font-weight: 700;">NG-VACANCY</span>
+        </p>
+      </div>
+      <button type="button" class="modal-close-btn" onclick="closeApplyModal()" aria-label="Close modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Progress Indicator Bar (6 Steps) -->
+    <div class="modal-steps-bar">
+      <div class="modal-step-dots-wrap">
+        <div class="modal-step-dot active"></div>
+        <div class="modal-step-dot"></div>
+        <div class="modal-step-dot"></div>
+        <div class="modal-step-dot"></div>
+        <div class="modal-step-dot"></div>
+        <div class="modal-step-dot"></div>
+      </div>
+      <div id="modal-step-counter" class="modal-step-counter">Step 1 of 6</div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-step-body">
+      
+      <!-- STEP 1: Full Name -->
+      <div id="modal-step-1">
+        <label class="modal-step-label" for="step-name">
+          What is your Full Name? <span style="color: var(--gold-amber);">*</span>
+        </label>
+        <p class="modal-step-desc">Enter your legal name as printed on your passport or Aadhaar card.</p>
+        <input type="text" id="step-name" class="modal-text-input form-control" placeholder="e.g. Rajesh Kumar Verma" required autocomplete="name" />
+        <div id="step-1-error" style="color: #f87171; font-size: 0.82rem; margin-top: 8px; display: none; font-weight: 600;"></div>
+      </div>
+
+      <!-- STEP 2: Phone / WhatsApp Number (MANDATORY) -->
+      <div id="modal-step-2" style="display: none;">
+        <label class="modal-step-label" for="step-phone">
+          Mobile / WhatsApp Contact Number <span style="color: var(--gold-amber);">*</span>
+        </label>
+        <p class="modal-step-desc">Recruitment coordinators will contact you directly on this number for interview scheduling.</p>
+        <input type="tel" id="step-phone" class="modal-text-input form-control" placeholder="e.g. +91 98765 43210" required autocomplete="tel" />
+        <div id="step-2-error" style="color: #f87171; font-size: 0.82rem; margin-top: 8px; display: none; font-weight: 600;"></div>
+        <span style="display: block; font-size: 0.78rem; color: #94a3b8; margin-top: 8px;">
+          <i class="fa-solid fa-lock" style="color: var(--gold-primary);"></i> Confidential &bull; Only verified NG Global recruitment team can contact you.
+        </span>
+      </div>
+
+      <!-- STEP 3: Total Experience -->
+      <div id="modal-step-3" style="display: none;">
+        <label class="modal-step-label">
+          Total Trade Experience <span style="color: var(--gold-amber);">*</span>
+        </label>
+        <p class="modal-step-desc">Select your experience level in this technical or skilled trade category.</p>
+        <div class="radio-card-options">
+          <label class="radio-card-label">
+            <input type="radio" name="apply-experience" value="Fresher / Initial Trade" />
+            <span>Fresher / Trainee</span>
+          </label>
+          <label class="radio-card-label">
+            <input type="radio" name="apply-experience" value="1 to 2 Years" />
+            <span>1 to 2 Years</span>
+          </label>
+          <label class="radio-card-label">
+            <input type="radio" name="apply-experience" value="3 to 5 Years" checked />
+            <span>3 to 5 Years Experience</span>
+          </label>
+          <label class="radio-card-label">
+            <input type="radio" name="apply-experience" value="5+ Years GCC / Overseas" />
+            <span>5+ Years (GCC / Overseas)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- STEP 4: Passport Status -->
+      <div id="modal-step-4" style="display: none;">
+        <label class="modal-step-label">
+          Do you have a valid Passport? <span style="color: var(--gold-amber);">*</span>
+        </label>
+        <p class="modal-step-desc">A valid passport is mandatory for overseas block visa and embassy processing.</p>
+        <div class="radio-card-options">
+          <label class="radio-card-label">
+            <input type="radio" name="apply-passport" value="Yes, Ready with Passport" checked />
+            <span>Yes (Ready with Passport)</span>
+          </label>
+          <label class="radio-card-label">
+            <input type="radio" name="apply-passport" value="Passport In Process" />
+            <span>In Process / Applied</span>
+          </label>
+          <label class="radio-card-label" style="grid-column: 1 / -1;">
+            <input type="radio" name="apply-passport" value="Need Guidance to Apply" />
+            <span>Need Guidance to Apply</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- STEP 5: Current Location / City -->
+      <div id="modal-step-5" style="display: none;">
+        <label class="modal-step-label" for="step-location">
+          Current City & State <span style="color: var(--gold-amber);">*</span>
+        </label>
+        <p class="modal-step-desc">Where are you currently residing in India or overseas?</p>
+        <input type="text" id="step-location" class="modal-text-input form-control" placeholder="e.g. Gorakhpur, UP or Jalandhar, Punjab" required />
+        <div id="step-5-error" style="color: #f87171; font-size: 0.82rem; margin-top: 8px; display: none; font-weight: 600;"></div>
+      </div>
+
+      <!-- STEP 6: Expected Monthly Salary -->
+      <div id="modal-step-6" style="display: none;">
+        <label class="modal-step-label" for="step-expected-salary">
+          Offered / Expected Monthly Salary
+        </label>
+        <p class="modal-step-desc">Confirm the employer package or state your minimum expectation.</p>
+        <input type="text" id="step-expected-salary" class="modal-text-input form-control" placeholder="e.g. ₹1,26,000 / mo or SGD 2,000" />
+        <div style="margin-top: 14px; padding: 12px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; display: flex; align-items: center; gap: 10px;">
+          <i class="fa-solid fa-circle-check" style="color: #34d399; font-size: 1.1rem;"></i>
+          <span style="font-size: 0.82rem; color: #a7f3d0;">
+            Submitting records your priority application in our verified recruiter CRM. You can also chat immediately with our desk on WhatsApp.
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="modal-foot-actions">
+      <button type="button" id="modal-prev-btn" class="btn btn-secondary" onclick="prevApplyStep()" style="visibility: hidden; padding: 10px 18px; font-size: 0.88rem; background: rgba(255, 255, 255, 0.08); color: #fff;">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Back</span>
+      </button>
+
+      <button type="button" id="modal-next-btn" class="btn btn-gold" onclick="nextApplyStep()" style="padding: 10px 22px; font-size: 0.92rem;">
+        <span>Continue</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+  </div>
+</div>
