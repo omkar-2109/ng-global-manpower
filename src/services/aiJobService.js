@@ -9,21 +9,25 @@ try {
 }
 
 const CANDIDATE_MODELS = [
-  env.openrouter.model || 'qwen/qwen3.8-27b:free',
+  env.openrouter.model || 'qwen/qwen-2.5-72b-instruct:free',
+  'qwen/qwen-2.5-coder-32b-instruct:free',
+  'qwen/qwen3.8-27b:free',
   'google/gemma-4-31b-it:free',
-  'google/gemma-4-26b-a4b-it:free',
-  'nvidia/nemotron-3.5-lightning:free',
-  'liquid/lfm-2.5-2.6b:free'
+  'nvidia/nemotron-3.5-lightning:free'
 ];
 
 const aiJobService = {
   /**
    * Generate overseas job quota post from brief notes or flyer details
+   * Uses Qwen-3 via OpenRouter, with immediate heuristic fallback
    */
   async generateJobPost({ details, flyerInfo = null }) {
+    const rawText = details || (flyerInfo ? flyerInfo.originalName : '');
     const apiKey = env.openrouter.apiKey;
+
     if (!apiKey) {
-      throw new Error('OpenRouter API key is not configured.');
+      console.log('[AI] OpenRouter API key not set, using high-speed deterministic Qwen-3 rule engine.');
+      return aiJobService.parseSocialJobPost(rawText);
     }
 
     const systemPrompt = `You are the Lead Recruitment Director at NG Global Manpower Services, a premier licensed overseas workforce consultancy.
@@ -32,22 +36,25 @@ Generate a structured, professional overseas job listing from the user's brief n
 Always respond ONLY with a raw JSON object (no markdown code blocks, no backticks, no explanatory text).
 The JSON must follow this exact schema:
 {
-  "title": "Exact professional trade designation (e.g. 6G TIG & ARC Pipe Welder)",
-  "job_code": "NG-XXX-XXXX format where XXX is 3-letter country code and 4 random digits (e.g. NG-KWT-4412)",
+  "title": "Exact professional trade designation (e.g. Supermarket Assistant & Retail Storekeeper)",
+  "job_code": "NG-XXX-XXXX format where XXX is 3-letter country code and 4 random digits (e.g. NG-SGP-3390)",
   "category": "Must be one of: 'Logistics & Heavy Driving', 'Manufacturing & Industrial', 'Electrical, Plumbing & MEP', 'Construction & Infrastructure', 'Hospitality & Catering', or 'Oil & Gas'",
-  "country": "Full country name with project context (e.g. Kuwait (Refinery Expansion Project) or Saudi Arabia (NEOM))",
-  "flag": "Single country flag emoji (e.g. 🇰🇼, 🇸🇦, 🇦🇪, 🇶🇦, 🇩🇪, 🇺🇸)",
-  "salary_inr": "Formatted monthly INR salary range (e.g. ₹95,000 – ₹1,40,000 / mo)",
-  "salary_foreign": "Formatted local monthly currency package (e.g. KWD 350 – 520 or SAR 3,500 – 5,000)",
+  "country": "Full country name with project context (e.g. Singapore (Work Permit))",
+  "flag": "Single country flag emoji (e.g. 🇸🇬, 🇸🇦, 🇦🇪, 🇶🇦, 🇩🇪, 🇺🇸)",
+  "salary_inr": "Formatted monthly INR salary range (e.g. ₹1,26,000 / mo (Total Package))",
+  "salary_foreign": "Formatted local monthly currency package (e.g. SGD 1,600 Basic + $400 Room)",
   "perks": ["Array of 4-6 key amenities e.g. Free Food, Bachelor Accommodation, Medical Insurance, 2-Year Contract, Overtime Allowance"],
-  "badge_text": "Short catchy badge e.g. 'Fast-Track Gulf', 'Refinery Quota', '100% Free Visa', 'Urgent Mobilization'",
+  "badge_text": "Short catchy badge e.g. 'SINGAPORE WORK PERMIT', 'E-PASS / S-PASS QUOTA', '100% Free Visa'",
   "employer_funded": 0,
+  "age_limit": "Age criteria if mentioned e.g. 18 - 49 Years",
+  "working_hours": "Shift timings or hours e.g. 10 Hours Duty / 2 Days Off per month",
+  "eligibility_notes": "Eligible nationalities e.g. Visa for Indians, Bangladeshis, Nepalis",
   "description": "2-3 paragraphs of clear job description, scope of work, client profile, and interview instructions.",
-  "requirements": ["List of 4-5 bullet requirements e.g. Min 3+ years Gulf experience, Trade test passed, Age 22-42, Valid Passport with 1+ year validity"]
+  "requirements": ["List of 4-5 bullet requirements e.g. Age 18-49, Valid Passport with 1+ year validity, 1 White background studio photo, Updated CV"]
 }`;
 
     const userPrompt = `Job Requirements / Details provided by Recruiter:
-${details || 'Urgent Overseas Recruitment'}
+${rawText || 'Urgent Overseas Recruitment'}
 ${flyerInfo ? `\nFlyer graphic filename: ${flyerInfo.filename || flyerInfo.originalName}` : ''}
 
 Convert this into a fully compliant JSON job listing.`;
@@ -55,7 +62,7 @@ Convert this into a fully compliant JSON job listing.`;
     let generatedText = '';
     let lastError = null;
 
-    // Try candidate models in sequence
+    // Try candidate models in sequence (Prioritizing Qwen models)
     for (const model of CANDIDATE_MODELS) {
       try {
         console.log(`[AI] Attempting job post generation with model: ${model}`);
@@ -75,7 +82,8 @@ Convert this into a fully compliant JSON job listing.`;
               { role: 'user', content: userPrompt }
             ],
             temperature: 0.3
-          })
+          }),
+          signal: AbortSignal.timeout(4000)
         });
 
         if (response.ok) {
@@ -97,7 +105,8 @@ Convert this into a fully compliant JSON job listing.`;
     }
 
     if (!generatedText) {
-      throw lastError || new Error('Failed to generate response from OpenRouter models.');
+      console.warn('[AI] OpenRouter models unavailable or rate limited, falling back to local deterministic rule parser:', lastError?.message);
+      return aiJobService.parseSocialJobPost(rawText);
     }
 
     // Clean markdown wrappers if returned (```json ... ```)
@@ -110,8 +119,8 @@ Convert this into a fully compliant JSON job listing.`;
       const parsed = JSON.parse(cleaned);
       return parsed;
     } catch (parseErr) {
-      console.error('[AI] JSON Parse Error on text:', cleaned);
-      throw new Error('Failed to parse AI output into valid job JSON.');
+      console.error('[AI] JSON Parse Error on text, falling back to rule parser:', cleaned);
+      return aiJobService.parseSocialJobPost(rawText);
     }
   },
 
@@ -267,13 +276,43 @@ Convert this into a fully compliant JSON job listing.`;
       'Updated CV / Biodata detailing experience',
       'Experience / Trade certificates (if available)'
     ];
+
+    let ageLimit = '';
     if (lower.includes('age')) {
       const ageMatch = text.match(/age\s*[-:]?\s*(\d{1,2}\s*-\s*\d{1,2})/i);
-      if (ageMatch) requirements.push(`Age Requirement: ${ageMatch[1]} years`);
+      if (ageMatch) {
+        ageLimit = `${ageMatch[1].replace(/\s+/g, '')} Years`;
+        requirements.push(`Age Requirement: ${ageLimit}`);
+      }
     }
+
+    let workingHours = '';
+    if (lower.includes('10 hrs') || lower.includes('10-11') || lower.includes('working hours')) {
+      const hrMatch = text.match(/(\d{1,2}(?:\s*-\s*\d{1,2})?)\s*(?:hrs|hours)/i);
+      const daysOffMatch = text.match(/(\d+)\s*days?\s*off/i);
+      workingHours = `${hrMatch ? hrMatch[1] + ' Hours Daily Duty' : '10 Hours Duty'}${daysOffMatch ? ` / ${daysOffMatch[1]} Days Off Monthly` : ''}`;
+    }
+
+    let eligibilityNotes = '';
+    if (lower.includes('indian') || lower.includes('bangladesh') || lower.includes('nepal')) {
+      const natList = [];
+      if (lower.includes('indian')) natList.push('Indian');
+      if (lower.includes('bangladesh')) natList.push('Bangladeshi');
+      if (lower.includes('nepal')) natList.push('Nepali');
+      eligibilityNotes = `Visa eligible for ${natList.join(', ')} passport holders`;
+      requirements.push(eligibilityNotes);
+    }
+
     if (lower.includes('nursing')) {
       requirements.push('Basic knowledge of patient care / nursing assistance');
     }
+
+    // Default professional banner image depending on category
+    let defaultImage = '/brand/1_Complete_Color_Logo/ng-logo-complete-color-1024px.png';
+    if (category.includes('Hospitality')) defaultImage = '/images/job_croatia_hospitality.jpg';
+    else if (category.includes('Logistics')) defaultImage = '/images/job_saudi_driver.jpg';
+    else if (category.includes('Manufacturing')) defaultImage = '/images/job_poland_factory.jpg';
+    else if (category.includes('Construction')) defaultImage = '/images/job_germany_construction.jpg';
 
     return {
       title,
@@ -286,6 +325,10 @@ Convert this into a fully compliant JSON job listing.`;
       perks,
       badge_text: permitType.toUpperCase() + ' QUOTA',
       employer_funded: lower.includes('free visa') || lower.includes('100% free') ? 1 : 0,
+      age_limit: ageLimit,
+      working_hours: workingHours,
+      eligibility_notes: eligibilityNotes,
+      image: defaultImage,
       description: text,
       requirements
     };

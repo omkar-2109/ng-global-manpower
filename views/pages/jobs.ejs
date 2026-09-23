@@ -86,7 +86,7 @@
           <div class="job-card card-3d-interactive" style="padding: 0; overflow: hidden; border-radius: 16px; display: flex; flex-direction: column;">
             
             <!-- Card Image Box -->
-            <div class="job-card-image-box">
+            <a href="/jobs/<%= job.job_code || job.id %>" class="job-card-image-box" style="text-decoration: none; display: block;">
               <img src="<%= job.image || '/images/job_saudi_driver.jpg' %>" alt="<%= job.title %> in <%= job.country %>" loading="lazy">
               <div class="job-card-image-overlay">
                 <div class="card-top-badges">
@@ -106,12 +106,14 @@
                   </span>
                 </div>
               </div>
-            </div>
+            </a>
 
             <!-- Card Body -->
             <div class="job-card-body">
               <div>
-                <h3 class="job-card-title"><%= job.title %></h3>
+                <a href="/jobs/<%= job.job_code || job.id %>" style="text-decoration: none; color: inherit;">
+                  <h3 class="job-card-title" style="transition: color 0.2s ease;"><%= job.title %></h3>
+                </a>
                 <div class="job-card-category">
                   <i class="fa-solid fa-wrench" style="color: var(--gold-amber);"></i>
                   <span><%= job.category %></span>
@@ -134,10 +136,14 @@
                 </div>
               </div>
 
-              <div class="job-card-actions" style="margin-top: 14px;">
-                <button type="button" class="btn btn-gold" style="width: 100%; justify-content: center; padding: 12px 16px; font-size: 0.92rem;" onclick="applyForJob('<%= job.job_code %>', '<%= job.title.replace(/'/g, "\\\\'") %>', '<%= job.country.replace(/'/g, "\\\\'") %>', '<%= job.salary_inr.replace(/'/g, "\\\\'") %>')">
-                  <i class="fa-brands fa-whatsapp" style="font-size: 1.1rem;"></i>
-                  <span>Apply on WhatsApp</span>
+              <div class="job-card-actions" style="margin-top: 14px; display: flex; gap: 8px;">
+                <a href="/jobs/<%= job.job_code || job.id %>" class="btn btn-secondary" style="flex: 1; justify-content: center; padding: 11px 10px; font-size: 0.85rem; border-color: rgba(255,255,255,0.2);">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span>View Details</span>
+                </a>
+                <button type="button" class="btn btn-gold" style="flex: 1.2; justify-content: center; padding: 11px 10px; font-size: 0.85rem;" onclick="applyForJob('<%= job.job_code %>', '<%= job.title.replace(/'/g, "\\\\'") %>', '<%= job.country.replace(/'/g, "\\\\'") %>', '<%= job.salary_inr.replace(/'/g, "\\\\'") %>')">
+                  <i class="fa-brands fa-whatsapp" style="font-size: 1rem;"></i>
+                  <span>Apply Now</span>
                 </button>
               </div>
             </div>

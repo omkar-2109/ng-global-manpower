@@ -47,10 +47,11 @@ router.post('/agents/:id/delete', adminController.deleteAgent);
 // Jobs Management
 router.get('/jobs', adminController.showJobs);
 router.get('/jobs/new', adminController.showJobForm);
-router.post('/jobs', validate(jobValidation), jobController.createJob);
+router.post('/jobs', documentService.uploadJobGraphic, validate(jobValidation), jobController.createJob);
 router.get('/jobs/:id/edit', adminController.showJobForm);
-router.post('/jobs/:id/edit', validate(jobValidation), jobController.updateJob);
+router.post('/jobs/:id/edit', documentService.uploadJobGraphic, validate(jobValidation), jobController.updateJob);
 router.post('/jobs/:id/delete', jobController.deleteJob);
+router.post('/jobs/ai-auto-publish', documentService.uploadJobGraphic, adminController.autoPublishJobAi);
 router.post('/jobs/ai-generate', documentService.uploadFlyer, adminController.generateJobAi);
 router.post('/jobs/smart-parse', adminController.smartParseJob);
 router.get('/jobs/:id/whatsapp-broadcast', adminController.getJobWhatsAppBroadcast);

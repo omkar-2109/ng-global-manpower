@@ -4,6 +4,7 @@ const pageController = require('../controllers/pageController');
 
 router.get('/', pageController.getHomePage);
 router.get('/jobs', pageController.getJobsPage);
+router.get('/jobs/:id', pageController.getJobDetailPage);
 
 // Quick redirect to fraud advisory section
 router.get('/fraud-advisory', (req, res) => {

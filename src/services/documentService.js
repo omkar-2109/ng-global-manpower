@@ -85,6 +85,28 @@ const documentService = {
   ]),
 
   uploadFlyer: upload.single('job_flyer'),
+  uploadJobGraphic: upload.single('job_graphic'),
+
+  /**
+   * Process and save optional job graphic / poster flyer
+   */
+  async processJobGraphic(file) {
+    if (!file || !file.buffer) return null;
+    try {
+      const filename = `job_poster_${Date.now()}.jpg`;
+      const outputPath = path.join(JOB_BANNERS_DIR, filename);
+
+      await sharp(file.buffer)
+        .resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true })
+        .jpeg({ quality: 88, progressive: true })
+        .toFile(outputPath);
+
+      return `/uploads/job-banners/${filename}`;
+    } catch (err) {
+      console.error('[DocService] Error processing job graphic:', err.message);
+      return null;
+    }
+  },
 
   /**
    * Process, compress, and save candidate files named after the candidate

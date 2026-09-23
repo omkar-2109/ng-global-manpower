@@ -33,20 +33,113 @@
     </div>
   </div>
 
-  <div style="max-width: 800px;">
+  <div style="max-width: 860px;">
+
+    <% if (!isEdit) { %>
+      <!-- Fast-Track 1-Click AI Job Creator Card (Upfront on Page) -->
+      <div class="card-panel" style="margin-bottom: 24px; border: 1.5px solid #10b981; background: linear-gradient(180deg, rgba(6, 78, 59, 0.25) 0%, rgba(8, 22, 54, 0.95) 100%); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15);">
+        
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; border-bottom: 1px solid rgba(16, 185, 129, 0.3); padding-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #059669, #10b981); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem;">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div>
+              <h2 style="font-size: 1.15rem; color: #fff; margin: 0; font-weight: 700;">⚡ 1-Click Fast Post / AI Job Creator (Qwen-3 Engine)</h2>
+              <small style="color: #6ee7b7; font-size: 0.8rem;">Paste opening info directly & attach optional graphic to publish immediately</small>
+            </div>
+          </div>
+          <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 0.72rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; border: 1px solid rgba(16, 185, 129, 0.4);">
+            FAST TRACK
+          </span>
+        </div>
+
+        <!-- Sample Buttons -->
+        <div style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <span style="font-size: 0.76rem; color: var(--admin-text-muted);">Quick Template Samples:</span>
+          <button type="button" onclick="insertFastSample('supermarket')" class="btn-admin btn-admin-secondary" style="padding: 4px 10px; font-size: 0.75rem; border-color: #10b981; color: #6ee7b7;">
+            🇸🇬 Singapore Supermarket Assistant
+          </button>
+          <button type="button" onclick="insertFastSample('hospital')" class="btn-admin btn-admin-secondary" style="padding: 4px 10px; font-size: 0.75rem;">
+            🇸🇬 Singapore Hospital Staff
+          </button>
+          <button type="button" onclick="insertFastSample('restaurant')" class="btn-admin btn-admin-secondary" style="padding: 4px 10px; font-size: 0.75rem;">
+            🇸🇬 Singapore Restaurant Staff
+          </button>
+        </div>
+
+        <form id="fast-track-form" action="/admin/jobs/ai-auto-publish" method="POST" enctype="multipart/form-data" onsubmit="handleFastTrackPublish(event)">
+          
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label class="form-label" for="fast_raw_text" style="color: #6ee7b7; font-weight: 600;">
+              Paste Job Description / WhatsApp Opening *
+            </label>
+            <textarea id="fast_raw_text" name="rawText" rows="7" class="form-control" style="font-family: monospace; font-size: 0.85rem; line-height: 1.5; background: #040c1e; border: 1px solid rgba(16, 185, 129, 0.4);" placeholder="Paste opening text e.g.&#10;SINGAPORE 🇸🇬 WORK PERMIT&#10;Visa for INDIANs, BANGLADESHIs, NEPALIs to SINGAPORE 🇸🇬&#10;SUPERMARKET ASSISTANT&#10;BASIC $1600&#10;ROOM $400&#10;10 HRS&#10;2 DAYS OFF&#10;# AGE 18-49&#10;# PASSPORT and 1 PHOTO 📸&#10;APPLY NOW URGENTLY REQUIRED" required></textarea>
+          </div>
+
+          <!-- Optional Graphic Upload -->
+          <div class="form-group" style="background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 10px; border: 1px dashed rgba(16, 185, 129, 0.4); margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label class="form-label" for="fast_job_graphic" style="margin: 0; color: #fff; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-image" style="color: #10b981; font-size: 1rem;"></i>
+                <span>Job Graphic / Poster Image (Optional)</span>
+              </label>
+              <span style="font-size: 0.72rem; color: var(--admin-text-muted);">PNG, JPG, WEBP (Max 25MB)</span>
+            </div>
+            <input type="file" id="fast_job_graphic" name="job_graphic" class="form-control" accept=".jpg,.jpeg,.png,.webp" onchange="previewGraphic(this, 'fast_graphic_preview')" />
+            <small style="color: var(--admin-text-muted); font-size: 0.76rem; display: block; margin-top: 6px;">
+              If HR uploads a graphic, it will be prominently displayed on the detailed job page. If left empty, our standard verified trade graphic will be used.
+            </small>
+            <div id="fast_graphic_preview" style="display: none; margin-top: 10px;">
+              <img src="" alt="Poster preview" style="max-height: 120px; border-radius: 8px; border: 1px solid var(--admin-border-gold);" />
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="submit" id="fast-publish-btn" class="btn-admin btn-admin-primary" style="flex: 1; justify-content: center; padding: 12px; font-size: 0.95rem; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>⚡ AI Generate & Automatically Publish Job</span>
+            </button>
+
+            <button type="button" onclick="populateManualFormFromFastTrack()" class="btn-admin btn-admin-secondary" style="border-color: #3b82f6; color: #60a5fa; padding: 12px 18px;">
+              <i class="fa-solid fa-pen-to-square"></i>
+              <span>✨ Auto-Fill Form Below (Review First)</span>
+            </button>
+          </div>
+
+          <div id="fast-loading" style="display: none; text-align: center; margin-top: 14px; color: #34d399;">
+            <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 1.4rem; margin-bottom: 6px;"></i>
+            <div style="font-size: 0.86rem; color: #fff;">Qwen-3 AI is reading requirements, setting up visa quotas & publishing...</div>
+          </div>
+
+        </form>
+
+      </div>
+    <% } %>
+
+    <!-- Manual / Detailed Job Form -->
     <div class="card-panel">
       
-      <form action="<%= isEdit ? '/admin/jobs/' + job.id + '/edit' : '/admin/jobs' %>" method="POST" id="job-form">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid var(--admin-border); padding-bottom: 12px;">
+        <h3 style="margin: 0; color: #fff; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-sliders" style="color: var(--admin-gold);"></i>
+          <span><%= isEdit ? 'Edit Quota Specifications' : 'Quota Details & Manual Specifications' %></span>
+        </h3>
+        <small style="color: var(--admin-text-muted);">All fields can be edited before publishing</small>
+      </div>
+
+      <form action="<%= isEdit ? '/admin/jobs/' + job.id + '/edit' : '/admin/jobs' %>" method="POST" enctype="multipart/form-data" id="job-form">
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
           <div class="form-group">
             <label class="form-label" for="title">Job Designation / Title *</label>
-            <input type="text" id="title" name="title" class="form-control" placeholder="e.g. Heavy Trailer Driver" value="<%= job.title || '' %>" required />
+            <input type="text" id="title" name="title" class="form-control" placeholder="e.g. Supermarket Assistant & Retail Storekeeper" value="<%= job.title || '' %>" required />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="job_code">Quota / Job Code</label>
-            <input type="text" id="job_code" name="job_code" class="form-control" placeholder="e.g. NG-KSA-9041 (Auto-generated if empty)" value="<%= job.job_code || '' %>" />
+            <input type="text" id="job_code" name="job_code" class="form-control" placeholder="e.g. NG-SGP-3390 (Auto-generated if empty)" value="<%= job.job_code || '' %>" />
           </div>
         </div>
 
@@ -55,47 +148,86 @@
             <label class="form-label" for="category">Trade Category *</label>
             <select id="category" name="category" class="form-control" style="background: #081636;" required>
               <option value="Logistics & Heavy Driving" <%= job.category === 'Logistics & Heavy Driving' ? 'selected' : '' %>>Logistics & Heavy Driving</option>
+              <option value="Hospitality & Catering" <%= job.category === 'Hospitality & Catering' ? 'selected' : '' %>>Hospitality & Catering</option>
               <option value="Manufacturing & Industrial" <%= job.category === 'Manufacturing & Industrial' ? 'selected' : '' %>>Manufacturing & Industrial</option>
               <option value="Electrical, Plumbing & MEP" <%= job.category === 'Electrical, Plumbing & MEP' ? 'selected' : '' %>>Electrical, Plumbing & MEP</option>
               <option value="Construction & Infrastructure" <%= job.category === 'Construction & Infrastructure' ? 'selected' : '' %>>Construction & Infrastructure</option>
-              <option value="Hospitality & Catering" <%= job.category === 'Hospitality & Catering' ? 'selected' : '' %>>Hospitality & Catering</option>
               <option value="Oil & Gas" <%= job.category === 'Oil & Gas' ? 'selected' : '' %>>Oil & Gas</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="country">Destination Country / Region *</label>
-            <input type="text" id="country" name="country" class="form-control" placeholder="e.g. Saudi Arabia (NEOM Mega Project)" value="<%= job.country || '' %>" required />
+            <label class="form-label" for="country">Destination Country / Permit Type *</label>
+            <input type="text" id="country" name="country" class="form-control" placeholder="e.g. Singapore (Work Permit)" value="<%= job.country || '' %>" required />
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
           <div class="form-group">
             <label class="form-label" for="flag">Flag Emoji</label>
-            <input type="text" id="flag" name="flag" class="form-control" placeholder="e.g. 🇸🇦" value="<%= job.flag || '🌐' %>" />
+            <input type="text" id="flag" name="flag" class="form-control" placeholder="e.g. 🇸🇬" value="<%= job.flag || '🌐' %>" />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="salary_inr">Estimated INR Salary *</label>
-            <input type="text" id="salary_inr" name="salary_inr" class="form-control" placeholder="e.g. ₹85,000 – ₹1,25,000 / mo" value="<%= job.salary_inr || '' %>" required />
+            <input type="text" id="salary_inr" name="salary_inr" class="form-control" placeholder="e.g. ₹1,26,000 / mo (Total Package)" value="<%= job.salary_inr || '' %>" required />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="salary_foreign">Foreign Currency Package</label>
-            <input type="text" id="salary_foreign" name="salary_foreign" class="form-control" placeholder="e.g. SAR 3,800 – 5,500" value="<%= job.salary_foreign || '' %>" />
+            <input type="text" id="salary_foreign" name="salary_foreign" class="form-control" placeholder="e.g. SGD 1,600 Basic + $400 Room" value="<%= job.salary_foreign || '' %>" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label" for="age_limit">Age Eligibility Criteria</label>
+            <input type="text" id="age_limit" name="age_limit" class="form-control" placeholder="e.g. 18 - 49 Years" value="<%= job.age_limit || '' %>" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="working_hours">Duty & Shift Hours</label>
+            <input type="text" id="working_hours" name="working_hours" class="form-control" placeholder="e.g. 10 Hours Duty / 2 Days Off per month" value="<%= job.working_hours || '' %>" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="eligibility_notes">Eligible Nationalities</label>
+            <input type="text" id="eligibility_notes" name="eligibility_notes" class="form-control" placeholder="e.g. Visa for Indians, Bangladeshis, Nepalis" value="<%= job.eligibility_notes || '' %>" />
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="perks">Perks & Benefits (Comma separated)</label>
-          <input type="text" id="perks" name="perks" class="form-control" placeholder="Free Food, Camp Accommodation, 2-Year Contract, Overtime Extra" value="<%= Array.isArray(job.perks) ? job.perks.join(', ') : (job.perks || '') %>" />
+          <input type="text" id="perks" name="perks" class="form-control" placeholder="Accommodation Provided, Free Duty Meals, 2 Days Off, Overtime Extra" value="<%= Array.isArray(job.perks) ? job.perks.join(', ') : (job.perks || '') %>" />
           <small style="color: var(--admin-text-muted); font-size: 0.8rem;">Enter features separated by commas.</small>
+        </div>
+
+        <!-- Graphic Upload for Manual Form -->
+        <div class="form-group" style="background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 8px; border: 1px dashed var(--admin-border);">
+          <label class="form-label" for="job_graphic">
+            <i class="fa-solid fa-image" style="color: var(--admin-gold); margin-right: 6px;"></i> Job Graphic / Poster Image (Optional)
+          </label>
+          <input type="file" id="job_graphic" name="job_graphic" class="form-control" accept=".jpg,.jpeg,.png,.webp" onchange="previewGraphic(this, 'manual_graphic_preview')" />
+          <% if (job.image && job.image.startsWith('/uploads/')) { %>
+            <div style="margin-top: 10px; display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 0.8rem; color: var(--admin-text-muted);">Current Graphic:</span>
+              <img src="<%= job.image %>" alt="Current job graphic" style="max-height: 80px; border-radius: 6px; border: 1px solid var(--admin-border-gold);" />
+            </div>
+          <% } %>
+          <div id="manual_graphic_preview" style="display: none; margin-top: 10px;">
+            <img src="" alt="Poster preview" style="max-height: 100px; border-radius: 6px; border: 1px solid var(--admin-border-gold);" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="description">Detailed Job Scope & Description</label>
+          <textarea id="description" name="description" rows="4" class="form-control" placeholder="Enter detailed duties, client profile, and interview requirements..."><%= job.description || '' %></textarea>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
           <div class="form-group">
             <label class="form-label" for="badge_text">Display Badge Tag</label>
-            <input type="text" id="badge_text" name="badge_text" class="form-control" placeholder="e.g. Fast-Track Gulf or High Earning" value="<%= job.badge_text || '' %>" />
+            <input type="text" id="badge_text" name="badge_text" class="form-control" placeholder="e.g. WORK PERMIT QUOTA or E-PASS" value="<%= job.badge_text || '' %>" />
           </div>
 
           <div class="form-group">
@@ -132,8 +264,51 @@
 
 </main>
 
+<!-- Smart WhatsApp / Social Job Paste Modal -->
+<div id="smartPasteModal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+  <div class="card-panel" style="max-width: 680px; width: 100%; border: 1.5px solid #10b981; background: #081636; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9); max-height: 90vh; overflow-y: auto;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 12px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #059669, #10b981); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem;">
+          <i class="fa-solid fa-paste"></i>
+        </div>
+        <div>
+          <h2 style="font-size: 1.15rem; color: #fff; margin: 0;">Smart Social / WhatsApp Job Post Creator</h2>
+          <small style="color: var(--admin-text-muted);">Paste raw recruiter WhatsApp or Telegram copy to create structured listings</small>
+        </div>
+      </div>
+      <button type="button" onclick="closeSmartPasteModal()" style="background: none; border: none; color: var(--admin-text-muted); font-size: 1.2rem; cursor: pointer;">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Quick Sample Inserts -->
+    <div style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+      <span style="font-size: 0.76rem; color: var(--admin-text-muted);">Try Sample Templates:</span>
+      <button type="button" onclick="insertSample('supermarket')" class="btn-admin btn-admin-secondary" style="padding: 3px 8px; font-size: 0.74rem; border-color: #10b981; color: #6ee7b7;">🇸🇬 Singapore Supermarket</button>
+      <button type="button" onclick="insertSample('hospital')" class="btn-admin btn-admin-secondary" style="padding: 3px 8px; font-size: 0.74rem;">🇸🇬 Singapore Hospital</button>
+      <button type="button" onclick="insertSample('restaurant')" class="btn-admin btn-admin-secondary" style="padding: 3px 8px; font-size: 0.74rem;">🇸🇬 Singapore Restaurant</button>
+    </div>
+
+    <form id="smart-paste-form" onsubmit="handleSmartPasteSubmit(event)">
+      <div class="form-group">
+        <label class="form-label" for="smart_raw_text">Paste Raw Job Description / WhatsApp Message *</label>
+        <textarea id="smart_raw_text" rows="8" class="form-control" style="font-family: monospace; font-size: 0.85rem; line-height: 1.5;" placeholder="Paste text here e.g.&#10;SINGAPORE 🇸🇬 WORK PERMIT&#10;Visa for INDIANs, BANGLADESHIs, NEPALIs to SINGAPORE 🇸🇬&#10;SUPERMARKET ASSISTANT&#10;BASIC $1600&#10;ROOM $400&#10;10 HRS&#10;2 DAYS OFF&#10;# AGE 18-49&#10;# PASSPORT and 1 PHOTO 📸&#10;APPLY NOW URGENTLY REQUIRED" required></textarea>
+        <small style="color: var(--admin-text-muted); font-size: 0.76rem;">Extracts Title, Country/Flag, Category, SGD/INR Salary, Duty Hours, Age limits, Perks, and Document requirements.</small>
+      </div>
+
+      <button type="submit" id="smart-parse-btn" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.95rem; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border: none;">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Parse & Auto-Fill into Job Form</span>
+      </button>
+    </form>
+
+  </div>
+</div>
+
 <!-- AI Job Generator Modal -->
-<div id="aiModal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+<div id="aiModal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
   <div class="card-panel" style="max-width: 620px; width: 100%; border: 1.5px solid var(--admin-border-gold); background: #081636; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9); max-height: 90vh; overflow-y: auto;">
     
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 12px;">
@@ -143,7 +318,7 @@
         </div>
         <div>
           <h2 style="font-size: 1.15rem; color: #fff; margin: 0;">AI Overseas Job Post Generator</h2>
-          <small style="color: var(--admin-text-muted);">Powered by OpenRouter API & Qwen-3 AI</small>
+          <small style="color: var(--admin-text-muted);">Powered by Qwen-3 Engine & OpenRouter</small>
         </div>
       </div>
       <button type="button" onclick="closeAiJobModal()" style="background: none; border: none; color: var(--admin-text-muted); font-size: 1.2rem; cursor: pointer;">
@@ -155,16 +330,7 @@
       
       <div class="form-group">
         <label class="form-label" for="ai_details">Brief Job Requirements / Short Details *</label>
-        <textarea id="ai_details" name="details" rows="4" class="form-control" placeholder="e.g. Urgent demand: 30 6G pipe welders for Kuwait refinery expansion project. Salary 450 KWD, free food and camp accommodation, client direct interview in Mumbai next week..." required></textarea>
-        <small style="color: var(--admin-text-muted); font-size: 0.78rem;">Paste client demand notes, WhatsApp messages, or vacancy bullet points.</small>
-      </div>
-
-      <div class="form-group" style="background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 8px; border: 1px dashed var(--admin-border);">
-        <label class="form-label" for="ai_flyer">
-          <i class="fa-solid fa-image" style="color: var(--admin-gold); margin-right: 6px;"></i> Job Graphic / Flyer Poster (Optional)
-        </label>
-        <input type="file" id="ai_flyer" name="job_flyer" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
-        <small style="color: var(--admin-text-muted); font-size: 0.78rem;">Upload flyer image to reference vacancy details.</small>
+        <textarea id="ai_details" name="details" rows="4" class="form-control" placeholder="e.g. Urgent demand: Supermarket assistant for Singapore work permit. Basic $1600, room allowance $400, age 18-49, 10 hrs duty, 2 days off, passport and 1 photo required..." required></textarea>
       </div>
 
       <button type="submit" id="ai-submit-btn" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.95rem; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); border: none;">
@@ -198,109 +364,40 @@
 <script>
   let lastAiResult = null;
 
-  function openAiJobModal() {
-    document.getElementById('aiModal').style.display = 'flex';
-  }
+  const SAMPLE_POSTS = {
+    supermarket: `SINGAPORE 🇸🇬 WORK PERMIT\n\nVisa for INDIANs, BANGLADESHIs, NEPALIs to SINGAPORE 🇸🇬 \n\nSUPERMARKET ASSISTANT\n\nBASIC $1600\nROOM $400 \n10 HRS\n2 DAYS OFF \n\n# AGE 18-49\n# PASSPORT and 1 PHOTO 📸 \n\nAPPLY NOW URGENTLY REQUIRED`,
+    hospital: `SINGAPORE 🇸🇬 PERMIT 🥳 \n\nSTAFF REQUIRED FOR HOSPITAL 🏥 JOB\n\nE-PASS🔥  Male/Female (anycan) \n\nPrimary work :- looking out for patients, giving them the medicine on time, changing Bedsheets & Pillow Covers\n\nSalary - $2200\n(Salary hike depending on the performance 🔥)\n\n#Should have basic knowledge of Nursing\n\nDM me your Resume along with your documents`,
+    restaurant: `Singapore Work Permit Required🔥 \n\nVacancies Available in Restaurant✨ \n- Waiter: $1700\n- Chef: $1900\n- Kitchen Worker: $1800\n\nWorking Hours: Monday to Friday, 9:30 AM - 7:30 PM\n\nMonthly: 2 days off with complimentary meals. Apply today to take advantage of this opportunity.🔥`
+  };
 
-  function closeAiJobModal() {
-    document.getElementById('aiModal').style.display = 'none';
-  }
-
-  async function handleAiGenerate(e) {
-    e.preventDefault();
-    const submitBtn = document.getElementById('ai-submit-btn');
-    const loading = document.getElementById('ai-loading');
-    const resultBox = document.getElementById('ai-result-box');
-
-    submitBtn.disabled = true;
-    loading.style.display = 'block';
-    resultBox.style.display = 'none';
-
-    const formData = new FormData(document.getElementById('ai-generator-form'));
-
-    try {
-      const response = await fetch('/admin/jobs/ai-generate', {
-        method: 'POST',
-        body: formData
-      });
-
-      const res = await response.json();
-      if (!res.success) {
-        throw new Error(res.message || 'Generation failed.');
-      }
-
-      lastAiResult = res.data;
-
-      // Populate preview
-      document.getElementById('ai-preview-content').innerHTML = `
-        <div><strong>Title:</strong> ${lastAiResult.title}</div>
-        <div><strong>Code:</strong> ${lastAiResult.job_code} &bull; <strong>Country:</strong> ${lastAiResult.flag || ''} ${lastAiResult.country}</div>
-        <div><strong>Salary INR:</strong> ${lastAiResult.salary_inr} &bull; <strong>Foreign:</strong> ${lastAiResult.salary_foreign}</div>
-        <div><strong>Perks:</strong> ${(lastAiResult.perks || []).join(', ')}</div>
-        <div><strong>Badge:</strong> ${lastAiResult.badge_text || 'None'}</div>
-      `;
-
-      resultBox.style.display = 'block';
-    } catch (err) {
-      alert('AI Generation Error: ' + err.message);
-    } finally {
-      submitBtn.disabled = false;
-      loading.style.display = 'none';
+  function insertFastSample(type) {
+    if (SAMPLE_POSTS[type]) {
+      const el = document.getElementById('fast_raw_text');
+      if (el) el.value = SAMPLE_POSTS[type];
     }
   }
 
-<!-- Smart WhatsApp / Social Job Paste Modal -->
-<div id="smartPasteModal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-  <div class="card-panel" style="max-width: 680px; width: 100%; border: 1.5px solid var(--admin-emerald); background: #081636; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9); max-height: 90vh; overflow-y: auto;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 12px;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #059669, #10b981); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem;">
-          <i class="fa-solid fa-paste"></i>
-        </div>
-        <div>
-          <h2 style="font-size: 1.15rem; color: #fff; margin: 0;">Smart Social / WhatsApp Job Post Creator</h2>
-          <small style="color: var(--admin-text-muted);">Paste raw recruiter WhatsApp or Telegram copy to create structured listings</small>
-        </div>
-      </div>
-      <button type="button" onclick="closeSmartPasteModal()" style="background: none; border: none; color: var(--admin-text-muted); font-size: 1.2rem; cursor: pointer;">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-
-    <!-- Quick Sample Inserts -->
-    <div style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-      <span style="font-size: 0.76rem; color: var(--admin-text-muted);">Try Sample Templates:</span>
-      <button type="button" onclick="insertSample('hospital')" class="btn-admin btn-admin-secondary" style="padding: 3px 8px; font-size: 0.74rem;">🇸🇬 Singapore Hospital</button>
-      <button type="button" onclick="insertSample('restaurant')" class="btn-admin btn-admin-secondary" style="padding: 3px 8px; font-size: 0.74rem;">🇸🇬 Singapore Restaurant</button>
-      <button type="button" onclick="insertSample('supermarket')" class="btn-admin btn-admin-secondary" style="padding: 3px 8px; font-size: 0.74rem;">🇸🇬 Singapore Supermarket</button>
-    </div>
-
-    <form id="smart-paste-form" onsubmit="handleSmartPasteSubmit(event)">
-      <div class="form-group">
-        <label class="form-label" for="smart_raw_text">Paste Raw Job Description / WhatsApp Message *</label>
-        <textarea id="smart_raw_text" rows="8" class="form-control" style="font-family: monospace; font-size: 0.85rem; line-height: 1.5;" placeholder="Paste text here e.g.&#10;SINGAPORE 🇸🇬 PERMIT 🥳&#10;STAFF REQUIRED FOR HOSPITAL 🏥 JOB&#10;E-PASS🔥 Male/Female&#10;Salary - $2200..." required></textarea>
-        <small style="color: var(--admin-text-muted); font-size: 0.76rem;">Extracts Title, Country/Flag, Category, SGD/INR Salary, Duty Hours, Perks, and Document requirements.</small>
-      </div>
-
-      <button type="submit" id="smart-parse-btn" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.95rem; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border: none;">
-        <i class="fa-solid fa-bolt"></i>
-        <span>Parse & Auto-Fill into Job Form</span>
-      </button>
-    </form>
-
-  </div>
-</div>
-
-<script>
-  let lastAiResult = null;
-
-  function openAiJobModal() {
-    document.getElementById('aiModal').style.display = 'flex';
+  function insertSample(type) {
+    if (SAMPLE_POSTS[type]) {
+      const el = document.getElementById('smart_raw_text');
+      if (el) el.value = SAMPLE_POSTS[type];
+    }
   }
 
-  function closeAiJobModal() {
-    document.getElementById('aiModal').style.display = 'none';
+  function previewGraphic(input, previewId) {
+    const previewEl = document.getElementById(previewId);
+    if (!previewEl) return;
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = previewEl.querySelector('img');
+        if (img) img.src = e.target.result;
+        previewEl.style.display = 'block';
+      };
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      previewEl.style.display = 'none';
+    }
   }
 
   function openSmartPasteModal() {
@@ -311,15 +408,73 @@
     document.getElementById('smartPasteModal').style.display = 'none';
   }
 
-  const SAMPLE_POSTS = {
-    hospital: `SINGAPORE 🇸🇬 PERMIT 🥳 \n\nSTAFF REQUIRED FOR HOSPITAL 🏥 JOB\n\nE-PASS🔥  Male/Female (anycan) \n\nPrimary work :- looking out for patients, giving them the medicine on time, changing Bedsheets & Pillow Covers\n\nSalary - $2200\n(Salary hike depending on the performance 🔥)\n\n#Should have basic knowledge of Nursing\n\nDM me your Resume along with your documents`,
-    restaurant: `Singapore Work Permit Required🔥 \n\nVacancies Available in Restaurant✨ \n- Waiter: $1700\n- Chef: $1900\n- Kitchen Worker: $1800\n\nWorking Hours: Monday to Friday, 9:30 AM - 7:30 PM\n\nMonthly: 2 days off with complimentary meals. Apply today to take advantage of this opportunity.🔥`,
-    supermarket: `SINGAPORE 🇸🇬 WORK PERMIT\n\nVisa for INDIANs, BANGLADESHIs, NEPALIs to SINGAPORE 🇸🇬 \n\nSUPERMARKET ASSISTANT\n\nBASIC $1600\nROOM $400 \n10 HRS\n2 DAYS OFF \n\n# AGE 18-49\n# PASSPORT and 1 PHOTO 📸 \n\nAPPLY NOW URGENTLY REQUIRED`
-  };
+  function openAiJobModal() {
+    document.getElementById('aiModal').style.display = 'flex';
+  }
 
-  function insertSample(type) {
-    if (SAMPLE_POSTS[type]) {
-      document.getElementById('smart_raw_text').value = SAMPLE_POSTS[type];
+  function closeAiJobModal() {
+    document.getElementById('aiModal').style.display = 'none';
+  }
+
+  // 1-Click Fast Track AI Auto Publish
+  async function handleFastTrackPublish(e) {
+    e.preventDefault();
+    const btn = document.getElementById('fast-publish-btn');
+    const loading = document.getElementById('fast-loading');
+    const form = document.getElementById('fast-track-form');
+
+    btn.disabled = true;
+    loading.style.display = 'block';
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('/admin/jobs/ai-auto-publish', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      });
+
+      const res = await response.json();
+      if (!res.success) {
+        throw new Error(res.message || 'Auto-publishing failed.');
+      }
+
+      alert('🎉 Success! ' + res.message);
+      window.location.href = res.redirectUrl || '/admin/jobs?created=true';
+    } catch (err) {
+      alert('Error publishing job with AI: ' + err.message);
+      btn.disabled = false;
+      loading.style.display = 'none';
+    }
+  }
+
+  // Populate manual form below from Fast-Track textarea
+  async function populateManualFormFromFastTrack() {
+    const rawText = document.getElementById('fast_raw_text').value;
+    if (!rawText || !rawText.trim()) {
+      alert('Please paste or select a job description first!');
+      return;
+    }
+
+    try {
+      const response = await fetch('/admin/jobs/smart-parse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rawText })
+      });
+
+      const res = await response.json();
+      if (!res.success) {
+        throw new Error(res.message || 'Parsing failed.');
+      }
+
+      applyParsedDataToForm(res.data);
+
+      // Smooth scroll down to manual form
+      document.getElementById('job-form').scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      alert('Parsing Error: ' + err.message);
     }
   }
 
@@ -344,6 +499,8 @@
 
       applyParsedDataToForm(res.data);
       closeSmartPasteModal();
+
+      document.getElementById('job-form').scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
       alert('Error parsing job description: ' + err.message);
     } finally {
@@ -362,6 +519,11 @@
     if (data.salary_inr) document.getElementById('salary_inr').value = data.salary_inr;
     if (data.salary_foreign) document.getElementById('salary_foreign').value = data.salary_foreign;
     if (data.badge_text) document.getElementById('badge_text').value = data.badge_text;
+    if (data.age_limit) document.getElementById('age_limit').value = data.age_limit;
+    if (data.working_hours) document.getElementById('working_hours').value = data.working_hours;
+    if (data.eligibility_notes) document.getElementById('eligibility_notes').value = data.eligibility_notes;
+    if (data.description) document.getElementById('description').value = data.description;
+
     if (data.employer_funded !== undefined) {
       document.getElementById('employer_funded').checked = !!data.employer_funded;
     }
@@ -381,14 +543,16 @@
     }
 
     // Pulse highlight the form panel
-    const formPanel = document.querySelector('.card-panel');
-    formPanel.style.transition = 'box-shadow 0.4s ease, border-color 0.4s ease';
-    formPanel.style.boxShadow = '0 0 35px rgba(16, 185, 129, 0.7)';
-    formPanel.style.borderColor = '#10b981';
-    setTimeout(() => {
-      formPanel.style.boxShadow = '';
-      formPanel.style.borderColor = '';
-    }, 1500);
+    const formPanel = document.querySelector('#job-form').closest('.card-panel');
+    if (formPanel) {
+      formPanel.style.transition = 'box-shadow 0.4s ease, border-color 0.4s ease';
+      formPanel.style.boxShadow = '0 0 35px rgba(16, 185, 129, 0.7)';
+      formPanel.style.borderColor = '#10b981';
+      setTimeout(() => {
+        formPanel.style.boxShadow = '';
+        formPanel.style.borderColor = '';
+      }, 1500);
+    }
   }
 
   async function handleAiGenerate(e) {

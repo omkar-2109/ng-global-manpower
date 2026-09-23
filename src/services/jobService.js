@@ -24,6 +24,15 @@ const jobService = {
     return Job.findById(id);
   },
 
+  getJobByCodeOrId(identifier) {
+    if (!identifier) return null;
+    let job = Job.findById(identifier);
+    if (!job) {
+      job = Job.findByCode(identifier);
+    }
+    return job;
+  },
+
   createJob(jobData) {
     const newJob = Job.create(jobData);
     this.invalidateCache();

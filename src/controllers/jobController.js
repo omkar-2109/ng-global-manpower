@@ -25,9 +25,16 @@ const jobController = {
   },
 
   // Admin: Create job opening
-  createJob(req, res, next) {
+  async createJob(req, res, next) {
     try {
-      const job = jobService.createJob(req.body);
+      const jobData = { ...req.body };
+      if (req.file) {
+        const documentService = require('../services/documentService');
+        const graphicUrl = await documentService.processJobGraphic(req.file);
+        if (graphicUrl) jobData.image = graphicUrl;
+      }
+
+      const job = jobService.createJob(jobData);
 
       if (req.xhr || req.headers.accept?.includes('json')) {
         return res.status(201).json({ success: true, message: 'Job opening published.', job });
@@ -39,10 +46,17 @@ const jobController = {
   },
 
   // Admin: Update job opening
-  updateJob(req, res, next) {
+  async updateJob(req, res, next) {
     try {
       const { id } = req.params;
-      const updated = jobService.updateJob(id, req.body);
+      const jobData = { ...req.body };
+      if (req.file) {
+        const documentService = require('../services/documentService');
+        const graphicUrl = await documentService.processJobGraphic(req.file);
+        if (graphicUrl) jobData.image = graphicUrl;
+      }
+
+      const updated = jobService.updateJob(id, jobData);
 
       if (!updated) {
         return res.status(404).json({ success: false, message: 'Job not found.' });

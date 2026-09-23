@@ -3,6 +3,7 @@ const jobService = require('../services/jobService');
 const Setting = require('../models/Setting');
 const Agent = require('../models/Agent');
 const Lead = require('../models/Lead');
+const Job = require('../models/Job');
 const Notification = require('../models/Notification');
 const documentService = require('../services/documentService');
 const aiJobService = require('../services/aiJobService');
@@ -490,6 +491,47 @@ const adminController = {
       res.json({ success: true, broadcastText });
     } catch (err) {
       next(err);
+    }
+  },
+
+  // Fast 1-Click AI Generate & Auto-Publish Job Post
+  async autoPublishJobAi(req, res, next) {
+    try {
+      const rawText = req.body.rawText || req.body.details;
+      if (!rawText || !rawText.trim()) {
+        return res.status(400).json({ success: false, message: 'Please provide job description text.' });
+      }
+
+      // Generate structured job data using Qwen-3 engine
+      const jobData = await aiJobService.generateJobPost({ details: rawText });
+
+      // Handle optional graphic upload
+      if (req.file) {
+        const graphicUrl = await documentService.processJobGraphic(req.file);
+        if (graphicUrl) {
+          jobData.image = graphicUrl;
+        }
+      }
+
+      // Insert job directly into database
+      const newJob = Job.create(jobData);
+
+      if (req.xhr || req.headers.accept?.includes('json')) {
+        return res.status(201).json({
+          success: true,
+          message: 'Job opening synthesized and published successfully!',
+          job: newJob,
+          redirectUrl: `/jobs/${newJob.job_code || newJob.id}`
+        });
+      }
+
+      res.redirect(`/jobs/${newJob.job_code || newJob.id}`);
+    } catch (err) {
+      console.error('[Admin] Auto-publish AI error:', err.message);
+      if (req.xhr || req.headers.accept?.includes('json')) {
+        return res.status(500).json({ success: false, message: err.message });
+      }
+      res.redirect('/admin/jobs?error=' + encodeURIComponent(err.message));
     }
   }
 };

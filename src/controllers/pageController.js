@@ -50,6 +50,41 @@ const pageController = {
     } catch (err) {
       next(err);
     }
+  },
+
+  getJobDetailPage(req, res, next) {
+    try {
+      const { id } = req.params;
+      const job = jobService.getJobByCodeOrId(id);
+
+      if (!job || job.active === 0) {
+        return res.status(404).render('pages/404', {
+          title: 'Job Opening Not Found | NG Global Manpower',
+          message: 'The requested overseas job opening may have expired, reached its applicant quota, or moved.'
+        });
+      }
+
+      const settings = Setting.all();
+      const allActiveJobs = jobService.getActiveJobs();
+      const relatedJobs = allActiveJobs
+        .filter(j => j.id !== job.id && (j.category === job.category || j.country.split('(')[0] === job.country.split('(')[0]))
+        .slice(0, 3);
+
+      res.render('pages/job-detail', {
+        title: `${job.title} – ${job.country} | NG Global Manpower`,
+        description: `Verified job opening for ${job.title} in ${job.country}. Package: ${job.salary_foreign || job.salary_inr}. Read full visa criteria, perks, and apply now.`,
+        job,
+        relatedJobs,
+        settings: {
+          whatsappNumber: settings.whatsapp_number || env.whatsappNumber,
+          helplinePhone: settings.helpline_phone || env.helplinePhone,
+          supportEmail: settings.support_email || env.supportEmail
+        },
+        path: '/jobs'
+      });
+    } catch (err) {
+      next(err);
+    }
   }
 };
 

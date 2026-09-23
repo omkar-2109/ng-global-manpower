@@ -1,0 +1,387 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/mobile-drawer') %>
+
+<main style="padding-top: 36px; padding-bottom: 80px;">
+  <div class="container" style="max-width: 1140px;">
+    
+    <!-- Breadcrumbs -->
+    <nav style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; flex-wrap: wrap;">
+      <a href="/" style="color: var(--text-muted); text-decoration: none;">Home</a>
+      <span>&rsaquo;</span>
+      <a href="/jobs" style="color: var(--text-muted); text-decoration: none;">International Jobs</a>
+      <span>&rsaquo;</span>
+      <a href="/jobs?country=<%= encodeURIComponent(job.country.split('(')[0].trim()) %>" style="color: var(--text-muted); text-decoration: none;"><%= job.country.split('(')[0].trim() %></a>
+      <span>&rsaquo;</span>
+      <span style="color: var(--gold-amber);"><%= job.title %></span>
+    </nav>
+
+    <!-- Main Grid: Left Column (Details) + Right Column (Sidebar CTA) -->
+    <div style="display: grid; grid-template-columns: 1fr 380px; gap: 32px; align-items: start;">
+      
+      <!-- Left Column: Detailed Job Information -->
+      <div>
+
+        <!-- Hero Header Box -->
+        <div class="glass-card" style="padding: 32px; border-radius: 20px; border: 1.5px solid var(--border-gold); margin-bottom: 28px; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: -50px; right: -50px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none;"></div>
+          
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap;">
+            <span style="background: rgba(30, 64, 175, 0.3); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8; font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+              <span><%= job.flag || '🌐' %></span>
+              <span><%= job.country %></span>
+            </span>
+
+            <% if (job.badge_text) { %>
+              <span style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                <%= job.badge_text %>
+              </span>
+            <% } %>
+
+            <% if (job.employer_funded) { %>
+              <span style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(245, 158, 11, 0.2)); border: 1px solid var(--gold-amber); color: #fef08a; font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                <i class="fa-solid fa-gift"></i> 100% Employer Funded
+              </span>
+            <% } else { %>
+              <span style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #e2e8f0; font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                <i class="fa-solid fa-shield-halved" style="color: #60a5fa;"></i> Regulated Service Fee
+              </span>
+            <% } %>
+
+            <span style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--gold-amber); background: rgba(0, 0, 0, 0.5); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); margin-left: auto;">
+              Job ID: <%= job.job_code %>
+            </span>
+          </div>
+
+          <h1 style="font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 12px;">
+            <%= job.title %>
+          </h1>
+
+          <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.92rem; margin-bottom: 22px;">
+            <i class="fa-solid fa-wrench" style="color: var(--gold-amber);"></i>
+            <span><%= job.category %></span>
+            <span>&bull;</span>
+            <i class="fa-solid fa-calendar-check" style="color: #10b981;"></i>
+            <span>Active Quota (Immediate Deployment)</span>
+          </div>
+
+          <!-- Salary Highlight Banner -->
+          <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 78, 59, 0.25) 100%); border: 1.5px solid rgba(16, 185, 129, 0.4); border-radius: 14px; padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <span style="font-size: 0.76rem; color: #6ee7b7; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; display: block; margin-bottom: 4px;">
+                Monthly Earning Package
+              </span>
+              <div style="font-size: 1.6rem; font-weight: 800; color: #fff; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span><%= job.salary_inr %></span>
+                <% if (job.salary_foreign) { %>
+                  <span style="font-size: 1.15rem; color: #34d399; font-weight: 600;">(<%= job.salary_foreign %>)</span>
+                <% } %>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <span style="background: rgba(16, 185, 129, 0.3); color: #a7f3d0; font-size: 0.75rem; padding: 4px 10px; border-radius: 8px; font-weight: 600;">
+                <i class="fa-solid fa-building-columns"></i> Direct Bank Transfer
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Optional Job Graphic / Flyer Display -->
+        <% if (job.image && job.image.startsWith('/uploads/')) { %>
+          <div class="glass-card" style="padding: 24px; border-radius: 18px; margin-bottom: 28px; border: 1.5px solid rgba(16, 185, 129, 0.4);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+              <h3 style="margin: 0; color: #fff; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-image" style="color: #10b981;"></i>
+                <span>Official Employer Recruitment Flyer</span>
+              </h3>
+              <a href="<%= job.image %>" target="_blank" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.8rem; border-color: rgba(255,255,255,0.2);">
+                <i class="fa-solid fa-up-right-from-square"></i> Full Resolution
+              </a>
+            </div>
+            <div style="text-align: center; background: rgba(0, 0, 0, 0.4); border-radius: 12px; overflow: hidden; padding: 12px;">
+              <img src="<%= job.image %>" alt="<%= job.title %> Vacancy Poster" style="max-width: 100%; max-height: 520px; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+            </div>
+          </div>
+        <% } %>
+
+        <!-- Key Specifications Grid (6 Cards) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px;">
+          
+          <div class="glass-card" style="padding: 18px; border-radius: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+              <i class="fa-solid fa-clock" style="color: #60a5fa; font-size: 1.1rem;"></i>
+              <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">DUTY & SHIFTS</span>
+            </div>
+            <div style="font-size: 1rem; color: #fff; font-weight: 600;">
+              <%= job.working_hours || '10 Hours Duty / 2 Days Off' %>
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding: 18px; border-radius: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+              <i class="fa-solid fa-user-check" style="color: #f59e0b; font-size: 1.1rem;"></i>
+              <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">AGE CRITERIA</span>
+            </div>
+            <div style="font-size: 1rem; color: #fff; font-weight: 600;">
+              <%= job.age_limit || '18 – 49 Years' %>
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding: 18px; border-radius: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+              <i class="fa-solid fa-passport" style="color: #10b981; font-size: 1.1rem;"></i>
+              <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">ELIGIBLE NATIONALITIES</span>
+            </div>
+            <div style="font-size: 0.95rem; color: #fff; font-weight: 600;">
+              <%= job.eligibility_notes || 'Indians, Bangladeshis, Nepalis' %>
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding: 18px; border-radius: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+              <i class="fa-solid fa-house" style="color: #a855f7; font-size: 1.1rem;"></i>
+              <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">ACCOMMODATION</span>
+            </div>
+            <div style="font-size: 0.95rem; color: #fff; font-weight: 600;">
+              Room Allowance / Camp Provided
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding: 18px; border-radius: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+              <i class="fa-solid fa-heart-pulse" style="color: #ef4444; font-size: 1.1rem;"></i>
+              <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">MEDICAL & HEALTH</span>
+            </div>
+            <div style="font-size: 0.95rem; color: #fff; font-weight: 600;">
+              GAMCA Medical / Employer Cover
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding: 18px; border-radius: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+              <i class="fa-solid fa-file-contract" style="color: var(--gold-amber); font-size: 1.1rem;"></i>
+              <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">CONTRACT & PERMIT</span>
+            </div>
+            <div style="font-size: 0.95rem; color: #fff; font-weight: 600;">
+              2-Year Renewable Work Permit
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Scope of Work & Description -->
+        <div class="glass-card" style="padding: 28px; border-radius: 18px; margin-bottom: 28px;">
+          <h3 style="font-size: 1.2rem; color: #fff; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-file-lines" style="color: var(--gold-amber);"></i>
+            <span>Role Scope & Responsibilities</span>
+          </h3>
+          <div style="font-size: 0.95rem; color: #cbd5e1; line-height: 1.7; white-space: pre-line;">
+            <%= job.description || 'Full scope of duties includes day-to-day operational support, adherence to workplace safety regulations, equipment operation, and team coordination under employer guidance.' %>
+          </div>
+        </div>
+
+        <!-- Perks & Amenities -->
+        <% if (job.perks && job.perks.length > 0) { %>
+          <div class="glass-card" style="padding: 28px; border-radius: 18px; margin-bottom: 28px;">
+            <h3 style="font-size: 1.2rem; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-star" style="color: #fbbf24;"></i>
+              <span>Included Perks & Allowances</span>
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+              <% job.perks.forEach(perk => { %>
+                <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px 14px; border-radius: 10px; display: flex; align-items: center; gap: 10px; color: #e2e8f0; font-size: 0.9rem;">
+                  <i class="fa-solid fa-circle-check" style="color: #10b981;"></i>
+                  <span><%= perk %></span>
+                </div>
+              <% }); %>
+            </div>
+          </div>
+        <% } %>
+
+        <!-- Mandatory Documentation Checklist (Strict Order) -->
+        <div class="glass-card" style="padding: 28px; border-radius: 18px; margin-bottom: 28px; border: 1px solid rgba(212, 175, 55, 0.35);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <h3 style="font-size: 1.2rem; color: #fff; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-folder-open" style="color: var(--gold-amber);"></i>
+              <span>Mandatory Candidate Documents (In Strict Order)</span>
+            </h3>
+            <span style="font-size: 0.76rem; color: #34d399; background: rgba(16, 185, 129, 0.15); padding: 4px 10px; border-radius: 12px; font-weight: 600;">
+              CONFIRMED DOSSIER
+            </span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.03); padding: 12px 16px; border-radius: 10px;">
+              <span style="background: var(--gold-amber); color: #000; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">1</span>
+              <div>
+                <strong style="color: #fff; font-size: 0.95rem;">Updated CV / Bio-Data</strong>
+                <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">Detailing complete work history, past employers, and contact information.</span>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.03); padding: 12px 16px; border-radius: 10px;">
+              <span style="background: var(--gold-amber); color: #000; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">2</span>
+              <div>
+                <strong style="color: #fff; font-size: 0.95rem;">Trade & Experience Certificates</strong>
+                <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">Skill proof, technical trade test certification, or previous overseas service records.</span>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.03); padding: 12px 16px; border-radius: 10px;">
+              <span style="background: var(--gold-amber); color: #000; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">3</span>
+              <div>
+                <strong style="color: #fff; font-size: 0.95rem;">Original Passport Copy (Front & Back)</strong>
+                <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">Clear color scan with minimum 1+ year validity from the date of submission.</span>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.03); padding: 12px 16px; border-radius: 10px;">
+              <span style="background: var(--gold-amber); color: #000; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">4</span>
+              <div>
+                <strong style="color: #fff; font-size: 0.95rem;">White-Background Studio Photograph 📸</strong>
+                <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">1 professional passport studio print with formal attire and clear white background.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Regulated Guarantee Box -->
+        <div class="glass-card" style="padding: 22px; border-radius: 16px; background: linear-gradient(135deg, rgba(30, 64, 175, 0.15) 0%, rgba(15, 23, 42, 0.6) 100%); border: 1px solid rgba(56, 189, 248, 0.3);">
+          <div style="display: flex; gap: 14px; align-items: flex-start;">
+            <i class="fa-solid fa-shield-halved" style="color: #38bdf8; font-size: 1.8rem; margin-top: 2px;"></i>
+            <div>
+              <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 1rem;">NG Global Regulated Recruitment Guarantee</h4>
+              <p style="color: #94a3b8; font-size: 0.85rem; line-height: 1.5; margin: 0;">
+                Official visa processing and GAMCA medical fees are paid directly to authorized government embassies. NG Global maintains transparent regulated service fees with zero unauthorized middleman charges.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Sidebar Application & Action Card -->
+      <div style="position: sticky; top: 100px;">
+
+        <div class="glass-card" style="padding: 28px; border-radius: 20px; border: 1.5px solid var(--border-gold); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);">
+          
+          <div style="text-align: center; margin-bottom: 22px;">
+            <span style="font-size: 0.78rem; color: var(--gold-amber); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">
+              APPLY FOR THIS QUOTA
+            </span>
+            <div style="font-size: 1.8rem; font-weight: 800; color: #fff;">
+              <%= job.salary_inr.split('/')[0].trim() %>
+            </div>
+            <% if (job.salary_foreign) { %>
+              <div style="font-size: 1rem; color: #34d399; font-weight: 600; margin-top: 2px;">
+                <%= job.salary_foreign %>
+              </div>
+            <% } %>
+          </div>
+
+          <!-- WhatsApp Apply Action -->
+          <% 
+            const waNumber = settings.whatsappNumber ? settings.whatsappNumber.replace(/[^0-9]/g, '') : '918080025670';
+            const waMessage = `Hello NG Global Manpower Team,%0A%0AI am applying for the following verified overseas opening:%0A*Position:* ${encodeURIComponent(job.title)}%0A*Quota Code:* ${job.job_code}%0A*Country:* ${encodeURIComponent(job.country)}%0A*Salary:* ${encodeURIComponent(job.salary_foreign || job.salary_inr)}%0A%0AMy Passport and documents are ready for immediate deployment. Please share interview instructions.`;
+            const waLink = `https://wa.me/${waNumber}?text=${waMessage}`;
+          %>
+
+          <a href="<%= waLink %>" target="_blank" class="btn btn-gold" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem; margin-bottom: 14px; border-radius: 12px;">
+            <i class="fa-brands fa-whatsapp" style="font-size: 1.25rem;"></i>
+            <span>Apply on WhatsApp</span>
+          </a>
+
+          <!-- Quick Portal Apply Form -->
+          <div style="border-top: 1px solid var(--border-light); padding-top: 20px; margin-top: 20px;">
+            <span style="font-size: 0.85rem; color: #fff; font-weight: 600; display: block; margin-bottom: 12px; text-align: center;">
+              Or Submit Direct Web Inquiry:
+            </span>
+
+            <form action="/api/v1/leads" method="POST" id="job-quick-apply-form">
+              <input type="hidden" name="job_code" value="<%= job.job_code %>" />
+              <input type="hidden" name="trade" value="<%= job.category %>" />
+              <input type="hidden" name="destination" value="<%= job.country %>" />
+              <input type="hidden" name="source" value="job_detail_page" />
+
+              <div class="form-group" style="margin-bottom: 12px;">
+                <input type="text" name="full_name" class="form-control" placeholder="Full Name as in Passport *" required style="font-size: 0.88rem; padding: 10px 12px;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 12px;">
+                <input type="tel" name="phone" class="form-control" placeholder="Mobile / WhatsApp Number *" required style="font-size: 0.88rem; padding: 10px 12px;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 12px;">
+                <input type="text" name="city" class="form-control" placeholder="Your City & State *" required style="font-size: 0.88rem; padding: 10px 12px;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 16px;">
+                <select name="experience" class="form-control" style="font-size: 0.88rem; padding: 10px 12px; background: #081636;">
+                  <option value="Fresher / Initial Trade">Fresher / Initial Trade</option>
+                  <option value="1 to 2 Years">1 to 2 Years</option>
+                  <option value="3 to 5 Years" selected>3 to 5 Years Experience</option>
+                  <option value="5+ Years GCC / Overseas">5+ Years GCC / Overseas</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.92rem; border-color: rgba(255,255,255,0.25);">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Submit Quick Application</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Share Links -->
+          <div style="margin-top: 20px; border-top: 1px solid var(--border-light); padding-top: 16px; text-align: center;">
+            <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 8px;">Share This Opportunity:</span>
+            <div style="display: flex; gap: 8px; justify-content: center;">
+              <a href="https://api.whatsapp.com/send?text=<%= encodeURIComponent('Check out this verified opening: ' + job.title + ' in ' + job.country + ' (Salary: ' + (job.salary_foreign || job.salary_inr) + ')\nApply here: https://ngglobalmp.in/jobs/' + (job.job_code || job.id)) %>" target="_blank" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem; border-color: #25D366; color: #25D366;">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp
+              </a>
+              <button type="button" onclick="navigator.clipboard.writeText(window.location.href); alert('Job link copied to clipboard!');" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
+                <i class="fa-solid fa-copy"></i> Copy Link
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Related Jobs Section -->
+    <% if (relatedJobs && relatedJobs.length > 0) { %>
+      <div style="margin-top: 60px;">
+        <h2 style="font-size: 1.6rem; color: #fff; margin-bottom: 24px;">Similar Overseas Opportunities</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+          <% relatedJobs.forEach(rel => { %>
+            <div class="glass-card card-3d-interactive" style="padding: 20px; border-radius: 16px; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                  <span style="font-size: 0.8rem; color: #38bdf8; background: rgba(56, 189, 248, 0.15); padding: 3px 10px; border-radius: 12px;">
+                    <%= rel.flag %> <%= rel.country %>
+                  </span>
+                  <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold-amber);">
+                    <%= rel.job_code %>
+                  </span>
+                </div>
+                <h4 style="font-size: 1.1rem; color: #fff; margin: 0 0 8px 0;"><%= rel.title %></h4>
+                <div style="font-size: 0.95rem; font-weight: 700; color: #34d399; margin-bottom: 14px;">
+                  <%= rel.salary_foreign || rel.salary_inr %>
+                </div>
+              </div>
+              <a href="/jobs/<%= rel.job_code || rel.id %>" class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.88rem;">
+                View Full Details &rarr;
+              </a>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
