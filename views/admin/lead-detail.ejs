@@ -13,13 +13,29 @@
         <span style="font-family: 'Space Grotesk', monospace; color: var(--admin-gold); font-size: 0.9rem;">#NG-<%= lead.id %></span>
       </div>
       <h1><%= lead.full_name %></h1>
-      <p>Candidate Profile & Overseas Eligibility Assessment</p>
+      <p style="margin: 0;">
+        Candidate Profile & Overseas Eligibility Assessment &bull;
+        <% if (lead.lead_type === 'confirmed_candidate') { %>
+          <span style="background: rgba(212, 175, 55, 0.2); color: var(--admin-gold); padding: 3px 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 700;">
+            <i class="fa-solid fa-badge-check"></i> Confirmed Candidate (Ready to Pay)
+          </span>
+        <% } else { %>
+          <span style="background: rgba(56, 189, 248, 0.2); color: var(--admin-cyan); padding: 3px 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 700;">
+            <i class="fa-solid fa-comment-dots"></i> Inquiry Query Lead (Follow-up Required)
+          </span>
+        <% } %>
+      </p>
     </div>
 
-    <div style="display: flex; gap: 12px; align-items: center;">
+    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
       <a href="<%= quickWhatsAppUrl %>" target="_blank" class="btn-admin btn-admin-whatsapp">
         <i class="fa-brands fa-whatsapp"></i>
-        <span>Direct WhatsApp Candidate</span>
+        <span>Chat on WhatsApp</span>
+      </a>
+
+      <a href="<%= procedureWhatsAppUrl %>" target="_blank" class="btn-admin btn-admin-secondary" style="border-color: #38bdf8; color: #38bdf8;">
+        <i class="fa-solid fa-paper-plane"></i>
+        <span>Send Procedure</span>
       </a>
       
       <form action="/admin/leads/<%= lead.id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to remove this candidate dossier?');">
@@ -29,6 +45,35 @@
       </form>
     </div>
   </div>
+
+  <% if (typeof docsUploaded !== 'undefined' && docsUploaded) { %>
+    <div class="admin-alert admin-alert-success" style="margin-bottom: 24px;">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>Documents uploaded successfully! Master PDF dossier has been compiled in strict sequence: <strong>1. CV &rarr; 2. Experience &rarr; 3. Passport &rarr; 4. Photo</strong>.</span>
+    </div>
+  <% } %>
+
+  <% if (typeof updated !== 'undefined' && updated) { %>
+    <div class="admin-alert admin-alert-success" style="margin-bottom: 24px;">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>Candidate profile and procedure follow-up details updated successfully.</span>
+    </div>
+  <% } %>
+
+  <% if (lead.status === 'Backed Out') { %>
+    <div class="admin-alert admin-alert-error" style="margin-bottom: 24px; background: rgba(239, 68, 68, 0.15); border: 2px solid #ef4444; color: #fff;">
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444; font-size: 1.6rem; margin-top: 2px;"></i>
+        <div>
+          <strong style="color: #fca5a5; font-size: 1.05rem;">ALERT: Candidate Marked as BACKED OUT</strong>
+          <p style="margin: 4px 0 0 0; font-size: 0.9rem; color: #fecaca;">
+            <strong>Backout Reason:</strong> <%= lead.backout_reason || 'No specific reason reported.' %>
+            <br><small style="color: #cbd5e1;">Reported by: <strong><%= lead.backed_out_by || 'Agent' %></strong> on <%= lead.backed_out_at ? new Date(lead.backed_out_at).toLocaleString('en-IN') : 'N/A' %></small>
+          </p>
+        </div>
+      </div>
+    </div>
+  <% } %>
 
   <!-- Detail Grid -->
   <div class="detail-grid">
@@ -89,12 +134,152 @@
           <span class="info-value"><%= new Date(lead.created_at).toLocaleString('en-IN') %></span>
         </div>
 
+        <% if (lead.agent_username) { %>
+        <div class="info-row">
+          <span class="info-label">Sourcing Partner Agent</span>
+          <span class="info-value">
+            <a href="/agency/<%= lead.agent_username %>" target="_blank" style="color: var(--admin-gold); text-decoration: none; font-weight: 600;">
+              <i class="fa-solid fa-handshake"></i> <%= lead.agent_username %>.url
+            </a>
+          </span>
+        </div>
+        <% } %>
+
+        <% if (lead.passport_no) { %>
+        <div class="info-row">
+          <span class="info-label">Passport Number</span>
+          <span class="info-value" style="font-family: monospace; font-weight: 700; color: var(--admin-gold);"><%= lead.passport_no %></span>
+        </div>
+        <% } %>
+
+        <% if (lead.gamca_status) { %>
+        <div class="info-row">
+          <span class="info-label">GAMCA Medical Status</span>
+          <span class="info-value" style="color: <%= lead.gamca_status === 'Passed / Fit' ? '#34d399' : '#fff' %>;"><%= lead.gamca_status %></span>
+        </div>
+        <% } %>
+
         <% if (lead.ip_address) { %>
         <div class="info-row">
           <span class="info-label">Client IP</span>
           <span class="info-value" style="font-family: monospace; font-size: 0.85rem; color: var(--admin-text-muted);"><%= lead.ip_address %></span>
         </div>
         <% } %>
+      </div>
+
+      <!-- Candidate Document Dossier Management & Upload Option (Always Visible) -->
+      <div class="card-panel" style="border: 1.5px solid var(--admin-border-gold); background: linear-gradient(135deg, rgba(8, 22, 54, 0.95) 0%, rgba(3, 10, 26, 0.98) 100%);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 1.15rem; color: #fff; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-file-shield" style="color: var(--admin-gold);"></i>
+              <span>Official Candidate Document Dossier</span>
+            </h2>
+            <small style="color: var(--admin-text-muted);">
+              Embassy & Client package compiled in strict order: <strong>1. CV &rarr; 2. Experience &rarr; 3. Passport &rarr; 4. Photo</strong>
+            </small>
+          </div>
+
+          <% if (lead.merged_dossier_pdf) { %>
+            <a href="<%= lead.merged_dossier_pdf %>" target="_blank" class="btn-admin btn-admin-primary" style="padding: 8px 16px; font-size: 0.85rem;">
+              <i class="fa-solid fa-download"></i>
+              <span>Download Master Dossier (Single PDF)</span>
+            </a>
+          <% } %>
+        </div>
+
+        <% if (lead.documents && lead.documents.length > 0) { %>
+          <div style="margin-bottom: 18px;">
+            <span style="font-size: 0.85rem; color: #94a3b8; display: block; margin-bottom: 8px; font-weight: 600;">Current Attached Files (<%= lead.documents.length %>):</span>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <% lead.documents.forEach(doc => { %>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 10px 14px; border-radius: 6px; border: 1px solid var(--admin-border);">
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid <%= doc.mime === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image' %>" style="color: <%= doc.mime === 'application/pdf' ? '#ef4444' : '#38bdf8' %>;"></i>
+                    <div>
+                      <span style="color: #fff; font-weight: 600; font-size: 0.88rem;"><%= doc.filename %></span>
+                      <small style="color: var(--admin-text-muted); margin-left: 8px; font-size: 0.75rem;">
+                        [<%= (doc.type || '').replace(/_/g, ' ') %>] &bull; <%= Math.round(doc.size / 1024) %> KB
+                      </small>
+                    </div>
+                  </div>
+                  <a href="<%= doc.path %>" target="_blank" class="btn-admin btn-admin-secondary" style="padding: 4px 10px; font-size: 0.78rem;">
+                    View File
+                  </a>
+                </div>
+              <% }); %>
+            </div>
+          </div>
+        <% } else { %>
+          <div style="background: rgba(255, 255, 255, 0.02); border: 1px dashed var(--admin-border); border-radius: 8px; padding: 14px; margin-bottom: 18px; color: var(--admin-text-muted); font-size: 0.88rem; text-align: center;">
+            <i class="fa-solid fa-folder-open" style="font-size: 1.5rem; color: var(--admin-gold); margin-bottom: 6px; display: block;"></i>
+            No document dossier uploaded yet. Candidate currently recorded as an Inquiry Query Lead. Use the upload box below to attach verified documents and generate the consolidated Master PDF.
+          </div>
+        <% } %>
+
+        <!-- Upload Documentation Form -->
+        <div style="background: rgba(255, 255, 255, 0.02); border-top: 1px solid var(--admin-border); padding-top: 16px;">
+          <h3 style="font-size: 0.98rem; color: var(--admin-gold); margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span><%= lead.documents && lead.documents.length > 0 ? 'Upload Additional / Updated Documents' : 'Upload Candidate Documentation & Compile Dossier' %></span>
+          </h3>
+
+          <form action="/admin/leads/<%= lead.id %>/documents" method="POST" enctype="multipart/form-data">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+              <div class="form-group" style="margin-bottom: 10px;">
+                <label class="form-label" for="admin_resume" style="font-size: 0.82rem;">
+                  1️⃣ Candidate CV / Bio-Data (PDF or Image)
+                </label>
+                <input type="file" id="admin_resume" name="resume" class="form-control" accept=".pdf,.jpg,.jpeg,.png" style="font-size: 0.82rem;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 10px;">
+                <label class="form-label" for="admin_certs" style="font-size: 0.82rem;">
+                  2️⃣ Experience & Trade Certificates (Select up to 3)
+                </label>
+                <input type="file" id="admin_certs" name="certificates" class="form-control" accept=".pdf,.jpg,.jpeg,.png" multiple style="font-size: 0.82rem;" />
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 6px;">
+              <div class="form-group" style="margin-bottom: 10px;">
+                <label class="form-label" for="admin_passport" style="font-size: 0.82rem;">
+                  3️⃣ Passport Copy Front & Back (PDF or Image)
+                </label>
+                <input type="file" id="admin_passport" name="passport_copy" class="form-control" accept=".pdf,.jpg,.jpeg,.png" multiple style="font-size: 0.82rem;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 10px;">
+                <label class="form-label" for="admin_photo" style="font-size: 0.82rem;">
+                  4️⃣ Studio Passport Photo (White Background) 📸
+                </label>
+                <input type="file" id="admin_photo" name="photo" class="form-control" accept=".jpg,.jpeg,.png" style="font-size: 0.82rem;" />
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 6px;">
+              <div class="form-group" style="margin-bottom: 10px;">
+                <label class="form-label" for="admin_license" style="font-size: 0.82rem;">
+                  5️⃣ Driving License (Optional)
+                </label>
+                <input type="file" id="admin_license" name="driving_license" class="form-control" accept=".pdf,.jpg,.jpeg,.png" style="font-size: 0.82rem;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 10px;">
+                <label class="form-label" for="admin_medical" style="font-size: 0.82rem;">
+                  6️⃣ GAMCA Medical Fitness Report (Optional)
+                </label>
+                <input type="file" id="admin_medical" name="medical_report" class="form-control" accept=".pdf,.jpg,.jpeg,.png" style="font-size: 0.82rem;" />
+              </div>
+            </div>
+
+            <button type="submit" class="btn-admin btn-admin-primary" style="margin-top: 10px; width: 100%; justify-content: center; padding: 10px; font-size: 0.9rem;">
+              <i class="fa-solid fa-file-circle-check"></i>
+              <span>Save Documents & Compile Master PDF Dossier (Order: CV, Experience, Passport, Pic)</span>
+            </button>
+          </form>
+        </div>
       </div>
 
       <!-- Process Workflow Checklist -->
@@ -121,8 +306,52 @@
       </div>
     </div>
 
-    <!-- Right Column: Status & Recruiter Notes -->
+    <!-- Right Column: Status & Follow-up Notes -->
     <div>
+      
+      <!-- Lead Classification & Follow-up Procedure Tracker -->
+      <div class="card-panel" style="border: 1px solid var(--admin-border-gold); margin-bottom: 20px;">
+        <h2 style="font-size: 1.05rem; margin-top: 0; color: #fff; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-headset" style="color: var(--admin-gold);"></i>
+          <span>Lead Query Follow-up Tracker</span>
+        </h2>
+        
+        <form action="/admin/leads/<%= lead.id %>/followup" method="POST">
+          <div class="form-group">
+            <label class="form-label" for="lead_type" style="font-size: 0.8rem;">Lead Classification</label>
+            <select name="lead_type" id="lead_type" class="form-control" style="background: #081636; font-weight: 600;">
+              <option value="inquiry_lead" <%= (lead.lead_type || 'inquiry_lead') === 'inquiry_lead' ? 'selected' : '' %>>Inquiry Query Lead (Follow-up & Explain Procedure)</option>
+              <option value="confirmed_candidate" <%= lead.lead_type === 'confirmed_candidate' ? 'selected' : '' %>>Confirmed Candidate (Ready to Pay & Mobilize)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #fff; font-size: 0.88rem;">
+              <input type="checkbox" name="procedure_explained" value="1" <%= lead.procedure_explained ? 'checked' : '' %> style="width: 18px; height: 18px; accent-color: var(--admin-gold);" />
+              <span>Overseas procedure & fee breakdown explained to candidate</span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="followup_notes" style="font-size: 0.8rem;">Follow-up Call Notes</label>
+            <textarea name="followup_notes" id="followup_notes" rows="3" class="form-control" placeholder="Candidate agreed for client interview, awaiting passport copy, requested 2 days for fee arrangement..."><%= lead.followup_notes || '' %></textarea>
+          </div>
+
+          <button type="submit" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 9px; font-size: 0.88rem;">
+            <i class="fa-solid fa-check"></i>
+            <span>Update Follow-up Status</span>
+          </button>
+        </form>
+
+        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--admin-border);">
+          <a href="<%= procedureWhatsAppUrl %>" target="_blank" class="btn-admin btn-admin-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem; color: #38bdf8; border-color: rgba(56, 189, 248, 0.4);">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Send 5-Step Procedure Message</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Update Pipeline Stage -->
       <div class="card-panel">
         <h2>Update Pipeline Stage</h2>
 
@@ -133,14 +362,16 @@
             <select name="status" id="status" class="form-control" style="font-weight: 600; color: #fff; background: #081636;">
               <option value="New" <%= lead.status === 'New' ? 'selected' : '' %>>New (Pending)</option>
               <option value="Contacted" <%= lead.status === 'Contacted' ? 'selected' : '' %>>Contacted (In Discussion)</option>
+              <option value="Confirmed" <%= lead.status === 'Confirmed' ? 'selected' : '' %>>Confirmed (Ready to Pay & Mobilize)</option>
               <option value="In-Progress" <%= lead.status === 'In-Progress' ? 'selected' : '' %>>In-Progress (Trade/Embassy)</option>
               <option value="Placed" <%= lead.status === 'Placed' ? 'selected' : '' %>>Placed (Visa Issued)</option>
+              <option value="Backed Out" <%= lead.status === 'Backed Out' ? 'selected' : '' %>>🚨 Backed Out (Candidate Withdrawn)</option>
             </select>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="notes">Internal Recruiter Notes</label>
-            <textarea name="notes" id="notes" class="form-control" placeholder="Add confidential recruiter notes regarding trade test, GAMCA medical fitness, passport validity..."><%= lead.notes || '' %></textarea>
+            <textarea name="notes" id="notes" class="form-control" rows="3" placeholder="Confidential notes regarding trade test, medical fitness, passport validity..."><%= lead.notes || '' %></textarea>
           </div>
 
           <button type="submit" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center;">

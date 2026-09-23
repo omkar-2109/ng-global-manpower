@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= agent.agency_name %> | Authorized Overseas Recruitment Partner | NG Global Manpower</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Main Website Stylesheet -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body style="background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; min-height: 100vh;">
+
+  <!-- Header -->
+  <header style="background: rgba(8, 22, 54, 0.9); backdrop-filter: blur(12px); border-bottom: 1.5px solid var(--admin-border-gold); padding: 14px 24px; position: sticky; top: 0; z-index: 100;">
+    <div style="max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+      <a href="/" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+        <div style="width: 42px; height: 42px; background: rgba(255, 255, 255, 0.08); border: 1.5px solid var(--admin-gold); padding: 4px; border-radius: 12px;">
+          <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Emblem" style="width: 100%; height: 100%; object-fit: contain;" />
+        </div>
+        <div>
+          <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; color: #fff; font-weight: 800;">
+            NG GLOBAL <span style="color: var(--admin-gold);">MANPOWER</span>
+          </div>
+          <small style="color: var(--admin-text-muted); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase;">
+            Licensed International Recruitment Network
+          </small>
+        </div>
+      </a>
+
+      <div>
+        <a href="/" class="btn-admin btn-admin-secondary" style="font-size: 0.82rem; padding: 6px 14px;">
+          <i class="fa-solid fa-house"></i> Main Portal
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
+
+    <!-- Partner Certificate Card -->
+    <div class="card-panel" style="border: 2px solid var(--admin-border-gold); background: radial-gradient(circle at 50% 10%, rgba(15, 33, 77, 0.95) 0%, rgba(3, 10, 26, 0.98) 100%); padding: 36px 32px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7); position: relative; overflow: hidden; margin-bottom: 32px;">
+      
+      <!-- Watermark background seal -->
+      <div style="position: absolute; right: -40px; bottom: -40px; width: 260px; height: 260px; opacity: 0.06; pointer-events: none;">
+        <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="Seal" style="width: 100%; height: 100%; object-fit: contain;" />
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px;">
+        <div>
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; padding: 6px 14px; border-radius: 999px; font-size: 0.82rem; font-weight: 700; margin-bottom: 14px;">
+            <i class="fa-solid fa-shield-check"></i>
+            <span>OFFICIAL AUTHORIZED RECRUITMENT PARTNER</span>
+          </div>
+
+          <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; color: #fff; margin: 0 0 8px 0; font-weight: 800;">
+            <%= agent.agency_name %>
+          </h1>
+
+          <p style="color: #cbd5e1; font-size: 1rem; margin: 0 0 16px 0;">
+            Principal Partner: <strong style="color: #fff;"><%= agent.name %></strong>
+            <% if (agent.city || agent.state) { %>
+              &bull; Regional Office: <strong style="color: var(--admin-gold);"><%= [agent.city, agent.state, agent.country].filter(Boolean).join(', ') %></strong>
+            <% } %>
+          </p>
+
+          <div style="display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.85rem; color: var(--admin-text-muted);">
+            <div>
+              <i class="fa-solid fa-id-badge" style="color: var(--admin-gold); margin-right: 4px;"></i> License No: 
+              <strong style="color: #fff; font-family: monospace;"><%= agent.license_no || 'RA/B-REG/NG/2026' %></strong>
+            </div>
+            <div>
+              <i class="fa-solid fa-network-wired" style="color: var(--admin-cyan); margin-right: 4px;"></i> Subdomain: 
+              <strong style="color: #fff;"><%= agent.username %>.url</strong>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <a href="https://wa.me/<%= (agent.phone || '').replace(/[^0-9]/g, '') %>?text=<%= encodeURIComponent(`Hello ${agent.name}, I am contacting you regarding overseas job opportunities with NG Global Manpower Services.`) %>" target="_blank" class="btn-admin btn-admin-primary" style="padding: 14px 24px; font-size: 1rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none;">
+            <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;"></i>
+            <span>Chat on WhatsApp</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Application Form -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
+      
+      <div>
+        <div class="card-panel">
+          <h2 style="font-size: 1.25rem; color: #fff; margin-top: 0; margin-bottom: 6px;">
+            Apply Directly to <%= agent.agency_name %>
+          </h2>
+          <p style="color: var(--admin-text-muted); font-size: 0.88rem; margin-bottom: 24px;">
+            Submit your profile for current overseas vacancies. Your application will be processed directly by this authorized recruitment partner.
+          </p>
+
+          <% if (typeof submitted !== 'undefined' && submitted) { %>
+            <div class="admin-alert admin-alert-success" style="margin-bottom: 24px;">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Thank you! Your profile has been received by <%= agent.agency_name %>. Our team will contact you shortly for screening and document collection.</span>
+            </div>
+          <% } %>
+
+          <form action="/agency/<%= agent.username %>/apply" method="POST">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+              <div class="form-group">
+                <label class="form-label" for="full_name">Your Full Name *</label>
+                <input type="text" id="full_name" name="full_name" class="form-control" placeholder="e.g. Ramesh Singh" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="phone">Mobile / WhatsApp Number *</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="e.g. +91 98765 43210" required />
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+              <div class="form-group">
+                <label class="form-label" for="trade">Your Trade / Skill *</label>
+                <input type="text" id="trade" name="trade" class="form-control" placeholder="e.g. Electrician / Welder / Driver" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="experience">Years of Experience</label>
+                <select id="experience" name="experience" class="form-control" style="background: #081636;">
+                  <option value="Fresher">Fresher (India Experience)</option>
+                  <option value="1 to 2 Years">1 to 2 Years</option>
+                  <option value="3 to 5 Years">3 to 5 Years</option>
+                  <option value="5+ Years Gulf Return">5+ Years (Gulf Return)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="city">Your City & State</label>
+              <input type="text" id="city" name="city" class="form-control" placeholder="e.g. Lucknow, Uttar Pradesh" />
+            </div>
+
+            <button type="submit" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem; margin-top: 10px;">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>Submit Application to Partner</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column: Verification & Security -->
+      <div>
+        <div class="card-panel" style="border: 1px solid var(--admin-border-gold); background: rgba(8, 22, 54, 0.6);">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <i class="fa-solid fa-certificate" style="color: var(--admin-gold); font-size: 1.4rem;"></i>
+            <h3 style="color: #fff; margin: 0; font-size: 1rem;">Verification Guarantee</h3>
+          </div>
+          <p style="color: var(--admin-text-muted); font-size: 0.85rem; line-height: 1.6; margin: 0 0 14px 0;">
+            This agency is an authorized sourcing partner of <strong>NG Global Manpower Services</strong>. All employment visas are issued through official embassy and government channels.
+          </p>
+          <div style="background: rgba(0, 0, 0, 0.3); padding: 10px 12px; border-radius: 6px; font-size: 0.78rem; color: #94a3b8;">
+            <i class="fa-solid fa-lock" style="color: var(--admin-gold); margin-right: 4px;"></i> 100% Anti-Fraud & Transparent Overseas Recruitment.
+          </div>
+        </div>
+
+        <div class="card-panel" style="margin-top: 20px;">
+          <h4 style="color: #fff; margin-top: 0; margin-bottom: 10px; font-size: 0.95rem;">Contact Partner Agency</h4>
+          <p style="color: #cbd5e1; font-size: 0.85rem; margin: 0 0 6px 0;">
+            <i class="fa-solid fa-phone" style="color: var(--admin-gold); margin-right: 6px;"></i> <%= agent.phone || '+91 80800 25670' %>
+          </p>
+          <p style="color: #cbd5e1; font-size: 0.85rem; margin: 0 0 6px 0;">
+            <i class="fa-solid fa-envelope" style="color: var(--admin-cyan); margin-right: 6px;"></i> <%= agent.email %>
+          </p>
+          <p style="color: #cbd5e1; font-size: 0.85rem; margin: 0;">
+            <i class="fa-solid fa-location-dot" style="color: #ef4444; margin-right: 6px;"></i> <%= [agent.city, agent.state, agent.country].filter(Boolean).join(', ') %>
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer style="border-top: 1px solid var(--admin-border); padding: 24px; text-align: center; color: var(--admin-text-muted); font-size: 0.8rem; margin-top: 60px;">
+    &copy; <%= new Date().getFullYear() %> NG Global Manpower Services. Partner Portal: <%= agent.agency_name %> (<%= agent.username %>.url).
+  </footer>
+
+</body>
+</html>

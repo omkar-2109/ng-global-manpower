@@ -2,12 +2,32 @@
   "users": [
     {
       "id": 1,
-      "name": "Recruitment Director",
-      "email": "admin@ngglobal.com",
-      "password_hash": "$2b$10$nmryz2pZx8nBUqPFtewF8.LDwXQ1ROF1yw67GN1dEbtYNhWD712Am",
+      "name": "NG Global HR Director",
+      "email": "hr@ngglobalmp.in",
+      "password_hash": "$2b$10$/6euvXS9rV3QEYWaJpa09e8aMx9idFG2Oisse286cJ/kiBEyVLmVu",
       "role": "admin",
-      "created_at": "2026-09-20T15:42:55.010Z",
-      "updated_at": "2026-09-20T15:42:55.010Z"
+      "created_at": "2026-09-23T09:19:18.788Z",
+      "updated_at": "2026-09-23T10:15:09.485Z"
+    }
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "name": "Vikram Sharma",
+      "agency_name": "Apex Global Manpower Services",
+      "username": "apex-global",
+      "email": "vikram@apexrecruitment.in",
+      "phone": "+91 98123 45670",
+      "city": "Chandigarh",
+      "state": "Punjab",
+      "country": "India",
+      "license_no": "RA/B-0982/PUN/PER/1000+/5/9921",
+      "status": "active",
+      "password_hash": "$2b$10$dd3tGiMYIBaf1vvhbPlrneLbiGGqRjwb9ldkMVulPBTwLY1Uq8rgm",
+      "commission_notes": "15% referral bonus on successful GCC placement",
+      "candidates_count": 1,
+      "created_at": "2026-09-23T09:19:19.035Z",
+      "updated_at": "2026-09-23T09:25:28.761Z"
     }
   ],
   "jobs": [
@@ -181,6 +201,76 @@
       "image": "/images/job_oilgas_gulf.jpg",
       "created_at": "2026-09-20T15:42:55.093Z",
       "updated_at": "2026-09-20T15:42:55.093Z"
+    },
+    {
+      "id": 9,
+      "job_code": "NG-SGP-8821",
+      "title": "Hospital Patient Care & Nursing Attendant",
+      "category": "Hospitality & Catering",
+      "country": "Singapore (E-Pass & S-Pass)",
+      "flag": "🇸🇬",
+      "salary_inr": "₹1,38,000 – ₹1,70,000 / mo",
+      "salary_foreign": "SGD 2,200 (Hike based on performance)",
+      "perks": [
+        "Patient Care Duties",
+        "Medicine Timing Support",
+        "Duty Uniform Provided",
+        "Performance Hike 🔥",
+        "Medical Insurance"
+      ],
+      "employer_funded": 0,
+      "badge_text": "E-PASS / S-PASS QUOTA",
+      "active": 1,
+      "image": "/brand/1_Complete_Color_Logo/ng-logo-complete-color-1024px.png",
+      "created_at": "2026-09-23T10:15:09.511Z",
+      "updated_at": "2026-09-23T10:15:09.511Z"
+    },
+    {
+      "id": 10,
+      "job_code": "NG-SGP-5514",
+      "title": "Restaurant Staff (Waiter, Chef & Kitchen Worker)",
+      "category": "Hospitality & Catering",
+      "country": "Singapore (Work Permit)",
+      "flag": "🇸🇬",
+      "salary_inr": "₹1,07,000 – ₹1,20,000 / mo",
+      "salary_foreign": "SGD 1,700 – 1,900",
+      "perks": [
+        "Waiter: $1700",
+        "Chef: $1900",
+        "Kitchen: $1800",
+        "Complimentary Meals",
+        "2 Days Off/Month",
+        "Mon-Fri 9:30AM-7:30PM"
+      ],
+      "employer_funded": 0,
+      "badge_text": "RESTAURANT WORK PERMIT",
+      "active": 1,
+      "image": "/brand/1_Complete_Color_Logo/ng-logo-complete-color-1024px.png",
+      "created_at": "2026-09-23T10:15:09.514Z",
+      "updated_at": "2026-09-23T10:15:09.514Z"
+    },
+    {
+      "id": 11,
+      "job_code": "NG-SGP-3390",
+      "title": "Supermarket Assistant & Retail Storekeeper",
+      "category": "Logistics & Heavy Driving",
+      "country": "Singapore (Work Permit)",
+      "flag": "🇸🇬",
+      "salary_inr": "₹1,26,000 / mo (Total Package)",
+      "salary_foreign": "SGD 1,600 Basic + $400 Room",
+      "perks": [
+        "Basic $1600",
+        "Room $400 Allowance",
+        "10 Hours Duty",
+        "2 Days Off/Month",
+        "Visa for Indians/Bangalis/Nepalis"
+      ],
+      "employer_funded": 0,
+      "badge_text": "SUPERMARKET PERMIT",
+      "active": 1,
+      "image": "/brand/1_Complete_Color_Logo/ng-logo-complete-color-1024px.png",
+      "created_at": "2026-09-23T10:15:09.517Z",
+      "updated_at": "2026-09-23T10:15:09.517Z"
     }
   ],
   "leads": [
@@ -227,6 +317,88 @@
       "notes": "Valid Qatar and Saudi heavy driving license.",
       "created_at": "2026-09-20T15:42:55.115Z",
       "updated_at": "2026-09-20T15:42:55.115Z"
+    },
+    {
+      "id": 4,
+      "full_name": "Omkar Saroj",
+      "phone": "+91030546",
+      "whatsapp": "+91030546",
+      "email": "",
+      "trade": "IT",
+      "destination": "Gulf Countries",
+      "experience": "Fresher",
+      "city": "MUMBAI",
+      "state": "",
+      "nationality": "Indian",
+      "passport_no": null,
+      "passport_expiry": null,
+      "dob": null,
+      "gamca_status": "Pending",
+      "source": "agent_public_profile",
+      "job_code": null,
+      "agent_id": 1,
+      "agent_username": "apex-global",
+      "documents": [],
+      "merged_dossier_pdf": null,
+      "status": "New",
+      "notes": "Applied through verified partner agent page: Apex Global Manpower Services (Chandigarh, Punjab)",
+      "ip_address": null,
+      "created_at": "2026-09-23T09:25:28.758Z",
+      "updated_at": "2026-09-23T09:25:28.758Z"
+    },
+    {
+      "id": 5,
+      "full_name": "Pooja Patil",
+      "phone": "+91 9988776655",
+      "whatsapp": "+91 9988776655",
+      "email": "",
+      "trade": "Healthcare & Nursing",
+      "destination": "Singapore",
+      "experience": "1 to 2 Years",
+      "city": "Not Specified",
+      "state": "",
+      "nationality": "Indian",
+      "passport_no": null,
+      "passport_expiry": null,
+      "dob": null,
+      "gamca_status": "Pending",
+      "source": "agent_intake",
+      "lead_type": "confirmed_candidate",
+      "job_code": null,
+      "agent_id": null,
+      "agent_username": null,
+      "documents": [],
+      "merged_dossier_pdf": null,
+      "status": "Backed Out",
+      "notes": "[23/9/2026, 3:46:32 pm - Marked Backed Out by agent_test_1]: Family did not permit travel to Singapore at this time",
+      "procedure_explained": false,
+      "followup_notes": "",
+      "backout_reason": "Family did not permit travel to Singapore at this time",
+      "backed_out_at": "2026-09-23T10:16:32.117Z",
+      "backed_out_by": "agent_test_1",
+      "ip_address": null,
+      "created_at": "2026-09-23T10:16:32.067Z",
+      "updated_at": "2026-09-23T10:16:32.117Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": 1,
+      "type": "candidate_backout",
+      "title": "⚠️ Candidate Backed Out: Pooja Patil",
+      "message": "Agent marked candidate as BACKED OUT. Reason: Family did not permit travel to Singapore at this time",
+      "lead_id": null,
+      "agent_id": null,
+      "agent_name": null,
+      "priority": "normal",
+      "is_read": false,
+      "metadata": {
+        "candidate_name": "Pooja Patil",
+        "phone": "+91 9988776655",
+        "reason": "Family did not permit travel to Singapore at this time"
+      },
+      "created_at": "2026-09-23T10:16:32.120Z",
+      "updated_at": "2026-09-23T10:16:32.120Z"
     }
   ],
   "settings": {

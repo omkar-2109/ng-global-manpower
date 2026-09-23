@@ -1,0 +1,160 @@
+<%- include('../partials/admin-header') %>
+
+<main class="admin-container">
+
+  <div class="admin-page-header">
+    <div class="admin-page-title">
+      <h1>Authorized Recruitment Partner Agents</h1>
+      <p>Manage licensed sub-agents, branch credentials, candidate quotas, and dedicated agency subdomains.</p>
+    </div>
+    <div>
+      <a href="/admin/agents/new" class="btn-admin btn-admin-primary">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register New Partner Agent</span>
+      </a>
+    </div>
+  </div>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="admin-alert admin-alert-error" style="margin-bottom: 20px;">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span><%= error %></span>
+    </div>
+  <% } %>
+
+  <!-- Agent Summary Metrics -->
+  <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 24px;">
+    <div class="metric-card">
+      <div class="metric-card-header">
+        <span class="metric-label">Active Partner Agencies</span>
+        <div class="metric-icon" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
+          <i class="fa-solid fa-handshake"></i>
+        </div>
+      </div>
+      <div class="metric-value"><%= (agents || []).filter(a => a.status === 'active').length %></div>
+      <div class="metric-subtitle">Authorized sourcing channels</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-card-header">
+        <span class="metric-label">Total Partner Candidates</span>
+        <div class="metric-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+          <i class="fa-solid fa-users-viewfinder"></i>
+        </div>
+      </div>
+      <div class="metric-value">
+        <%= (agents || []).reduce((sum, a) => sum + (a.candidates_count || 0), 0) %>
+      </div>
+      <div class="metric-subtitle">Dossiers submitted via agents</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-card-header">
+        <span class="metric-label">Dedicated Subdomains</span>
+        <div class="metric-icon" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold);">
+          <i class="fa-solid fa-globe"></i>
+        </div>
+      </div>
+      <div class="metric-value"><%= (agents || []).length %></div>
+      <div class="metric-subtitle">Live agency landing URLs</div>
+    </div>
+  </div>
+
+  <!-- Agents Table -->
+  <div class="table-card">
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Agency / Agent Name</th>
+            <th>Subdomain & Login Handle</th>
+            <th>Contact & Location</th>
+            <th>License / Reg No</th>
+            <th>Candidates</th>
+            <th>Status</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (agents && agents.length > 0) { %>
+            <% agents.forEach(agent => { %>
+              <tr>
+                <td>
+                  <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">
+                    <%= agent.agency_name || agent.name %>
+                  </div>
+                  <div style="font-size: 0.8rem; color: var(--admin-text-muted);">
+                    <i class="fa-solid fa-user-tie" style="margin-right: 4px;"></i> <%= agent.name %>
+                  </div>
+                </td>
+                <td>
+                  <div style="font-family: monospace; color: var(--admin-gold); font-size: 0.85rem; font-weight: 600;">
+                    <%= agent.username %>
+                  </div>
+                  <div style="margin-top: 4px;">
+                    <a href="/agency/<%= agent.username %>" target="_blank" style="font-size: 0.78rem; color: var(--admin-cyan); text-decoration: none;">
+                      <i class="fa-solid fa-up-right-from-square"></i> <%= agent.username %>.url (Profile)
+                    </a>
+                  </div>
+                </td>
+                <td>
+                  <div style="color: #fff; font-size: 0.85rem;">
+                    <i class="fa-solid fa-phone" style="margin-right: 4px; color: var(--admin-gold);"></i> <%= agent.phone || 'N/A' %>
+                  </div>
+                  <div style="font-size: 0.8rem; color: var(--admin-text-muted);">
+                    <%= agent.email %>
+                  </div>
+                  <% if (agent.city || agent.state) { %>
+                    <div style="font-size: 0.75rem; color: var(--admin-text-muted); margin-top: 2px;">
+                      📍 <%= [agent.city, agent.state, agent.country].filter(Boolean).join(', ') %>
+                    </div>
+                  <% } %>
+                </td>
+                <td>
+                  <span style="font-family: monospace; font-size: 0.8rem; color: #e2e8f0; background: rgba(255, 255, 255, 0.05); padding: 2px 6px; border-radius: 4px;">
+                    <%= agent.license_no || 'Pending Verification' %>
+                  </span>
+                </td>
+                <td>
+                  <span style="font-size: 1rem; font-weight: 700; color: #34d399;">
+                    <%= agent.candidates_count || 0 %>
+                  </span>
+                  <div style="font-size: 0.75rem; color: var(--admin-text-muted);">dossiers</div>
+                </td>
+                <td>
+                  <% if (agent.status === 'active') { %>
+                    <span class="status-badge placed">Active</span>
+                  <% } else { %>
+                    <span class="status-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">Suspended</span>
+                  <% } %>
+                </td>
+                <td style="text-align: right; white-space: nowrap;">
+                  <a href="/admin/agents/<%= agent.id %>/edit" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.82rem;">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Edit</span>
+                  </a>
+
+                  <form action="/admin/agents/<%= agent.id %>/delete" method="POST" style="display: inline-block; margin-left: 6px;" onsubmit="return confirm('Are you sure you want to deactivate and remove this agent partner?');">
+                    <button type="submit" class="btn-admin btn-admin-danger" style="padding: 6px 10px; font-size: 0.82rem;" title="Delete Agent">
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 40px; color: var(--admin-text-muted);">
+                No recruitment partner agents registered yet. Click "Register New Partner Agent" to create credentials.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>

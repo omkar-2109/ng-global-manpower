@@ -15,9 +15,35 @@
     </div>
   </div>
 
+  <!-- Pipeline Mode Switcher Tabs -->
+  <div style="display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;">
+    <a href="/admin/leads" class="btn-admin <%= !filter || (!filter.lead_type && !filter.status) ? 'btn-admin-primary' : 'btn-admin-secondary' %>" style="padding: 8px 16px; font-size: 0.85rem;">
+      <i class="fa-solid fa-list-check"></i>
+      <span>All Candidates (<%= metrics.total %>)</span>
+    </a>
+
+    <a href="/admin/leads?lead_type=confirmed_candidate" class="btn-admin <%= filter && filter.lead_type === 'confirmed_candidate' ? 'btn-admin-primary' : 'btn-admin-secondary' %>" style="padding: 8px 16px; font-size: 0.85rem;">
+      <i class="fa-solid fa-badge-check" style="color: var(--admin-gold);"></i>
+      <span>Confirmed Candidates (<%= metrics.confirmed || 0 %>)</span>
+    </a>
+
+    <a href="/admin/leads?lead_type=inquiry_lead" class="btn-admin <%= filter && filter.lead_type === 'inquiry_lead' ? 'btn-admin-primary' : 'btn-admin-secondary' %>" style="padding: 8px 16px; font-size: 0.85rem;">
+      <i class="fa-solid fa-comments" style="color: var(--admin-cyan);"></i>
+      <span>Inquiry Leads / Queries (<%= metrics.inquiries || 0 %>)</span>
+    </a>
+
+    <a href="/admin/leads?status=Backed+Out" class="btn-admin <%= filter && filter.status && filter.status.toLowerCase() === 'backed out' ? 'btn-admin-danger' : 'btn-admin-secondary' %>" style="padding: 8px 16px; font-size: 0.85rem; <%= filter && filter.status && filter.status.toLowerCase() === 'backed out' ? 'background: #ef4444; color: #fff;' : 'color: #fca5a5;' %>">
+      <i class="fa-solid fa-user-xmark"></i>
+      <span>Backed Out Alerts (<%= metrics.backedOut || 0 %>)</span>
+    </a>
+  </div>
+
   <!-- Filter Toolbar -->
   <div class="filter-bar">
     <form action="/admin/leads" method="GET" style="display: flex; align-items: center; justify-content: space-between; width: 100%; flex-wrap: wrap; gap: 14px;">
+      <% if (filter && filter.lead_type) { %>
+        <input type="hidden" name="lead_type" value="<%= filter.lead_type %>" />
+      <% } %>
       
       <div class="filter-group">
         <!-- Search -->
@@ -25,7 +51,7 @@
           type="text" 
           name="search" 
           class="filter-input" 
-          placeholder="Search by candidate name, phone, or city..." 
+          placeholder="Search by candidate name, phone, trade, or city..." 
           value="<%= filter && filter.search ? filter.search : '' %>" 
           style="min-width: 260px;"
         />
@@ -35,8 +61,10 @@
           <option value="">All Pipeline Stages</option>
           <option value="New" <%= filter && filter.status === 'New' ? 'selected' : '' %>>New (<%= metrics.new %>)</option>
           <option value="Contacted" <%= filter && filter.status === 'Contacted' ? 'selected' : '' %>>Contacted (<%= metrics.contacted %>)</option>
+          <option value="Confirmed" <%= filter && filter.status === 'Confirmed' ? 'selected' : '' %>>Confirmed / Ready to Pay</option>
           <option value="In-Progress" <%= filter && filter.status === 'In-Progress' ? 'selected' : '' %>>In-Progress (<%= metrics.inProgress %>)</option>
           <option value="Placed" <%= filter && filter.status === 'Placed' ? 'selected' : '' %>>Placed (<%= metrics.placed %>)</option>
+          <option value="Backed Out" <%= filter && filter.status === 'Backed Out' ? 'selected' : '' %>>Backed Out (<%= metrics.backedOut || 0 %>)</option>
         </select>
 
         <!-- Trade Filter -->
@@ -75,9 +103,9 @@
             <th>Application Ref</th>
             <th>Candidate Profile</th>
             <th>Phone / WhatsApp</th>
-            <th>Trade Skill</th>
-            <th>Target Region</th>
-            <th>Experience</th>
+            <th>Type</th>
+            <th>Trade & Destination</th>
+            <th>Dossier PDF</th>
             <th>Registered Date</th>
             <th>Stage</th>
             <th style="text-align: right;">Action</th>
@@ -86,7 +114,7 @@
         <tbody>
           <% if (leads && leads.length > 0) { %>
             <% leads.forEach(lead => { %>
-              <tr>
+              <tr style="<%= lead.status === 'Backed Out' ? 'background: rgba(239, 68, 68, 0.04);' : '' %>">
                 <td>
                   <strong style="font-family: 'Space Grotesk', monospace; color: var(--admin-gold);">#NG-<%= lead.id %></strong>
                   <% if (lead.job_code) { %>
@@ -103,9 +131,33 @@
                     <span><%= lead.phone %></span>
                   </a>
                 </td>
-                <td><%= lead.trade %></td>
-                <td><%= lead.destination %></td>
-                <td><%= lead.experience %></td>
+                <td>
+                  <% if (lead.lead_type === 'confirmed_candidate') { %>
+                    <span style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold); font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: 600; white-space: nowrap;">
+                      <i class="fa-solid fa-check-double"></i> Confirmed
+                    </span>
+                  <% } else { %>
+                    <span style="background: rgba(56, 189, 248, 0.15); color: var(--admin-cyan); font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: 600; white-space: nowrap;">
+                      <i class="fa-solid fa-comment-dots"></i> Query Lead
+                    </span>
+                  <% } %>
+                </td>
+                <td>
+                  <div style="font-weight: 500; color: #fff;"><%= lead.trade %></div>
+                  <small style="color: var(--admin-text-muted);"><%= lead.destination %> &bull; <%= lead.experience %></small>
+                </td>
+                <td>
+                  <% if (lead.merged_dossier_pdf) { %>
+                    <a href="<%= lead.merged_dossier_pdf %>" target="_blank" style="color: #34d399; text-decoration: none; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; font-weight: 600; background: rgba(52, 211, 153, 0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(52, 211, 153, 0.3);">
+                      <i class="fa-solid fa-file-pdf"></i>
+                      <span>Master Dossier</span>
+                    </a>
+                  <% } else { %>
+                    <span style="color: var(--admin-text-muted); font-size: 0.78rem;">
+                      <i class="fa-solid fa-clock"></i> Docs Pending
+                    </span>
+                  <% } %>
+                </td>
                 <td>
                   <small style="color: var(--admin-text-muted);">
                     <%= new Date(lead.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
@@ -115,15 +167,22 @@
                   <% 
                     let statusClass = 'new';
                     if (lead.status === 'Contacted') statusClass = 'contacted';
-                    if (lead.status === 'In-Progress') statusClass = 'in-progress';
-                    if (lead.status === 'Placed') statusClass = 'placed';
+                    else if (lead.status === 'In-Progress') statusClass = 'in-progress';
+                    else if (lead.status === 'Placed') statusClass = 'placed';
+                    else if (lead.status === 'Backed Out') statusClass = 'error';
+                    else if (lead.status === 'Confirmed') statusClass = 'contacted';
                   %>
                   <span class="status-badge <%= statusClass %>"><%= lead.status %></span>
+                  <% if (lead.status === 'Backed Out' && lead.backout_reason) { %>
+                    <div style="font-size: 0.72rem; color: #fca5a5; margin-top: 3px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<%= lead.backout_reason %>">
+                      <%= lead.backout_reason %>
+                    </div>
+                  <% } %>
                 </td>
                 <td style="text-align: right; white-space: nowrap;">
                   <a href="/admin/leads/<%= lead.id %>" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.82rem;">
                     <i class="fa-solid fa-folder-open"></i>
-                    <span>Open Dossier</span>
+                    <span>Dossier & Docs</span>
                   </a>
                 </td>
               </tr>

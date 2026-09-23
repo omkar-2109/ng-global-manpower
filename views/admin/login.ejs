@@ -50,18 +50,20 @@
         <input type="hidden" name="redirect" value="<%= typeof redirect !== 'undefined' ? redirect : '/admin/dashboard' %>" />
 
         <div class="form-group">
-          <label class="form-label" for="email">Staff Email Address</label>
+          <label class="form-label" for="email">Staff / HR Email Address</label>
           <div style="position: relative;">
-            <input type="email" id="email" name="email" class="form-control" placeholder="admin@ngglobal.com" required autofocus value="admin@ngglobal.com" />
+            <input type="email" id="email" name="email" class="form-control" placeholder="hr@ngglobalmp.in" required autofocus autocomplete="username" />
             <i class="fa-solid fa-envelope" style="position: absolute; right: 14px; top: 13px; color: var(--admin-text-muted);"></i>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="password">Password</label>
+          <label class="form-label" for="password">Password (HR Contact Key)</label>
           <div style="position: relative;">
-            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••••••" required value="Admin@12345" />
-            <i class="fa-solid fa-lock" style="position: absolute; right: 14px; top: 13px; color: var(--admin-text-muted);"></i>
+            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••••••" required autocomplete="current-password" />
+            <button type="button" onclick="const p = document.getElementById('password'); p.type = p.type === 'password' ? 'text' : 'password';" style="position: absolute; right: 14px; top: 10px; background: none; border: none; color: var(--admin-text-muted); cursor: pointer;">
+              <i class="fa-solid fa-eye"></i>
+            </button>
           </div>
         </div>
 

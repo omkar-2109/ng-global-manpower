@@ -3,17 +3,57 @@ const bcrypt = require('bcryptjs');
 const env = require('../config/env');
 
 function initializeDatabase() {
-  // 1. Seed Administrator
-  if (db.users.count() === 0) {
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(env.defaultAdmin.password, salt);
+  // 1. Seed or Migrate Strict Administrator
+  const hrEmail = env.defaultAdmin.email.toLowerCase();
+  const hrSalt = bcrypt.genSaltSync(10);
+  const hrHash = bcrypt.hashSync(env.defaultAdmin.password, hrSalt);
+
+  // Check if legacy demo admin exists and remove it
+  const legacyAdmin = db.users.findOne(u => u.email === 'admin@ngglobal.com');
+  if (legacyAdmin) {
+    db.users.delete(legacyAdmin.id);
+    console.log('[DB] Removed legacy demo administrator account.');
+  }
+
+  // Find or create HR Admin
+  const existingHrAdmin = db.users.findOne(u => u.email === hrEmail);
+  if (!existingHrAdmin) {
     db.users.insert({
       name: env.defaultAdmin.name,
-      email: env.defaultAdmin.email.toLowerCase(),
-      password_hash: hash,
+      email: hrEmail,
+      password_hash: hrHash,
       role: 'admin'
     });
-    console.log(`[DB] Seeded default administrator account: ${env.defaultAdmin.email}`);
+    console.log(`[DB] Initialized strict HR administrator: ${hrEmail}`);
+  } else {
+    // Ensure password hash matches current contact number password
+    db.users.update(existingHrAdmin.id, {
+      name: env.defaultAdmin.name,
+      password_hash: hrHash,
+      role: 'admin'
+    });
+  }
+
+  // 1b. Seed Sample Verified Agent if table empty
+  if (db.agents && db.agents.count() === 0) {
+    const agentSalt = bcrypt.genSaltSync(10);
+    const agentHash = bcrypt.hashSync('Agent@2026', agentSalt);
+    db.agents.insert({
+      name: 'Vikram Sharma',
+      agency_name: 'Apex Global Manpower Services',
+      username: 'apex-global',
+      email: 'vikram@apexrecruitment.in',
+      phone: '+91 98123 45670',
+      city: 'Chandigarh',
+      state: 'Punjab',
+      country: 'India',
+      license_no: 'RA/B-0982/PUN/PER/1000+/5/9921',
+      status: 'active',
+      password_hash: agentHash,
+      commission_notes: '15% referral bonus on successful GCC placement',
+      candidates_count: 0
+    });
+    console.log('[DB] Initialized sample recruitment partner agent: apex-global');
   }
 
   // 2. Seed Jobs
@@ -132,6 +172,59 @@ function initializeDatabase() {
       db.jobs.insert(job);
     }
     console.log(`[DB] Seeded ${initialJobs.length} verified overseas job openings.`);
+  }
+
+  // Ensure Singapore Quotas are active matching user requirements
+  const hasSingaporeJob = db.jobs.findOne(j => (j.country || '').includes('Singapore'));
+  if (!hasSingaporeJob) {
+    const singaporeJobs = [
+      {
+        job_code: 'NG-SGP-8821',
+        title: 'Hospital Patient Care & Nursing Attendant',
+        category: 'Hospitality & Catering',
+        country: 'Singapore (E-Pass & S-Pass)',
+        flag: '🇸🇬',
+        salary_inr: '₹1,38,000 – ₹1,70,000 / mo',
+        salary_foreign: 'SGD 2,200 (Hike based on performance)',
+        perks: ['Patient Care Duties', 'Medicine Timing Support', 'Duty Uniform Provided', 'Performance Hike 🔥', 'Medical Insurance'],
+        employer_funded: 0,
+        badge_text: 'E-PASS / S-PASS QUOTA',
+        active: 1,
+        image: '/brand/1_Complete_Color_Logo/ng-logo-complete-color-1024px.png'
+      },
+      {
+        job_code: 'NG-SGP-5514',
+        title: 'Restaurant Staff (Waiter, Chef & Kitchen Worker)',
+        category: 'Hospitality & Catering',
+        country: 'Singapore (Work Permit)',
+        flag: '🇸🇬',
+        salary_inr: '₹1,07,000 – ₹1,20,000 / mo',
+        salary_foreign: 'SGD 1,700 – 1,900',
+        perks: ['Waiter: $1700', 'Chef: $1900', 'Kitchen: $1800', 'Complimentary Meals', '2 Days Off/Month', 'Mon-Fri 9:30AM-7:30PM'],
+        employer_funded: 0,
+        badge_text: 'RESTAURANT WORK PERMIT',
+        active: 1,
+        image: '/brand/1_Complete_Color_Logo/ng-logo-complete-color-1024px.png'
+      },
+      {
+        job_code: 'NG-SGP-3390',
+        title: 'Supermarket Assistant & Retail Storekeeper',
+        category: 'Logistics & Heavy Driving',
+        country: 'Singapore (Work Permit)',
+        flag: '🇸🇬',
+        salary_inr: '₹1,26,000 / mo (Total Package)',
+        salary_foreign: 'SGD 1,600 Basic + $400 Room',
+        perks: ['Basic $1600', 'Room $400 Allowance', '10 Hours Duty', '2 Days Off/Month', 'Visa for Indians/Bangalis/Nepalis'],
+        employer_funded: 0,
+        badge_text: 'SUPERMARKET PERMIT',
+        active: 1,
+        image: '/brand/1_Complete_Color_Logo/ng-logo-complete-color-1024px.png'
+      }
+    ];
+    for (const j of singaporeJobs) {
+      db.jobs.insert(j);
+    }
+    console.log(`[DB] Seeded ${singaporeJobs.length} Singapore employer job quotas.`);
   }
 
   // 3. Seed Sample Leads

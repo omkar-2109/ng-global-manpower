@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title : 'Candidate Dossier | NG Global' %></title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📁</text></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Admin Stylesheet -->
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <!-- Agent Navigation Bar -->
+  <header class="admin-navbar">
+    <a href="/agent/dashboard" class="admin-nav-brand">
+      <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Emblem" />
+      <span>NG GLOBAL <small style="font-weight: 500; color: var(--admin-gold); font-size: 0.8rem; margin-left: 6px;">AGENT PORTAL</small></span>
+    </a>
+
+    <ul class="admin-nav-links">
+      <li>
+        <a href="/agent/dashboard" class="admin-nav-link active">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>My Candidates</span>
+        </a>
+      </li>
+      <li>
+        <a href="/agent/candidates/new" class="admin-nav-link">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>New Intake</span>
+        </a>
+      </li>
+      <li>
+        <a href="/agency/<%= agent.username %>" target="_blank" class="admin-nav-link">
+          <i class="fa-solid fa-globe"></i>
+          <span>My Public Landing URL</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="admin-user-pill">
+      <span class="user-badge" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold); border: 1px solid rgba(212, 175, 55, 0.3);">
+        <i class="fa-solid fa-certificate"></i> <%= agent.agency_name %>
+      </span>
+      <a href="/agent/logout" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="admin-container">
+
+    <div class="admin-page-header">
+      <div class="admin-page-title">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+          <a href="/agent/dashboard" style="color: var(--admin-text-muted); text-decoration: none; font-size: 0.9rem;">
+            &larr; Back to Candidates
+          </a>
+        </div>
+        <h1>Candidate Dossier: <%= candidate.full_name %></h1>
+        <p>Overseas recruitment dossier with compressed documents and consolidated Master PDF.</p>
+      </div>
+
+      <% if (candidate.merged_dossier_pdf) { %>
+        <div>
+          <a href="<%= candidate.merged_dossier_pdf %>" target="_blank" class="btn-admin btn-admin-primary" style="padding: 10px 20px;">
+            <i class="fa-solid fa-file-pdf"></i>
+            <span>Download Master Dossier PDF</span>
+          </a>
+        </div>
+      <% } %>
+    </div>
+
+    <% if (typeof created !== 'undefined' && created) { %>
+      <div class="admin-alert admin-alert-success" style="margin-bottom: 24px;">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Candidate intake submitted successfully! Documents have been compressed, sorted (CV &rarr; Experience &rarr; Passport &rarr; Pic), and compiled into the master dossier PDF.</span>
+      </div>
+    <% } %>
+
+    <% if (typeof statusUpdated !== 'undefined' && statusUpdated) { %>
+      <div class="admin-alert admin-alert-success" style="margin-bottom: 24px;">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Candidate status has been updated successfully and NG Global HQ Admin has been notified immediately!</span>
+      </div>
+    <% } %>
+
+    <% if (candidate.status === 'Backed Out') { %>
+      <div class="admin-alert admin-alert-error" style="margin-bottom: 24px; background: rgba(239, 68, 68, 0.15); border: 1.5px solid #ef4444; color: #fff;">
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444; font-size: 1.4rem; margin-top: 2px;"></i>
+          <div>
+            <strong style="color: #fca5a5; font-size: 1rem;">Candidate Marked as Backed Out</strong>
+            <p style="margin: 4px 0 0 0; font-size: 0.88rem; color: #fecaca;">
+              <strong>Reason:</strong> <%= candidate.backout_reason || 'No detailed reason specified.' %>
+              <br><small style="color: #cbd5e1;">Reported by <%= candidate.backed_out_by || 'Agent' %> on <%= candidate.backed_out_at ? new Date(candidate.backed_out_at).toLocaleString('en-IN') : 'N/A' %></small>
+            </p>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+      
+      <!-- Left Column: Details & Documents -->
+      <div>
+        
+        <!-- Candidate Profile Card -->
+        <div class="card-panel" style="margin-bottom: 24px;">
+          <h2 style="font-size: 1.15rem; color: #fff; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 12px;">
+            <i class="fa-solid fa-id-card-clip" style="color: var(--admin-gold); margin-right: 6px;"></i> Candidate Identification
+          </h2>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 0.9rem;">
+            <div>
+              <span style="color: var(--admin-text-muted); display: block;">Full Name</span>
+              <strong style="color: #fff; font-size: 1.05rem;"><%= candidate.full_name %></strong>
+            </div>
+
+            <div>
+              <span style="color: var(--admin-text-muted); display: block;">Trade / Skill Position</span>
+              <strong style="color: var(--admin-cyan);"><%= candidate.trade %></strong>
+            </div>
+
+            <div>
+              <span style="color: var(--admin-text-muted); display: block;">Contact Phone</span>
+              <strong style="color: #fff;"><%= candidate.phone %></strong>
+            </div>
+
+            <div>
+              <span style="color: var(--admin-text-muted); display: block;">Passport Number</span>
+              <strong style="font-family: monospace; color: var(--admin-gold);"><%= candidate.passport_no || 'Not Provided' %></strong>
+            </div>
+
+            <div>
+              <span style="color: var(--admin-text-muted); display: block;">Passport Expiry</span>
+              <span style="color: #e2e8f0;"><%= candidate.passport_expiry || 'N/A' %></span>
+            </div>
+
+            <div>
+              <span style="color: var(--admin-text-muted); display: block;">Date of Birth</span>
+              <span style="color: #e2e8f0;"><%= candidate.dob || 'N/A' %></span>
+            </div>
+
+            <div>
+              <span style="color: var(--admin-text-muted); display: block;">Location</span>
+              <span style="color: #e2e8f0;"><%= [candidate.city, candidate.state, candidate.nationality].filter(Boolean).join(', ') %></span>
+            </div>
+
+            <div>
+              <span style="color: var(--admin-text-muted); display: block;">GAMCA Medical Status</span>
+              <span style="color: <%= candidate.gamca_status === 'Passed / Fit' ? '#34d399' : 'var(--admin-gold)' %>; font-weight: 600;">
+                <%= candidate.gamca_status || 'Pending' %>
+              </span>
+            </div>
+          </div>
+
+          <% if (candidate.notes) { %>
+            <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--admin-border);">
+              <span style="color: var(--admin-text-muted); font-size: 0.85rem; display: block;">Partner Remarks</span>
+              <p style="color: #cbd5e1; font-size: 0.9rem; margin: 4px 0 0 0;"><%= candidate.notes %></p>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Compiled Documents Section -->
+        <div class="card-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 12px;">
+            <h2 style="font-size: 1.15rem; color: #fff; margin: 0;">
+              <i class="fa-solid fa-folder-tree" style="color: var(--admin-gold); margin-right: 6px;"></i> Uploaded Documents (<%= (candidate.documents || []).length %> files)
+            </h2>
+            
+            <% if (candidate.merged_dossier_pdf) { %>
+              <a href="<%= candidate.merged_dossier_pdf %>" target="_blank" style="color: #34d399; font-size: 0.85rem; text-decoration: none; font-weight: 600;">
+                <i class="fa-solid fa-file-pdf"></i> Open Merged PDF &rarr;
+              </a>
+            <% } %>
+          </div>
+
+          <% if (candidate.documents && candidate.documents.length > 0) { %>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <% candidate.documents.forEach(doc => { %>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--admin-border);">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="font-size: 1.4rem; color: <%= doc.mime === 'application/pdf' ? '#ef4444' : '#38bdf8' %>;">
+                      <i class="fa-solid <%= doc.mime === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image' %>"></i>
+                    </div>
+                    <div>
+                      <div style="color: #fff; font-weight: 600; font-size: 0.9rem;"><%= doc.filename %></div>
+                      <small style="color: var(--admin-text-muted); font-size: 0.78rem;">
+                        Type: <span style="text-transform: capitalize;"><%= doc.type.replace(/_/g, ' ') %></span> &bull; 
+                        Size: <%= Math.round(doc.size / 1024) %> KB (Optimized)
+                      </small>
+                    </div>
+                  </div>
+
+                  <div>
+                    <a href="<%= doc.path %>" target="_blank" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
+                      <i class="fa-solid fa-download"></i> View
+                    </a>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin: 0;">
+              No separate document files uploaded for this candidate.
+            </p>
+          <% } %>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Dossier Card & Agency Attribution -->
+      <div>
+        
+        <!-- Merged Master Dossier Box -->
+        <div class="card-panel" style="border: 1.5px solid var(--admin-border-gold); background: linear-gradient(135deg, rgba(8, 22, 54, 0.95) 0%, rgba(3, 10, 26, 0.98) 100%);">
+          <div style="text-align: center; padding: 12px 0 20px 0;">
+            <div style="width: 56px; height: 56px; border-radius: 14px; background: rgba(212, 175, 55, 0.15); border: 1px solid var(--admin-border-gold); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; color: var(--admin-gold); font-size: 1.6rem;">
+              <i class="fa-solid fa-file-pdf"></i>
+            </div>
+            <h3 style="color: #fff; margin: 0 0 6px 0; font-size: 1.1rem;">Official Candidate Dossier</h3>
+            <p style="color: var(--admin-text-muted); font-size: 0.8rem; margin: 0;">
+              Compiled Master PDF Document
+            </p>
+          </div>
+
+          <% if (candidate.merged_dossier_pdf) { %>
+            <a href="<%= candidate.merged_dossier_pdf %>" target="_blank" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.95rem;">
+              <i class="fa-solid fa-download"></i>
+              <span>Download Master Dossier</span>
+            </a>
+            <div style="font-size: 0.75rem; color: var(--admin-text-muted); text-align: center; margin-top: 10px;">
+              Ready for Embassy, Client Interview & Visa Stamping
+            </div>
+          <% } else { %>
+            <div style="text-align: center; color: var(--admin-text-muted); font-size: 0.85rem; padding: 10px;">
+              No documents available to compile.
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Candidate Pipeline Status & Backout Actions -->
+        <div class="card-panel" style="margin-top: 20px; border: 1.5px solid <%= candidate.status === 'Backed Out' ? '#ef4444' : 'var(--admin-border-gold)' %>;">
+          <h4 style="color: #fff; margin-top: 0; margin-bottom: 12px; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center;">
+            <span><i class="fa-solid fa-arrows-spin" style="color: var(--admin-gold); margin-right: 6px;"></i> Candidate Status</span>
+            <span class="status-badge <%= candidate.status === 'Placed' ? 'placed' : (candidate.status === 'Backed Out' ? 'error' : (candidate.status === 'In-Progress' ? 'in-progress' : 'new')) %>">
+              <%= candidate.status %>
+            </span>
+          </h4>
+
+          <form action="/agent/candidates/<%= candidate.id %>/status" method="POST" id="agentStatusForm">
+            <div class="form-group">
+              <label class="form-label" for="agent_status_select" style="font-size: 0.8rem;">Update Stage</label>
+              <select name="status" id="agent_status_select" class="form-control" style="background: #081636;" onchange="handleAgentStatusChange(this.value)">
+                <option value="Confirmed" <%= candidate.status === 'Confirmed' ? 'selected' : '' %>>Confirmed (Ready to Pay & Mobilize)</option>
+                <option value="In-Progress" <%= candidate.status === 'In-Progress' ? 'selected' : '' %>>In-Progress (Trade / GAMCA / Embassy)</option>
+                <option value="Placed" <%= candidate.status === 'Placed' ? 'selected' : '' %>>Placed (Visa Issued & Deployed)</option>
+                <option value="Backed Out" <%= candidate.status === 'Backed Out' ? 'selected' : '' %>>🚨 Backed Out (Candidate Withdrawn)</option>
+              </select>
+            </div>
+
+            <!-- Backout Reason (Conditional / Highlighted) -->
+            <div class="form-group" id="backoutReasonGroup" style="<%= candidate.status === 'Backed Out' ? 'display: block;' : 'display: none;' %> background: rgba(239, 68, 68, 0.08); padding: 12px; border-radius: 8px; border: 1px dashed #ef4444;">
+              <label class="form-label" for="reason" style="color: #fca5a5; font-size: 0.82rem;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Reason for Backout (Admin Alert) *
+              </label>
+              <textarea name="reason" id="backout_reason" class="form-control" rows="2" placeholder="e.g. Candidate accepted another job in local factory / Family refused overseas travel / Financial shortage..."><%= candidate.backout_reason || '' %></textarea>
+              <small style="color: #f87171; font-size: 0.74rem;">NG Global Admin will be notified immediately upon submission.</small>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="agent_notes" style="font-size: 0.8rem;">Agent Notes</label>
+              <textarea name="notes" id="agent_notes" class="form-control" rows="2" placeholder="Interview remarks, client feedback..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.88rem;">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Save Status & Notify Admin</span>
+            </button>
+          </form>
+
+          <% if (candidate.status !== 'Backed Out') { %>
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--admin-border); text-align: center;">
+              <button type="button" onclick="triggerBackoutPrompt()" class="btn-admin btn-admin-danger" style="width: 100%; justify-content: center; padding: 8px; font-size: 0.82rem; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5;">
+                <i class="fa-solid fa-user-xmark"></i>
+                <span>Report Candidate Backed Out</span>
+              </button>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Agency Source Attribution -->
+        <div class="card-panel" style="margin-top: 20px;">
+          <h4 style="color: #fff; margin-top: 0; margin-bottom: 12px; font-size: 0.95rem;">
+            <i class="fa-solid fa-handshake" style="color: var(--admin-gold); margin-right: 6px;"></i> Sourcing Partner
+          </h4>
+          <p style="color: #e2e8f0; font-size: 0.9rem; margin: 0 0 4px 0; font-weight: 600;">
+            <%= agent.agency_name %>
+          </p>
+          <p style="color: var(--admin-text-muted); font-size: 0.8rem; margin: 0;">
+            Handle: <strong style="color: var(--admin-gold);"><%= agent.username %>.url</strong>
+          </p>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--admin-border); font-size: 0.8rem; color: var(--admin-text-muted);">
+            Submission Date: <%= new Date(candidate.created_at || Date.now()).toLocaleDateString() %>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    function handleAgentStatusChange(val) {
+      const reasonGroup = document.getElementById('backoutReasonGroup');
+      const reasonText = document.getElementById('backout_reason');
+      if (val === 'Backed Out') {
+        reasonGroup.style.display = 'block';
+        reasonText.required = true;
+        reasonText.focus();
+      } else {
+        reasonGroup.style.display = 'none';
+        reasonText.required = false;
+      }
+    }
+
+    function triggerBackoutPrompt() {
+      const select = document.getElementById('agent_status_select');
+      select.value = 'Backed Out';
+      handleAgentStatusChange('Backed Out');
+      
+      const customReason = prompt('Please enter the reason for candidate backout (NG Global Admin will be alerted immediately):');
+      if (customReason && customReason.trim()) {
+        document.getElementById('backout_reason').value = customReason.trim();
+        if (confirm('Confirm reporting this candidate as BACKED OUT to NG Global Admin?')) {
+          document.getElementById('agentStatusForm').submit();
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>

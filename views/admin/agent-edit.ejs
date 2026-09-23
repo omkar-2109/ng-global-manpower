@@ -1,0 +1,162 @@
+<%- include('../partials/admin-header') %>
+
+<main class="admin-container">
+
+  <div class="admin-page-header">
+    <div class="admin-page-title">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+        <a href="/admin/agents" style="color: var(--admin-text-muted); text-decoration: none; font-size: 0.9rem;">
+          &larr; Back to Partner Agents
+        </a>
+      </div>
+      <h1><%= isEdit ? 'Edit Partner Agent: ' + (agent.agency_name || agent.name) : 'Register New Recruitment Partner Agent' %></h1>
+      <p>Configure login credentials, dedicated subdomain slug, regional license, and candidate quota privileges.</p>
+    </div>
+  </div>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="admin-alert admin-alert-error" style="max-width: 800px; margin-bottom: 20px;">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span><%= error %></span>
+    </div>
+  <% } %>
+
+  <div style="max-width: 800px;">
+    <div class="card-panel">
+      
+      <form action="<%= isEdit ? '/admin/agents/' + agent.id + '/edit' : '/admin/agents' %>" method="POST">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label" for="name">Agent / Principal Name *</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="e.g. Vikram Sharma" value="<%= agent.name || '' %>" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="agency_name">Agency / Branch Name *</label>
+            <input type="text" id="agency_name" name="agency_name" class="form-control" placeholder="e.g. Apex Global Overseas Consultancy" value="<%= agent.agency_name || '' %>" required />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label" for="username">Subdomain Slug / Login Handle *</label>
+            <div style="position: relative;">
+              <input type="text" id="username" name="username" class="form-control" placeholder="e.g. apex-global or vikram" value="<%= agent.username || '' %>" required pattern="[a-z0-9-]+" title="Only lowercase letters, numbers, and hyphens" />
+            </div>
+            <small style="color: var(--admin-text-muted); font-size: 0.78rem;">
+              Enables subdomain URL: <strong style="color: var(--admin-gold);"><span id="slug-preview"><%= agent.username || 'your-agency' %></span>.url</strong>
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Official Email Address *</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="e.g. vikram@apexrecruitment.in" value="<%= agent.email || '' %>" required />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label" for="phone">Contact Phone / WhatsApp *</label>
+            <input type="tel" id="phone" name="phone" class="form-control" placeholder="e.g. +91 98123 45670" value="<%= agent.phone || '' %>" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="license_no">Government License / Reg ID</label>
+            <input type="text" id="license_no" name="license_no" class="form-control" placeholder="e.g. RA/B-0982/PUN/PER/1000+/5/9921" value="<%= agent.license_no || '' %>" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label" for="city">City</label>
+            <input type="text" id="city" name="city" class="form-control" placeholder="e.g. Chandigarh" value="<%= agent.city || '' %>" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="state">State / Province</label>
+            <input type="text" id="state" name="state" class="form-control" placeholder="e.g. Punjab" value="<%= agent.state || '' %>" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="country">Country</label>
+            <input type="text" id="country" name="country" class="form-control" placeholder="India" value="<%= agent.country || 'India' %>" />
+          </div>
+        </div>
+
+        <% if (!isEdit) { %>
+          <div class="form-group">
+            <label class="form-label" for="password">Initial Agent Password *</label>
+            <div style="position: relative;">
+              <input type="password" id="password" name="password" class="form-control" placeholder="Minimum 6 characters" required minlength="6" />
+              <button type="button" onclick="const p = document.getElementById('password'); p.type = p.type === 'password' ? 'text' : 'password';" style="position: absolute; right: 14px; top: 10px; background: none; border: none; color: var(--admin-text-muted); cursor: pointer;">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+        <% } %>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="form-label" for="commission_notes">Commission & Placement Notes</label>
+            <input type="text" id="commission_notes" name="commission_notes" class="form-control" placeholder="e.g. 15% referral bonus on successful GCC placement" value="<%= agent.commission_notes || '' %>" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="status">Account Status</label>
+            <select id="status" name="status" class="form-control" style="background: #081636;">
+              <option value="active" <%= agent.status === 'active' ? 'selected' : '' %>>Active (Full Intake Access)</option>
+              <option value="suspended" <%= agent.status === 'suspended' ? 'selected' : '' %>>Suspended / Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--admin-border);">
+          <button type="submit" class="btn-admin btn-admin-primary" style="padding: 12px 28px;">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span><%= isEdit ? 'Save Agent Changes' : 'Register Partner Agent' %></span>
+          </button>
+
+          <a href="/admin/agents" class="btn-admin btn-admin-secondary" style="padding: 12px 20px;">
+            Cancel
+          </a>
+        </div>
+
+      </form>
+
+      <% if (isEdit) { %>
+        <!-- Dedicated Reset Password Form for Existing Agent -->
+        <div style="margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--admin-border);">
+          <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 8px;">
+            <i class="fa-solid fa-key" style="color: var(--admin-gold); margin-right: 6px;"></i> Reset Agent Password
+          </h3>
+          <p style="color: var(--admin-text-muted); font-size: 0.85rem; margin-bottom: 16px;">
+            Issue a new secure password directly to this recruitment partner agent.
+          </p>
+
+          <form action="/admin/agents/<%= agent.id %>/reset-password" method="POST" style="max-width: 400px; display: flex; gap: 10px;">
+            <input type="password" name="new_password" class="form-control" placeholder="New Password (min 6 chars)" required minlength="6" />
+            <button type="submit" class="btn-admin btn-admin-secondary" style="white-space: nowrap;">
+              Reset Key
+            </button>
+          </form>
+        </div>
+      <% } %>
+
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const usernameInput = document.getElementById('username');
+  const slugPreview = document.getElementById('slug-preview');
+  if (usernameInput && slugPreview) {
+    usernameInput.addEventListener('input', (e) => {
+      slugPreview.textContent = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') || 'your-agency';
+    });
+  }
+</script>
+
+</body>
+</html>

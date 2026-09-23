@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title : 'Agent Partner Portal | NG Global' %></title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤝</text></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Admin Stylesheet -->
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <!-- Agent Navigation Bar -->
+  <header class="admin-navbar">
+    <a href="/agent/dashboard" class="admin-nav-brand">
+      <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Emblem" />
+      <span>NG GLOBAL <small style="font-weight: 500; color: var(--admin-gold); font-size: 0.8rem; margin-left: 6px;">AGENT PORTAL</small></span>
+    </a>
+
+    <ul class="admin-nav-links">
+      <li>
+        <a href="/agent/dashboard" class="admin-nav-link active">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>My Candidates</span>
+        </a>
+      </li>
+      <li>
+        <a href="/agent/candidates/new" class="admin-nav-link">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>New Intake</span>
+        </a>
+      </li>
+      <li>
+        <a href="/agency/<%= agent.username %>" target="_blank" class="admin-nav-link">
+          <i class="fa-solid fa-globe"></i>
+          <span>My Public Landing URL (<%= agent.username %>.url)</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="admin-user-pill">
+      <span class="user-badge" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold); border: 1px solid rgba(212, 175, 55, 0.3);">
+        <i class="fa-solid fa-certificate"></i> <%= agent.agency_name %>
+      </span>
+      <a href="/agent/logout" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="admin-container">
+
+    <div class="admin-page-header">
+      <div class="admin-page-title">
+        <h1>Partner Candidate Command & Dossiers</h1>
+        <p>Overseas recruitment intake, compressed document archiving, and single-file PDF dossiers for embassy submissions.</p>
+      </div>
+      <div>
+        <a href="/agent/candidates/new" class="btn-admin btn-admin-primary">
+          <i class="fa-solid fa-folder-plus"></i>
+          <span>Submit Candidate & Documents</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Agency Identity Card -->
+    <div class="card-panel" style="margin-bottom: 24px; background: linear-gradient(135deg, rgba(8, 22, 54, 0.9) 0%, rgba(3, 10, 26, 0.95) 100%); border: 1.5px solid var(--admin-border-gold);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <h2 style="font-size: 1.25rem; color: #fff; margin: 0; font-weight: 700;"><%= agent.agency_name %></h2>
+            <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">
+              <i class="fa-solid fa-shield-check"></i> Verified Partner
+            </span>
+          </div>
+          <p style="color: var(--admin-text-muted); font-size: 0.85rem; margin: 4px 0 0 0;">
+            Principal: <strong><%= agent.name %></strong> &bull; License: <strong><%= agent.license_no || 'Authorized Agent' %></strong> &bull; Location: <%= [agent.city, agent.state, agent.country].filter(Boolean).join(', ') %>
+          </p>
+        </div>
+        <div>
+          <a href="/agency/<%= agent.username %>" target="_blank" class="btn-admin btn-admin-secondary" style="font-size: 0.85rem;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            <span>Preview Public Agency Page</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metrics Grid -->
+    <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 24px;">
+      <div class="metric-card">
+        <div class="metric-card-header">
+          <span class="metric-label">Total Dossiers Submitted</span>
+          <div class="metric-icon" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
+            <i class="fa-solid fa-users"></i>
+          </div>
+        </div>
+        <div class="metric-value"><%= metrics.total || 0 %></div>
+        <div class="metric-subtitle">All active candidates</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-card-header">
+          <span class="metric-label">Under Verification</span>
+          <div class="metric-icon" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold);">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+        </div>
+        <div class="metric-value"><%= metrics.new || 0 %></div>
+        <div class="metric-subtitle">Trade & document check</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-card-header">
+          <span class="metric-label">Visa / Medical In-Progress</span>
+          <div class="metric-icon" style="background: rgba(6, 182, 212, 0.15); color: var(--admin-cyan);">
+            <i class="fa-solid fa-passport"></i>
+          </div>
+        </div>
+        <div class="metric-value"><%= metrics.inProgress || 0 %></div>
+        <div class="metric-subtitle">Embassy & GAMCA processing</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-card-header">
+          <span class="metric-label">Deployed Overseas</span>
+          <div class="metric-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+            <i class="fa-solid fa-plane-departure"></i>
+          </div>
+        </div>
+        <div class="metric-value"><%= metrics.placed || 0 %></div>
+        <div class="metric-subtitle">Successfully mobilized</div>
+      </div>
+    </div>
+
+    <!-- Candidate List Table -->
+    <div class="table-card">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Candidate Name & Contact</th>
+              <th>Trade & Experience</th>
+              <th>Passport No</th>
+              <th>GAMCA Medical</th>
+              <th>Documents</th>
+              <th>Compiled Master PDF</th>
+              <th>Status</th>
+              <th style="text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (candidates && candidates.length > 0) { %>
+              <% candidates.forEach(c => { %>
+                <tr>
+                  <td>
+                    <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">
+                      <%= c.full_name %>
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--admin-text-muted);">
+                      <i class="fa-solid fa-phone" style="margin-right: 4px;"></i> <%= c.phone %>
+                    </div>
+                  </td>
+                  <td>
+                    <div style="font-weight: 600; color: #fff;"><%= c.trade %></div>
+                    <small style="color: var(--admin-text-muted);"><%= c.experience || '1-2 Yrs' %> &bull; <%= c.destination || 'Gulf' %></small>
+                  </td>
+                  <td>
+                    <% if (c.passport_no) { %>
+                      <span style="font-family: monospace; font-weight: 600; color: var(--admin-gold);">
+                        <%= c.passport_no %>
+                      </span>
+                    <% } else { %>
+                      <span style="color: var(--admin-text-muted); font-size: 0.8rem;">Not Provided</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <span style="font-size: 0.82rem; color: <%= c.gamca_status === 'Passed / Fit' ? '#34d399' : '#e2e8f0' %>;">
+                      <%= c.gamca_status || 'Pending' %>
+                    </span>
+                  </td>
+                  <td>
+                    <span style="background: rgba(255, 255, 255, 0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">
+                      📁 <%= (c.documents || []).length %> files
+                    </span>
+                  </td>
+                  <td>
+                    <% if (c.merged_dossier_pdf) { %>
+                      <a href="<%= c.merged_dossier_pdf %>" target="_blank" class="btn-admin btn-admin-primary" style="padding: 4px 10px; font-size: 0.78rem;">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span>Download Dossier PDF</span>
+                      </a>
+                    <% } else { %>
+                      <span style="color: var(--admin-text-muted); font-size: 0.8rem;">No PDF Dossier</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <%
+                      let agentBadgeClass = 'new';
+                      if (c.status === 'Backed Out') agentBadgeClass = 'error';
+                      else if (c.status === 'Placed') agentBadgeClass = 'placed';
+                      else if (c.status === 'In-Progress') agentBadgeClass = 'in-progress';
+                      else if (c.status === 'Confirmed') agentBadgeClass = 'contacted';
+                    %>
+                    <span class="status-badge <%= agentBadgeClass %>">
+                      <%= c.status %>
+                    </span>
+                  </td>
+                  <td style="text-align: right;">
+                    <a href="/agent/candidates/<%= c.id %>" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.82rem;">
+                      <i class="fa-solid fa-eye"></i>
+                      <span>View</span>
+                    </a>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="8" style="text-align: center; padding: 48px; color: var(--admin-text-muted);">
+                  <i class="fa-solid fa-folder-open" style="font-size: 2rem; margin-bottom: 12px; display: block; opacity: 0.5;"></i>
+                  No candidate dossiers submitted yet. Click "Submit Candidate & Documents" to create your first intake.
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>

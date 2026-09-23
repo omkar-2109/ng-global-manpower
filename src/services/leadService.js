@@ -51,6 +51,10 @@ const leadService = {
     return Lead.updateStatus(id, status, notes);
   },
 
+  markLeadBackedOut(id, reason, updatedBy) {
+    return Lead.markBackedOut(id, reason, updatedBy);
+  },
+
   deleteLead(id) {
     return Lead.delete(id);
   },
@@ -61,11 +65,12 @@ const leadService = {
 
   exportToCsv() {
     const leads = Lead.all();
-    const headers = ['ID', 'Date', 'Full Name', 'Phone', 'Trade', 'Destination', 'Experience', 'City', 'Status', 'Job Code', 'Notes'];
+    const headers = ['ID', 'Date', 'Type', 'Full Name', 'Phone', 'Trade', 'Destination', 'Experience', 'City', 'Status', 'Backout Reason', 'Dossier Ready', 'Job Code', 'Notes'];
     
     const rows = leads.map(l => [
       l.id,
       `"${new Date(l.created_at).toLocaleString('en-IN')}"`,
+      `"${l.lead_type || 'inquiry_lead'}"`,
       `"${(l.full_name || '').replace(/"/g, '""')}"`,
       `"${(l.phone || '').replace(/"/g, '""')}"`,
       `"${(l.trade || '').replace(/"/g, '""')}"`,
@@ -73,6 +78,8 @@ const leadService = {
       `"${(l.experience || '').replace(/"/g, '""')}"`,
       `"${(l.city || '').replace(/"/g, '""')}"`,
       `"${(l.status || '').replace(/"/g, '""')}"`,
+      `"${(l.backout_reason || '').replace(/"/g, '""')}"`,
+      `"${l.merged_dossier_pdf ? 'Yes' : 'No'}"`,
       `"${(l.job_code || '').replace(/"/g, '""')}"`,
       `"${(l.notes || '').replace(/"/g, '""')}"`
     ]);

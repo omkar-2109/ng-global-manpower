@@ -20,51 +20,102 @@
     </div>
   </div>
 
+  <% if (unreadNotifications && unreadNotifications.length > 0) { %>
+    <!-- High-Priority Admin Alert Feed -->
+    <div style="margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px;">
+      <% unreadNotifications.forEach(notif => { %>
+        <div style="background: <%= notif.priority === 'urgent' ? 'linear-gradient(90deg, rgba(239, 68, 68, 0.2) 0%, rgba(15, 23, 42, 0.95) 100%)' : 'rgba(212, 175, 55, 0.12)' %>; border: 1.5px solid <%= notif.priority === 'urgent' ? '#ef4444' : 'var(--admin-border-gold)' %>; border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 40px; height: 40px; border-radius: 10px; background: <%= notif.priority === 'urgent' ? 'rgba(239, 68, 68, 0.25)' : 'rgba(212, 175, 55, 0.2)' %>; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: <%= notif.priority === 'urgent' ? '#ef4444' : 'var(--admin-gold)' %>;">
+              <i class="fa-solid <%= notif.priority === 'urgent' ? 'fa-triangle-exclamation' : 'fa-bell' %>"></i>
+            </div>
+            <div>
+              <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">
+                <%= notif.title %>
+                <% if (notif.priority === 'urgent') { %>
+                  <span style="background: #ef4444; color: #fff; font-size: 0.68rem; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-weight: 700; text-transform: uppercase;">Urgent Backout</span>
+                <% } %>
+              </div>
+              <p style="margin: 3px 0 0 0; color: #cbd5e1; font-size: 0.85rem;">
+                <%= notif.message %>
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; align-items: center; flex-shrink: 0;">
+            <% if (notif.lead_id) { %>
+              <a href="/admin/leads/<%= notif.lead_id %>" class="btn-admin btn-admin-primary" style="padding: 6px 14px; font-size: 0.82rem;">
+                <i class="fa-solid fa-eye"></i>
+                <span>Open Candidate</span>
+              </a>
+            <% } %>
+
+            <form action="/admin/notifications/<%= notif.id %>/dismiss" method="POST" style="margin: 0;">
+              <button type="submit" class="btn-admin btn-admin-secondary" style="padding: 6px 10px; font-size: 0.82rem;" title="Dismiss alert">
+                <i class="fa-solid fa-check"></i>
+                <span>Dismiss</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+
   <!-- KPI Cards Grid -->
-  <div class="kpi-grid">
+  <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
     <div class="kpi-card">
       <div class="kpi-header">
         <span class="kpi-title">Total Applications</span>
         <div class="kpi-icon icon-blue"><i class="fa-solid fa-users"></i></div>
       </div>
       <div class="kpi-value"><%= metrics.total %></div>
-      <p style="margin: 8px 0 0 0; font-size: 0.8rem; color: var(--admin-text-muted);">Registered Candidate Leads</p>
+      <p style="margin: 8px 0 0 0; font-size: 0.78rem; color: var(--admin-text-muted);">All registered records</p>
     </div>
 
     <div class="kpi-card" style="border-color: rgba(56, 189, 248, 0.4);">
       <div class="kpi-header">
-        <span class="kpi-title">New Unprocessed</span>
-        <div class="kpi-icon icon-blue"><i class="fa-solid fa-sparkles"></i></div>
+        <span class="kpi-title">Inquiry Leads (Queries)</span>
+        <div class="kpi-icon icon-blue"><i class="fa-solid fa-comments"></i></div>
       </div>
-      <div class="kpi-value" style="color: var(--admin-cyan);"><%= metrics.new %></div>
-      <p style="margin: 8px 0 0 0; font-size: 0.8rem; color: var(--admin-text-muted);">Pending WhatsApp Follow-up</p>
+      <div class="kpi-value" style="color: var(--admin-cyan);"><%= metrics.inquiries || 0 %></div>
+      <p style="margin: 8px 0 0 0; font-size: 0.78rem; color: var(--admin-text-muted);">Follow-up & Explain Procedure</p>
+    </div>
+
+    <div class="kpi-card" style="border-color: rgba(212, 175, 55, 0.4);">
+      <div class="kpi-header">
+        <span class="kpi-title">Confirmed Candidates</span>
+        <div class="kpi-icon icon-gold"><i class="fa-solid fa-badge-check"></i></div>
+      </div>
+      <div class="kpi-value" style="color: var(--admin-gold);"><%= metrics.confirmed || 0 %></div>
+      <p style="margin: 8px 0 0 0; font-size: 0.78rem; color: var(--admin-text-muted);">Ready to Pay & Mobilize</p>
+    </div>
+
+    <div class="kpi-card" style="border-color: rgba(16, 185, 129, 0.4);">
+      <div class="kpi-header">
+        <span class="kpi-title">Master Dossiers PDF</span>
+        <div class="kpi-icon icon-emerald"><i class="fa-solid fa-file-shield"></i></div>
+      </div>
+      <div class="kpi-value" style="color: var(--admin-emerald);"><%= metrics.dossiersReady || 0 %></div>
+      <p style="margin: 8px 0 0 0; font-size: 0.78rem; color: var(--admin-text-muted);">Compiled Embassy Packages</p>
     </div>
 
     <div class="kpi-card">
       <div class="kpi-header">
-        <span class="kpi-title">Contacted</span>
-        <div class="kpi-icon icon-gold"><i class="fa-solid fa-phone"></i></div>
+        <span class="kpi-title">In-Progress / Placed</span>
+        <div class="kpi-icon icon-gold"><i class="fa-solid fa-plane-departure"></i></div>
       </div>
-      <div class="kpi-value" style="color: var(--admin-gold);"><%= metrics.contacted %></div>
-      <p style="margin: 8px 0 0 0; font-size: 0.8rem; color: var(--admin-text-muted);">Initial Verification Done</p>
+      <div class="kpi-value" style="color: #C084FC;"><%= (metrics.inProgress || 0) + (metrics.placed || 0) %></div>
+      <p style="margin: 8px 0 0 0; font-size: 0.78rem; color: var(--admin-text-muted);"><%= metrics.placed || 0 %> Mobilized Overseas</p>
     </div>
 
-    <div class="kpi-card">
+    <div class="kpi-card" style="<%= (metrics.backedOut || 0) > 0 ? 'border-color: #ef4444; background: rgba(239, 68, 68, 0.08);' : '' %>">
       <div class="kpi-header">
-        <span class="kpi-title">Trade In-Progress</span>
-        <div class="kpi-icon icon-gold"><i class="fa-solid fa-hourglass-half"></i></div>
+        <span class="kpi-title" style="<%= (metrics.backedOut || 0) > 0 ? 'color: #fca5a5;' : '' %>">Backed Out</span>
+        <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;"><i class="fa-solid fa-user-xmark"></i></div>
       </div>
-      <div class="kpi-value" style="color: #C084FC;"><%= metrics.inProgress %></div>
-      <p style="margin: 8px 0 0 0; font-size: 0.8rem; color: var(--admin-text-muted);">GAMCA / Embassy Phase</p>
-    </div>
-
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <span class="kpi-title">Deployed / Placed</span>
-        <div class="kpi-icon icon-emerald"><i class="fa-solid fa-plane-departure"></i></div>
-      </div>
-      <div class="kpi-value" style="color: var(--admin-emerald);"><%= metrics.placed %></div>
-      <p style="margin: 8px 0 0 0; font-size: 0.8rem; color: var(--admin-text-muted);">Visa Approved & Deployed</p>
+      <div class="kpi-value" style="color: #ef4444;"><%= metrics.backedOut || 0 %></div>
+      <p style="margin: 8px 0 0 0; font-size: 0.78rem; color: var(--admin-text-muted);">Reported Backouts</p>
     </div>
   </div>
 
@@ -87,9 +138,9 @@
             <th>Ref #</th>
             <th>Candidate</th>
             <th>Phone / WhatsApp</th>
+            <th>Type</th>
             <th>Primary Trade</th>
-            <th>Desired Region</th>
-            <th>Experience</th>
+            <th>Dossier PDF</th>
             <th>Status</th>
             <th style="text-align: right;">Action</th>
           </tr>
@@ -111,22 +162,46 @@
                     <span><%= lead.phone %></span>
                   </a>
                 </td>
-                <td><%= lead.trade %></td>
-                <td><%= lead.destination %></td>
-                <td><%= lead.experience %></td>
+                <td>
+                  <% if (lead.lead_type === 'confirmed_candidate') { %>
+                    <span style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold); font-size: 0.72rem; padding: 2px 7px; border-radius: 4px; font-weight: 600;">
+                      <i class="fa-solid fa-check-double"></i> Confirmed
+                    </span>
+                  <% } else { %>
+                    <span style="background: rgba(56, 189, 248, 0.15); color: var(--admin-cyan); font-size: 0.72rem; padding: 2px 7px; border-radius: 4px; font-weight: 600;">
+                      <i class="fa-solid fa-comment-dots"></i> Query Lead
+                    </span>
+                  <% } %>
+                </td>
+                <td>
+                  <div style="font-weight: 500;"><%= lead.trade %></div>
+                  <small style="color: var(--admin-text-muted);"><%= lead.destination %></small>
+                </td>
+                <td>
+                  <% if (lead.merged_dossier_pdf) { %>
+                    <a href="<%= lead.merged_dossier_pdf %>" target="_blank" style="color: #34d399; text-decoration: none; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+                      <i class="fa-solid fa-file-pdf"></i>
+                      <span>Dossier Ready</span>
+                    </a>
+                  <% } else { %>
+                    <span style="color: var(--admin-text-muted); font-size: 0.76rem;">Pending Docs</span>
+                  <% } %>
+                </td>
                 <td>
                   <% 
                     let statusClass = 'new';
                     if (lead.status === 'Contacted') statusClass = 'contacted';
-                    if (lead.status === 'In-Progress') statusClass = 'in-progress';
-                    if (lead.status === 'Placed') statusClass = 'placed';
+                    else if (lead.status === 'In-Progress') statusClass = 'in-progress';
+                    else if (lead.status === 'Placed') statusClass = 'placed';
+                    else if (lead.status === 'Backed Out') statusClass = 'error';
+                    else if (lead.status === 'Confirmed') statusClass = 'contacted';
                   %>
                   <span class="status-badge <%= statusClass %>"><%= lead.status %></span>
                 </td>
                 <td style="text-align: right;">
                   <a href="/admin/leads/<%= lead.id %>" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.82rem;">
-                    <i class="fa-solid fa-eye"></i>
-                    <span>Review</span>
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>Dossier</span>
                   </a>
                 </td>
               </tr>

@@ -18,6 +18,8 @@ npm-debug.log*
 
 # Uploads / Temp
 public/uploads/temp/
+public/uploads/candidates/
+public/uploads/job-banners/
 temp/
 data/*.tmp
 .DS_Store

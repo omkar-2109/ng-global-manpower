@@ -46,6 +46,12 @@
         </a>
       </li>
       <li>
+        <a href="/admin/agents" class="admin-nav-link <%= typeof path !== 'undefined' && path.startsWith('/admin/agents') ? 'active' : '' %>">
+          <i class="fa-solid fa-handshake"></i>
+          <span>Agents</span>
+        </a>
+      </li>
+      <li>
         <a href="/admin/settings" class="admin-nav-link <%= typeof path !== 'undefined' && path === '/admin/settings' ? 'active' : '' %>">
           <i class="fa-solid fa-sliders"></i>
           <span>Settings</span>

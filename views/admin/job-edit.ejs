@@ -12,12 +12,31 @@
       <h1><%= isEdit ? 'Edit Job Quota: ' + job.title : 'Create New Overseas Job Quota' %></h1>
       <p>Configure employer demands, salary packages, and perks for the candidate portal.</p>
     </div>
+    
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <% if (isEdit && job && job.id) { %>
+        <button type="button" class="btn-admin btn-admin-secondary" onclick="copyWhatsAppBroadcast(<%= job.id %>)" style="border-color: #34d399; color: #34d399;">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Copy WhatsApp Broadcast Post</span>
+        </button>
+      <% } %>
+
+      <button type="button" class="btn-admin btn-admin-primary" onclick="openSmartPasteModal()" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); border: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+        <i class="fa-solid fa-paste"></i>
+        <span>⚡ Paste WhatsApp / Agency Post</span>
+      </button>
+
+      <button type="button" class="btn-admin btn-admin-primary" onclick="openAiJobModal()" style="background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); border: none; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>✨ Generate with AI</span>
+      </button>
+    </div>
   </div>
 
   <div style="max-width: 800px;">
     <div class="card-panel">
       
-      <form action="<%= isEdit ? '/admin/jobs/' + job.id + '/edit' : '/admin/jobs' %>" method="POST">
+      <form action="<%= isEdit ? '/admin/jobs/' + job.id + '/edit' : '/admin/jobs' %>" method="POST" id="job-form">
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
           <div class="form-group">
@@ -40,6 +59,7 @@
               <option value="Electrical, Plumbing & MEP" <%= job.category === 'Electrical, Plumbing & MEP' ? 'selected' : '' %>>Electrical, Plumbing & MEP</option>
               <option value="Construction & Infrastructure" <%= job.category === 'Construction & Infrastructure' ? 'selected' : '' %>>Construction & Infrastructure</option>
               <option value="Hospitality & Catering" <%= job.category === 'Hospitality & Catering' ? 'selected' : '' %>>Hospitality & Catering</option>
+              <option value="Oil & Gas" <%= job.category === 'Oil & Gas' ? 'selected' : '' %>>Oil & Gas</option>
             </select>
           </div>
 
@@ -81,7 +101,7 @@
           <div class="form-group">
             <label class="form-label">Funding Model</label>
             <label style="display: flex; align-items: center; gap: 10px; margin-top: 10px; cursor: pointer; color: #fff;">
-              <input type="checkbox" name="employer_funded" value="1" <%= job.employer_funded ? 'checked' : '' %> style="width: 18px; height: 18px; accent-color: var(--admin-gold);" />
+              <input type="checkbox" id="employer_funded" name="employer_funded" value="1" <%= job.employer_funded ? 'checked' : '' %> style="width: 18px; height: 18px; accent-color: var(--admin-gold);" />
               <span>100% Employer Funded (Zero Candidate Charge)</span>
             </label>
           </div>
@@ -111,6 +131,330 @@
   </div>
 
 </main>
+
+<!-- AI Job Generator Modal -->
+<div id="aiModal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+  <div class="card-panel" style="max-width: 620px; width: 100%; border: 1.5px solid var(--admin-border-gold); background: #081636; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9); max-height: 90vh; overflow-y: auto;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 12px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #a855f7); display: flex; align-items: center; justify-content: center; color: #fff;">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <div>
+          <h2 style="font-size: 1.15rem; color: #fff; margin: 0;">AI Overseas Job Post Generator</h2>
+          <small style="color: var(--admin-text-muted);">Powered by OpenRouter API & Qwen-3 AI</small>
+        </div>
+      </div>
+      <button type="button" onclick="closeAiJobModal()" style="background: none; border: none; color: var(--admin-text-muted); font-size: 1.2rem; cursor: pointer;">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <form id="ai-generator-form" onsubmit="handleAiGenerate(event)">
+      
+      <div class="form-group">
+        <label class="form-label" for="ai_details">Brief Job Requirements / Short Details *</label>
+        <textarea id="ai_details" name="details" rows="4" class="form-control" placeholder="e.g. Urgent demand: 30 6G pipe welders for Kuwait refinery expansion project. Salary 450 KWD, free food and camp accommodation, client direct interview in Mumbai next week..." required></textarea>
+        <small style="color: var(--admin-text-muted); font-size: 0.78rem;">Paste client demand notes, WhatsApp messages, or vacancy bullet points.</small>
+      </div>
+
+      <div class="form-group" style="background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 8px; border: 1px dashed var(--admin-border);">
+        <label class="form-label" for="ai_flyer">
+          <i class="fa-solid fa-image" style="color: var(--admin-gold); margin-right: 6px;"></i> Job Graphic / Flyer Poster (Optional)
+        </label>
+        <input type="file" id="ai_flyer" name="job_flyer" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+        <small style="color: var(--admin-text-muted); font-size: 0.78rem;">Upload flyer image to reference vacancy details.</small>
+      </div>
+
+      <button type="submit" id="ai-submit-btn" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.95rem; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); border: none;">
+        <i class="fa-solid fa-sparkles"></i>
+        <span>Synthesize Professional Job Opening</span>
+      </button>
+
+      <div id="ai-loading" style="display: none; text-align: center; margin-top: 16px; color: var(--admin-gold);">
+        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 1.5rem; margin-bottom: 8px;"></i>
+        <div style="font-size: 0.88rem; color: #fff;">Qwen-3 AI is reading requirements and calculating packages...</div>
+      </div>
+
+    </form>
+
+    <!-- AI Result Box -->
+    <div id="ai-result-box" style="display: none; margin-top: 20px; padding: 16px; background: rgba(255, 255, 255, 0.04); border-radius: 8px; border: 1px solid var(--admin-border-gold);">
+      <h4 style="color: var(--admin-gold); margin-top: 0; margin-bottom: 8px; font-size: 0.95rem;">
+        <i class="fa-solid fa-check-circle"></i> AI Generated Preview
+      </h4>
+      <div id="ai-preview-content" style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 14px;"></div>
+      
+      <button type="button" onclick="applyAiToForm()" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.9rem;">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Auto-Fill into Job Form</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let lastAiResult = null;
+
+  function openAiJobModal() {
+    document.getElementById('aiModal').style.display = 'flex';
+  }
+
+  function closeAiJobModal() {
+    document.getElementById('aiModal').style.display = 'none';
+  }
+
+  async function handleAiGenerate(e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById('ai-submit-btn');
+    const loading = document.getElementById('ai-loading');
+    const resultBox = document.getElementById('ai-result-box');
+
+    submitBtn.disabled = true;
+    loading.style.display = 'block';
+    resultBox.style.display = 'none';
+
+    const formData = new FormData(document.getElementById('ai-generator-form'));
+
+    try {
+      const response = await fetch('/admin/jobs/ai-generate', {
+        method: 'POST',
+        body: formData
+      });
+
+      const res = await response.json();
+      if (!res.success) {
+        throw new Error(res.message || 'Generation failed.');
+      }
+
+      lastAiResult = res.data;
+
+      // Populate preview
+      document.getElementById('ai-preview-content').innerHTML = `
+        <div><strong>Title:</strong> ${lastAiResult.title}</div>
+        <div><strong>Code:</strong> ${lastAiResult.job_code} &bull; <strong>Country:</strong> ${lastAiResult.flag || ''} ${lastAiResult.country}</div>
+        <div><strong>Salary INR:</strong> ${lastAiResult.salary_inr} &bull; <strong>Foreign:</strong> ${lastAiResult.salary_foreign}</div>
+        <div><strong>Perks:</strong> ${(lastAiResult.perks || []).join(', ')}</div>
+        <div><strong>Badge:</strong> ${lastAiResult.badge_text || 'None'}</div>
+      `;
+
+      resultBox.style.display = 'block';
+    } catch (err) {
+      alert('AI Generation Error: ' + err.message);
+    } finally {
+      submitBtn.disabled = false;
+      loading.style.display = 'none';
+    }
+  }
+
+<!-- Smart WhatsApp / Social Job Paste Modal -->
+<div id="smartPasteModal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+  <div class="card-panel" style="max-width: 680px; width: 100%; border: 1.5px solid var(--admin-emerald); background: #081636; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9); max-height: 90vh; overflow-y: auto;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 12px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #059669, #10b981); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem;">
+          <i class="fa-solid fa-paste"></i>
+        </div>
+        <div>
+          <h2 style="font-size: 1.15rem; color: #fff; margin: 0;">Smart Social / WhatsApp Job Post Creator</h2>
+          <small style="color: var(--admin-text-muted);">Paste raw recruiter WhatsApp or Telegram copy to create structured listings</small>
+        </div>
+      </div>
+      <button type="button" onclick="closeSmartPasteModal()" style="background: none; border: none; color: var(--admin-text-muted); font-size: 1.2rem; cursor: pointer;">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Quick Sample Inserts -->
+    <div style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+      <span style="font-size: 0.76rem; color: var(--admin-text-muted);">Try Sample Templates:</span>
+      <button type="button" onclick="insertSample('hospital')" class="btn-admin btn-admin-secondary" style="padding: 3px 8px; font-size: 0.74rem;">🇸🇬 Singapore Hospital</button>
+      <button type="button" onclick="insertSample('restaurant')" class="btn-admin btn-admin-secondary" style="padding: 3px 8px; font-size: 0.74rem;">🇸🇬 Singapore Restaurant</button>
+      <button type="button" onclick="insertSample('supermarket')" class="btn-admin btn-admin-secondary" style="padding: 3px 8px; font-size: 0.74rem;">🇸🇬 Singapore Supermarket</button>
+    </div>
+
+    <form id="smart-paste-form" onsubmit="handleSmartPasteSubmit(event)">
+      <div class="form-group">
+        <label class="form-label" for="smart_raw_text">Paste Raw Job Description / WhatsApp Message *</label>
+        <textarea id="smart_raw_text" rows="8" class="form-control" style="font-family: monospace; font-size: 0.85rem; line-height: 1.5;" placeholder="Paste text here e.g.&#10;SINGAPORE 🇸🇬 PERMIT 🥳&#10;STAFF REQUIRED FOR HOSPITAL 🏥 JOB&#10;E-PASS🔥 Male/Female&#10;Salary - $2200..." required></textarea>
+        <small style="color: var(--admin-text-muted); font-size: 0.76rem;">Extracts Title, Country/Flag, Category, SGD/INR Salary, Duty Hours, Perks, and Document requirements.</small>
+      </div>
+
+      <button type="submit" id="smart-parse-btn" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.95rem; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border: none;">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Parse & Auto-Fill into Job Form</span>
+      </button>
+    </form>
+
+  </div>
+</div>
+
+<script>
+  let lastAiResult = null;
+
+  function openAiJobModal() {
+    document.getElementById('aiModal').style.display = 'flex';
+  }
+
+  function closeAiJobModal() {
+    document.getElementById('aiModal').style.display = 'none';
+  }
+
+  function openSmartPasteModal() {
+    document.getElementById('smartPasteModal').style.display = 'flex';
+  }
+
+  function closeSmartPasteModal() {
+    document.getElementById('smartPasteModal').style.display = 'none';
+  }
+
+  const SAMPLE_POSTS = {
+    hospital: `SINGAPORE 🇸🇬 PERMIT 🥳 \n\nSTAFF REQUIRED FOR HOSPITAL 🏥 JOB\n\nE-PASS🔥  Male/Female (anycan) \n\nPrimary work :- looking out for patients, giving them the medicine on time, changing Bedsheets & Pillow Covers\n\nSalary - $2200\n(Salary hike depending on the performance 🔥)\n\n#Should have basic knowledge of Nursing\n\nDM me your Resume along with your documents`,
+    restaurant: `Singapore Work Permit Required🔥 \n\nVacancies Available in Restaurant✨ \n- Waiter: $1700\n- Chef: $1900\n- Kitchen Worker: $1800\n\nWorking Hours: Monday to Friday, 9:30 AM - 7:30 PM\n\nMonthly: 2 days off with complimentary meals. Apply today to take advantage of this opportunity.🔥`,
+    supermarket: `SINGAPORE 🇸🇬 WORK PERMIT\n\nVisa for INDIANs, BANGLADESHIs, NEPALIs to SINGAPORE 🇸🇬 \n\nSUPERMARKET ASSISTANT\n\nBASIC $1600\nROOM $400 \n10 HRS\n2 DAYS OFF \n\n# AGE 18-49\n# PASSPORT and 1 PHOTO 📸 \n\nAPPLY NOW URGENTLY REQUIRED`
+  };
+
+  function insertSample(type) {
+    if (SAMPLE_POSTS[type]) {
+      document.getElementById('smart_raw_text').value = SAMPLE_POSTS[type];
+    }
+  }
+
+  async function handleSmartPasteSubmit(e) {
+    e.preventDefault();
+    const rawText = document.getElementById('smart_raw_text').value;
+    const btn = document.getElementById('smart-parse-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Parsing Job Details...</span>';
+
+    try {
+      const response = await fetch('/admin/jobs/smart-parse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rawText })
+      });
+
+      const res = await response.json();
+      if (!res.success) {
+        throw new Error(res.message || 'Parsing failed.');
+      }
+
+      applyParsedDataToForm(res.data);
+      closeSmartPasteModal();
+    } catch (err) {
+      alert('Error parsing job description: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>Parse & Auto-Fill into Job Form</span>';
+    }
+  }
+
+  function applyParsedDataToForm(data) {
+    if (!data) return;
+
+    if (data.title) document.getElementById('title').value = data.title;
+    if (data.job_code) document.getElementById('job_code').value = data.job_code;
+    if (data.country) document.getElementById('country').value = data.country;
+    if (data.flag) document.getElementById('flag').value = data.flag;
+    if (data.salary_inr) document.getElementById('salary_inr').value = data.salary_inr;
+    if (data.salary_foreign) document.getElementById('salary_foreign').value = data.salary_foreign;
+    if (data.badge_text) document.getElementById('badge_text').value = data.badge_text;
+    if (data.employer_funded !== undefined) {
+      document.getElementById('employer_funded').checked = !!data.employer_funded;
+    }
+    if (data.perks) {
+      document.getElementById('perks').value = Array.isArray(data.perks) ? data.perks.join(', ') : data.perks;
+    }
+
+    if (data.category) {
+      const catSelect = document.getElementById('category');
+      for (let option of catSelect.options) {
+        if (option.value.toLowerCase().includes(data.category.toLowerCase()) || 
+            data.category.toLowerCase().includes(option.value.toLowerCase())) {
+          catSelect.value = option.value;
+          break;
+        }
+      }
+    }
+
+    // Pulse highlight the form panel
+    const formPanel = document.querySelector('.card-panel');
+    formPanel.style.transition = 'box-shadow 0.4s ease, border-color 0.4s ease';
+    formPanel.style.boxShadow = '0 0 35px rgba(16, 185, 129, 0.7)';
+    formPanel.style.borderColor = '#10b981';
+    setTimeout(() => {
+      formPanel.style.boxShadow = '';
+      formPanel.style.borderColor = '';
+    }, 1500);
+  }
+
+  async function handleAiGenerate(e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById('ai-submit-btn');
+    const loading = document.getElementById('ai-loading');
+    const resultBox = document.getElementById('ai-result-box');
+
+    submitBtn.disabled = true;
+    loading.style.display = 'block';
+    resultBox.style.display = 'none';
+
+    const formData = new FormData(document.getElementById('ai-generator-form'));
+
+    try {
+      const response = await fetch('/admin/jobs/ai-generate', {
+        method: 'POST',
+        body: formData
+      });
+
+      const res = await response.json();
+      if (!res.success) {
+        throw new Error(res.message || 'Generation failed.');
+      }
+
+      lastAiResult = res.data;
+
+      // Populate preview
+      document.getElementById('ai-preview-content').innerHTML = `
+        <div><strong>Title:</strong> ${lastAiResult.title}</div>
+        <div><strong>Code:</strong> ${lastAiResult.job_code} &bull; <strong>Country:</strong> ${lastAiResult.flag || ''} ${lastAiResult.country}</div>
+        <div><strong>Salary INR:</strong> ${lastAiResult.salary_inr} &bull; <strong>Foreign:</strong> ${lastAiResult.salary_foreign}</div>
+        <div><strong>Perks:</strong> ${(lastAiResult.perks || []).join(', ')}</div>
+        <div><strong>Badge:</strong> ${lastAiResult.badge_text || 'None'}</div>
+      `;
+
+      resultBox.style.display = 'block';
+    } catch (err) {
+      alert('AI Generation Error: ' + err.message);
+    } finally {
+      submitBtn.disabled = false;
+      loading.style.display = 'none';
+    }
+  }
+
+  function applyAiToForm() {
+    if (!lastAiResult) return;
+    applyParsedDataToForm(lastAiResult);
+    closeAiJobModal();
+  }
+
+  async function copyWhatsAppBroadcast(jobId) {
+    try {
+      const response = await fetch('/admin/jobs/' + jobId + '/whatsapp-broadcast');
+      const res = await response.json();
+      if (res.success && res.broadcastText) {
+        await navigator.clipboard.writeText(res.broadcastText);
+        alert('✅ WhatsApp broadcast message copied to clipboard!\n\nYou can now paste it directly into WhatsApp groups, Telegram channels, and social media.');
+      } else {
+        alert('Could not generate broadcast copy.');
+      }
+    } catch (err) {
+      alert('Copy error: ' + err.message);
+    }
+  }
+</script>
 
 </body>
 </html>

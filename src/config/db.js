@@ -12,8 +12,10 @@ if (!fs.existsSync(dbDir)) {
 // In-memory store with disk persistence
 let store = {
   users: [],
+  agents: [],
   jobs: [],
   leads: [],
+  notifications: [],
   settings: {}
 };
 
@@ -126,8 +128,10 @@ function createTableInterface(tableName) {
 
 const db = {
   users: createTableInterface('users'),
+  agents: createTableInterface('agents'),
   jobs: createTableInterface('jobs'),
   leads: createTableInterface('leads'),
+  notifications: createTableInterface('notifications'),
   settings: {
     get(key, defaultValue = null) {
       return store.settings && store.settings[key] !== undefined ? store.settings[key] : defaultValue;

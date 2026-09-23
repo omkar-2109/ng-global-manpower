@@ -14,8 +14,12 @@ module.exports = {
   helplinePhone: process.env.HELPLINE_PHONE || '+91 80800 25670',
   supportEmail: process.env.SUPPORT_EMAIL || 'hr@ngglobalmp.in',
   defaultAdmin: {
-    email: process.env.DEFAULT_ADMIN_EMAIL || 'admin@ngglobal.com',
-    password: process.env.DEFAULT_ADMIN_PASSWORD || 'Admin@12345',
-    name: process.env.DEFAULT_ADMIN_NAME || 'Recruitment Director'
+    email: process.env.DEFAULT_ADMIN_EMAIL || 'hr@ngglobalmp.in',
+    password: process.env.DEFAULT_ADMIN_PASSWORD || '918080025670',
+    name: process.env.DEFAULT_ADMIN_NAME || 'NG Global HR Director'
+  },
+  openrouter: {
+    apiKey: process.env.OPENROUTER_API_KEY || '',
+    model: process.env.OPENROUTER_MODEL || 'qwen/qwen3.8-27b:free'
   }
 };

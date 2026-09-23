@@ -40,6 +40,7 @@
             <label style="display: block; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Destination Region</label>
             <select name="country" onchange="this.form.submit()" style="width: 100%; background: #07132C; border: 1px solid var(--border-light); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.95rem; outline: none;">
               <option value="">All Destination Regions</option>
+              <option value="Singapore" <%= selectedCountry === 'Singapore' ? 'selected' : '' %>>Singapore 🇸🇬 (Work Permit / E-Pass)</option>
               <option value="Saudi" <%= selectedCountry === 'Saudi' ? 'selected' : '' %>>Saudi Arabia (KSA)</option>
               <option value="UAE" <%= selectedCountry === 'UAE' ? 'selected' : '' %>>United Arab Emirates (UAE)</option>
               <option value="Qatar" <%= selectedCountry === 'Qatar' ? 'selected' : '' %>>Qatar</option>

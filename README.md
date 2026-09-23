@@ -57,6 +57,14 @@ WHATSAPP_NUMBER=918080025670
 HELPLINE_PHONE="+91 80800 25670"
 SUPPORT_EMAIL=hr@ngglobalmp.in
 
+# Strict Administrator Credentials (HR Mail & Contact Password)
+DEFAULT_ADMIN_EMAIL=hr@ngglobalmp.in
+DEFAULT_ADMIN_PASSWORD=918080025670
+
+# OpenRouter AI Job Post Generator
+OPENROUTER_API_KEY=sk-or-v1-...
+OPENROUTER_MODEL=qwen/qwen3.8-27b:free
+
 # Supabase Credentials
 SUPABASE_URL=https://xlluysszizykztwpnuig.supabase.co
 SUPABASE_ANON_KEY=your_publishable_key
@@ -71,8 +79,14 @@ npm start
 npm run dev
 ```
 
-Visit: `http://localhost:3000`  
-Staff Portal: `http://localhost:3000/admin/login`
+- **Public Portal**: `http://localhost:3000`  
+- **Admin Command Center**: `http://localhost:3000/admin/login`
+  - **Email**: `hr@ngglobalmp.in`
+  - **Password**: `918080025670`
+- **Partner Agent Portal**: `http://localhost:3000/agent/login` (or `http://agents.localhost:3000`)
+  - **Sample Agent**: `apex-global`
+  - **Password**: `Agent@2026`
+- **Partner Agency Public URL**: `http://localhost:3000/agency/apex-global` (or `http://apex-global.localhost:3000`)
 
 ---
 
