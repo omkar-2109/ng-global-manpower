@@ -92,8 +92,8 @@
                     <%= agent.username %>
                   </div>
                   <div style="margin-top: 4px;">
-                    <a href="/agency/<%= agent.username %>" target="_blank" style="font-size: 0.78rem; color: var(--admin-cyan); text-decoration: none;">
-                      <i class="fa-solid fa-up-right-from-square"></i> <%= agent.username %>.url (Profile)
+                    <a href="<%= typeof getAgentLandingUrl === 'function' ? getAgentLandingUrl(agent.username) : ('/agency/' + agent.username) %>" target="_blank" style="font-size: 0.78rem; color: var(--admin-cyan); text-decoration: none;">
+                      <i class="fa-solid fa-up-right-from-square"></i> <%= agent.username %>.<%= typeof rootHostname !== 'undefined' ? rootHostname : 'ngglobalmp.in' %>
                     </a>
                   </div>
                 </td>

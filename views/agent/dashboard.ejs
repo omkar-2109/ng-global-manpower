@@ -40,9 +40,9 @@
         </a>
       </li>
       <li>
-        <a href="/agency/<%= agent.username %>" target="_blank" class="admin-nav-link">
+        <a href="<%= typeof getAgentLandingUrl === 'function' ? getAgentLandingUrl(agent.username) : ('/agency/' + agent.username) %>" target="_blank" class="admin-nav-link">
           <i class="fa-solid fa-globe"></i>
-          <span>My Public Landing URL (<%= agent.username %>.url)</span>
+          <span>My Public Landing URL (<%= agent.username %>.<%= typeof rootHostname !== 'undefined' ? rootHostname : 'ngglobalmp.in' %>)</span>
         </a>
       </li>
     </ul>
@@ -88,7 +88,7 @@
           </p>
         </div>
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-          <a href="/agency/<%= agent.username %>" target="_blank" class="btn-admin btn-admin-secondary" style="font-size: 0.85rem;">
+          <a href="<%= typeof getAgentLandingUrl === 'function' ? getAgentLandingUrl(agent.username) : ('/agency/' + agent.username) %>" target="_blank" class="btn-admin btn-admin-secondary" style="font-size: 0.85rem;">
             <i class="fa-solid fa-arrow-up-right-from-square"></i>
             <span>Preview Public Agency Page</span>
           </a>

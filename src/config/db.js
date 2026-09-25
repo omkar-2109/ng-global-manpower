@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const env = require('./env');
+const supabaseService = require('../services/supabaseService');
 
 const dbFilePath = path.resolve(env.dbFile.replace(/\.sqlite$/, '.json'));
 const dbDir = path.dirname(dbFilePath);
@@ -93,6 +94,10 @@ function createTableInterface(tableName) {
       };
       items.push(record);
       persist();
+
+      // Cloud sync to Supabase (fire-and-forget)
+      supabaseService.pushRecord(tableName, record).catch(() => {});
+
       return record;
     },
 
@@ -110,6 +115,10 @@ function createTableInterface(tableName) {
         updated_at: now
       };
       persist();
+
+      // Cloud sync to Supabase (fire-and-forget)
+      supabaseService.updateRecord(tableName, numericId, data).catch(() => {});
+
       return items[index];
     },
 
@@ -119,8 +128,13 @@ function createTableInterface(tableName) {
       const index = items.findIndex(item => item.id === numericId || item.id === id);
       if (index === -1) return false;
 
+      const removedItem = items[index];
       items.splice(index, 1);
       persist();
+
+      // Cloud sync to Supabase (fire-and-forget)
+      supabaseService.deleteRecord(tableName, removedItem.id || id, removedItem).catch(() => {});
+
       return true;
     },
 
@@ -133,6 +147,8 @@ function createTableInterface(tableName) {
       const deletedCount = initialLength - store[tableName].length;
       if (deletedCount > 0) {
         persist();
+        // Cloud sync to Supabase (fire-and-forget)
+        supabaseService.deleteManyRecords(tableName, ids).catch(() => {});
       }
       return deletedCount;
     }
@@ -153,6 +169,7 @@ const db = {
       if (!store.settings) store.settings = {};
       store.settings[key] = value;
       persist();
+      supabaseService.pushRecord('settings', { key, value }).catch(() => {});
       return value;
     },
     all() {
@@ -160,7 +177,9 @@ const db = {
     }
   },
   _raw: store,
-  persist
+  persist,
+  syncWithSupabase: () => supabaseService.syncOnStartup(store, persist)
 };
 
 module.exports = db;
+

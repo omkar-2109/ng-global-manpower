@@ -47,7 +47,7 @@
         <span><i class="fa-solid fa-phone"></i> Helpline: <%= typeof settings !== 'undefined' && settings.helplinePhone ? settings.helplinePhone : '+91 80800 25670' %></span>
         <a href="/#fraud-advisory"><i class="fa-solid fa-shield-halved"></i> Anti-Fraud Advisory</a>
         <% if (typeof user !== 'undefined' && user) { %>
-          <a href="/admin/dashboard" style="color: var(--gold-primary); font-weight: 600;"><i class="fa-solid fa-user-shield"></i> Recruiter Portal</a>
+          <a href="<%= typeof adminUrl !== 'undefined' ? adminUrl : '/admin/dashboard' %>" style="color: var(--gold-primary); font-weight: 600;"><i class="fa-solid fa-user-shield"></i> Recruiter Portal</a>
         <% } %>
       </div>
     </div>

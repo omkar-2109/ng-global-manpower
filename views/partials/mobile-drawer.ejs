@@ -60,14 +60,14 @@
       </li>
       <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
       <li>
-        <a href="/admin/dashboard" style="color: var(--gold-primary);">
+        <a href="<%= typeof adminUrl !== 'undefined' ? adminUrl : '/admin/dashboard' %>" style="color: var(--gold-primary);">
           <i class="fa-solid fa-user-shield"></i>
           <span>Recruiter Command Center</span>
         </a>
       </li>
       <% } else { %>
       <li>
-        <a href="/admin/login">
+        <a href="<%= typeof adminLoginUrl !== 'undefined' ? adminLoginUrl : '/admin/login' %>">
           <i class="fa-solid fa-shield-halved" style="color: var(--gold-primary);"></i>
           <span>HR &amp; Admin Login</span>
         </a>
@@ -76,14 +76,14 @@
 
       <% if (typeof agent !== 'undefined' && agent) { %>
       <li>
-        <a href="/agent/dashboard" style="color: #38bdf8;">
+        <a href="<%= typeof agentPortalUrl !== 'undefined' ? agentPortalUrl : '/agent/dashboard' %>" style="color: #38bdf8;">
           <i class="fa-solid fa-handshake"></i>
           <span>Agent Dashboard (<%= agent.agency_name %>)</span>
         </a>
       </li>
       <% } else { %>
       <li>
-        <a href="/agent/login">
+        <a href="<%= typeof agentLoginUrl !== 'undefined' ? agentLoginUrl : '/agent/login' %>">
           <i class="fa-solid fa-handshake" style="color: #38bdf8;"></i>
           <span>Agent Partner Portal</span>
         </a>

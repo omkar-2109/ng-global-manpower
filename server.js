@@ -21,11 +21,13 @@ const agentRoutes = require('./src/routes/agentRoutes');
 const apiRoutes = require('./src/routes/apiRoutes');
 const agentController = require('./src/controllers/agentController');
 const jobService = require('./src/services/jobService');
+const db = require('./src/config/db');
 
 const app = express();
 
 // 1. Initialize & Seed Database (Strict HR Admin & Sample Agent)
 initializeDatabase();
+db.syncWithSupabase().catch(err => console.warn('[Supabase] Initial sync note:', err.message));
 
 // 2. View Engine Configuration (EJS)
 app.set('view engine', 'ejs');
@@ -67,11 +69,50 @@ app.use((req, res, next) => {
   res.locals.appUrl = env.appUrl;
   res.locals.currentYear = new Date().getFullYear();
   res.locals.user = req.user || null;
+  res.locals.currentUser = req.user || null;
   res.locals.agent = req.agent || null;
+  res.locals.currentAgent = req.agent || null;
   
   const host = (req.headers.host || '').split(':')[0].toLowerCase();
-  const parts = host.split('.');
-  res.locals.rootHostname = host.endsWith('localhost') ? `localhost:${env.port}` : (parts.length > 2 ? parts.slice(1).join('.') : host);
+  const port = (req.headers.host || '').split(':')[1];
+  const portSuffix = port ? `:${port}` : '';
+  const proto = (req.secure || req.headers['x-forwarded-proto'] === 'https') ? 'https' : 'http';
+  const isLocal = host === 'localhost' || host.endsWith('.localhost');
+  const isIpOrRender = /^\d+\.\d+\.\d+\.\d+$/.test(host) || host.endsWith('.onrender.com');
+
+  let rootDomain = host;
+  if (isLocal) {
+    rootDomain = `localhost${portSuffix}`;
+  } else if (!isIpOrRender) {
+    const parts = host.split('.');
+    rootDomain = parts.length >= 3 ? parts.slice(1).join('.') : host;
+  }
+  res.locals.rootHostname = rootDomain;
+
+  // Subdomain URL builder helper
+  res.locals.getSubdomainUrl = function(subdomain, targetPath = '/') {
+    const cleanPath = targetPath.startsWith('/') ? targetPath : '/' + targetPath;
+    if (isLocal) {
+      if (!subdomain) return `${proto}://localhost${portSuffix}${cleanPath}`;
+      return `${proto}://${subdomain}.localhost${portSuffix}${cleanPath}`;
+    }
+    if (isIpOrRender) {
+      return cleanPath;
+    }
+    if (!subdomain) {
+      return `${proto}://${rootDomain}${cleanPath}`;
+    }
+    return `${proto}://${subdomain}.${rootDomain}${cleanPath}`;
+  };
+
+  res.locals.adminUrl = res.locals.getSubdomainUrl('admin', '/admin/dashboard');
+  res.locals.adminLoginUrl = res.locals.getSubdomainUrl('admin', '/admin/login');
+  res.locals.agentLoginUrl = res.locals.getSubdomainUrl('agents', '/agent/login');
+  res.locals.agentPortalUrl = res.locals.getSubdomainUrl('agents', '/agent/dashboard');
+  res.locals.publicSiteUrl = res.locals.getSubdomainUrl('', '/');
+  res.locals.getAgentLandingUrl = function(username) {
+    return res.locals.getSubdomainUrl(username, '/');
+  };
 
   try {
     res.locals.tickerJobs = jobService.getActiveJobs().slice(0, 10);

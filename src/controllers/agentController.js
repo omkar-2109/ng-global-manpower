@@ -344,6 +344,9 @@ const agentController = {
         return res.json({ success: true, message: 'Application submitted directly to partner agent.' });
       }
 
+      if (req.subdomainAgent || (req.headers.host && req.headers.host.toLowerCase().startsWith(agent.username.toLowerCase()))) {
+        return res.redirect('/?applied=true');
+      }
       res.redirect(`/agency/${agent.username}?applied=true`);
     } catch (err) {
       next(err);
