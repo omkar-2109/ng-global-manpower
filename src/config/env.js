@@ -10,8 +10,8 @@ module.exports = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   cookieSecret: process.env.COOKIE_SECRET || 'fallback_cookie_secret',
   dbFile: process.env.DB_FILE || './data/ngglobal.sqlite',
-  whatsappNumber: process.env.WHATSAPP_NUMBER || '918080025670',
-  helplinePhone: process.env.HELPLINE_PHONE || '+91 80800 25670',
+  whatsappNumber: (process.env.WHATSAPP_NUMBER || '918080025670').replace(/[^0-9]/g, ''),
+  helplinePhone: (process.env.HELPLINE_PHONE || '+91 80800 25670').replace(/['"]+/g, '').trim(),
   supportEmail: process.env.SUPPORT_EMAIL || 'hr@ngglobalmp.in',
   defaultAdmin: {
     email: process.env.DEFAULT_ADMIN_EMAIL || 'hr@ngglobalmp.in',

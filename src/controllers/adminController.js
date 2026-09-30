@@ -175,9 +175,15 @@ const adminController = {
   showAgents(req, res, next) {
     try {
       const agents = Agent.all();
+      const { passwordReset, updated, created, deleted, error } = req.query;
       res.render('admin/agents', {
         title: 'Recruitment Partner Agents | NG Global',
         agents,
+        passwordReset: passwordReset === 'true',
+        updated: updated === 'true',
+        created: created === 'true',
+        deleted: deleted === 'true',
+        error: error || null,
         path: '/admin/agents'
       });
     } catch (err) {
@@ -204,7 +210,7 @@ const adminController = {
         title: isEdit ? `Edit Agent: ${agent.name}` : 'Register New Recruitment Partner Agent | NG Global',
         agent: agent || {},
         isEdit,
-        error: null,
+        error: req.query.error || null,
         path: '/admin/agents'
       });
     } catch (err) {
@@ -287,10 +293,12 @@ const adminController = {
         country,
         license_no,
         commission_notes,
-        status
+        status,
+        password,
+        new_password
       } = req.body;
 
-      Agent.update(id, {
+      const updateData = {
         name,
         agency_name,
         username,
@@ -302,11 +310,19 @@ const adminController = {
         license_no,
         commission_notes,
         status
-      });
+      };
 
-      res.redirect('/admin/agents?updated=true');
+      const passToSet = password || new_password;
+      if (passToSet && passToSet.trim().length >= 6) {
+        updateData.password = passToSet.trim();
+      }
+
+      Agent.update(id, updateData);
+
+      const queryNotice = passToSet && passToSet.trim().length >= 6 ? 'updated=true&passwordReset=true' : 'updated=true';
+      res.redirect(`/admin/agents?${queryNotice}`);
     } catch (err) {
-      next(err);
+      res.redirect(`/admin/agents/${req.params.id}/edit?error=${encodeURIComponent(err.message)}`);
     }
   },
 
@@ -314,16 +330,35 @@ const adminController = {
   resetAgentPassword(req, res, next) {
     try {
       const { id } = req.params;
-      const { new_password } = req.body;
+      const new_password = req.body.new_password || req.body.password;
 
-      if (!new_password || new_password.length < 6) {
-        throw new Error('Password must be at least 6 characters.');
+      if (!new_password || new_password.trim().length < 6) {
+        if (req.xhr || req.headers.accept?.includes('json')) {
+          return res.status(400).json({ success: false, message: 'Password must be at least 6 characters.' });
+        }
+        return res.redirect(`/admin/agents?error=${encodeURIComponent('Password must be at least 6 characters.')}`);
       }
 
-      Agent.updatePassword(id, new_password);
+      const agent = Agent.findById(id);
+      if (!agent) {
+        if (req.xhr || req.headers.accept?.includes('json')) {
+          return res.status(404).json({ success: false, message: 'Agent not found.' });
+        }
+        return res.redirect(`/admin/agents?error=${encodeURIComponent('Agent partner not found.')}`);
+      }
+
+      Agent.updatePassword(id, new_password.trim());
+
+      if (req.xhr || req.headers.accept?.includes('json')) {
+        return res.json({ success: true, message: `Password for agent ${agent.agency_name || agent.name} successfully updated.` });
+      }
+
       res.redirect('/admin/agents?passwordReset=true');
     } catch (err) {
-      next(err);
+      if (req.xhr || req.headers.accept?.includes('json')) {
+        return res.status(500).json({ success: false, message: err.message });
+      }
+      res.redirect(`/admin/agents?error=${encodeURIComponent(err.message)}`);
     }
   },
 

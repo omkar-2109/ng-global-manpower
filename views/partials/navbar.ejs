@@ -44,9 +44,8 @@
         <span>Transparent & Regulated Service Charges • 100% Company-Sponsored Quotas Available • Official Embassy Processing</span>
       </div>
       <div class="top-bar-links">
-        <span><i class="fa-solid fa-phone"></i> Helpline: <%= typeof settings !== 'undefined' && settings.helplinePhone ? settings.helplinePhone : '+91 80800 25670' %></span>
+        <span><i class="fa-solid fa-phone"></i> Helpline: <%= (typeof settings !== 'undefined' && settings.helplinePhone ? settings.helplinePhone : '+91 80800 25670').replace(/['"]+/g, '').trim() %></span>
         <a href="/#fraud-advisory"><i class="fa-solid fa-shield-halved"></i> Anti-Fraud Advisory</a>
-        <a href="<%= typeof agentLoginUrl !== 'undefined' ? agentLoginUrl : '/agent/login' %>" style="color: #38bdf8; font-weight: 600;"><i class="fa-solid fa-handshake"></i> Agent Portal</a>
         <% if (typeof user !== 'undefined' && user) { %>
           <a href="<%= typeof adminUrl !== 'undefined' ? adminUrl : '/admin/dashboard' %>" style="color: var(--gold-primary); font-weight: 600;"><i class="fa-solid fa-user-shield"></i> Recruiter Portal</a>
         <% } %>
@@ -71,17 +70,13 @@
         <li><a href="/#why-us">Trust Model</a></li>
         <li><a href="/jobs">Job Openings</a></li>
         <li><a href="/#timelines">Processing Tracks</a></li>
-        <li><a href="/#agent-network">Partner Network</a></li>
+        <li><a href="/#agent-network">Accreditations</a></li>
         <li><a href="/#testimonials">Worker Stories</a></li>
         <li><a href="/#faq">FAQ</a></li>
       </ul>
 
       <!-- Desktop CTA -->
       <div class="nav-cta-group">
-        <a href="<%= typeof agentLoginUrl !== 'undefined' ? agentLoginUrl : '/agent/login' %>" style="color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease;">
-          <i class="fa-solid fa-handshake"></i>
-          <span>Partner Portal</span>
-        </a>
         <a href="/#lead-funnel" class="btn btn-gold">
           <span>Check Eligibility Free</span>
           <i class="fa-solid fa-arrow-right"></i>

@@ -15,9 +15,40 @@
     </div>
   </div>
 
+  <% if (typeof passwordReset !== 'undefined' && passwordReset) { %>
+    <div class="admin-alert admin-alert-success" style="margin-bottom: 20px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; padding: 14px 18px; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+      <i class="fa-solid fa-circle-check" style="font-size: 1.2rem;"></i>
+      <div>
+        <strong style="color: #fff;">Password Updated Successfully!</strong>
+        <div style="font-size: 0.85rem; margin-top: 2px;">The recruitment partner agent's credentials have been updated and are live immediately for login.</div>
+      </div>
+    </div>
+  <% } %>
+
+  <% if (typeof updated !== 'undefined' && updated && !passwordReset) { %>
+    <div class="admin-alert admin-alert-success" style="margin-bottom: 20px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>Partner agent details saved successfully.</span>
+    </div>
+  <% } %>
+
+  <% if (typeof created !== 'undefined' && created) { %>
+    <div class="admin-alert admin-alert-success" style="margin-bottom: 20px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>New recruitment partner agent registered successfully!</span>
+    </div>
+  <% } %>
+
+  <% if (typeof deleted !== 'undefined' && deleted) { %>
+    <div class="admin-alert admin-alert-error" style="margin-bottom: 20px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; padding: 12px 16px; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+      <i class="fa-solid fa-trash-can"></i>
+      <span>Partner agent removed.</span>
+    </div>
+  <% } %>
+
   <% if (typeof error !== 'undefined' && error) { %>
-    <div class="admin-alert admin-alert-error" style="margin-bottom: 20px;">
-      <i class="fa-solid fa-triangle-exclamation"></i>
+    <div class="admin-alert admin-alert-error" style="margin-bottom: 20px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; padding: 14px 18px; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+      <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.2rem;"></i>
       <span><%= error %></span>
     </div>
   <% } %>
@@ -129,6 +160,11 @@
                   <% } %>
                 </td>
                 <td style="text-align: right; white-space: nowrap;">
+                  <button type="button" class="btn-admin btn-admin-secondary" style="padding: 6px 10px; font-size: 0.82rem; margin-right: 4px; color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);" onclick="openResetModal('<%= agent.id %>', '<%= (agent.agency_name || agent.name).replace(/'/g, '\\\'') %>', '<%= agent.username %>')" title="Reset Agent Password">
+                    <i class="fa-solid fa-key"></i>
+                    <span>Reset Pass</span>
+                  </button>
+
                   <a href="/admin/agents/<%= agent.id %>/edit" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.82rem;">
                     <i class="fa-solid fa-pen-to-square"></i>
                     <span>Edit</span>
@@ -155,6 +191,94 @@
   </div>
 
 </main>
+
+<!-- Interactive Password Reset Modal -->
+<div id="resetPasswordModal" style="display: none; position: fixed; inset: 0; background: rgba(3, 10, 26, 0.85); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #081636; border: 1.5px solid var(--admin-gold); border-radius: 14px; max-width: 460px; width: 100%; padding: 28px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); position: relative;">
+    <button type="button" onclick="closeResetModal()" style="position: absolute; top: 18px; right: 18px; background: none; border: none; color: var(--admin-text-muted); font-size: 1.2rem; cursor: pointer;">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+      <div style="width: 42px; height: 42px; border-radius: 10px; background: rgba(245, 158, 11, 0.15); display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 1.2rem;">
+        <i class="fa-solid fa-key"></i>
+      </div>
+      <div>
+        <h3 style="color: #fff; font-size: 1.15rem; margin: 0;">Reset Agent Password</h3>
+        <p style="color: var(--admin-text-muted); font-size: 0.82rem; margin: 2px 0 0 0;">Agent: <strong id="modalAgentName" style="color: var(--admin-gold);"></strong> (<span id="modalAgentHandle" style="font-family: monospace;"></span>)</p>
+      </div>
+    </div>
+
+    <form id="resetPasswordForm" method="POST" action="">
+      <div class="form-group" style="margin-bottom: 18px;">
+        <label class="form-label" for="modalNewPassword" style="font-size: 0.85rem; color: #cbd5e1; display: block; margin-bottom: 6px;">New Secure Password *</label>
+        <div style="position: relative;">
+          <input type="password" id="modalNewPassword" name="new_password" class="form-control" placeholder="Minimum 6 characters" required minlength="6" style="width: 100%; padding-right: 75px;" />
+          <button type="button" onclick="toggleModalPassword()" style="position: absolute; right: 40px; top: 10px; background: none; border: none; color: var(--admin-text-muted); cursor: pointer;" title="Show/Hide">
+            <i id="toggleEyeIcon" class="fa-solid fa-eye"></i>
+          </button>
+          <button type="button" onclick="generateRandomPassword()" style="position: absolute; right: 10px; top: 10px; background: none; border: none; color: var(--admin-gold); cursor: pointer;" title="Generate Random Secure Password">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </button>
+        </div>
+        <small style="color: var(--admin-text-muted); font-size: 0.76rem; display: block; margin-top: 4px;">Click the magic wand to auto-generate a strong password.</small>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px;">
+        <button type="button" onclick="closeResetModal()" class="btn-admin btn-admin-secondary" style="padding: 10px 18px;">Cancel</button>
+        <button type="submit" class="btn-admin btn-admin-primary" style="padding: 10px 22px;">
+          <i class="fa-solid fa-check"></i>
+          <span>Save New Password</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openResetModal(agentId, agentName, agentUsername) {
+    document.getElementById('modalAgentName').textContent = agentName;
+    document.getElementById('modalAgentHandle').textContent = agentUsername;
+    document.getElementById('resetPasswordForm').action = '/admin/agents/' + agentId + '/reset-password';
+    document.getElementById('modalNewPassword').value = '';
+    document.getElementById('modalNewPassword').type = 'password';
+    document.getElementById('toggleEyeIcon').className = 'fa-solid fa-eye';
+    const modal = document.getElementById('resetPasswordModal');
+    modal.style.display = 'flex';
+  }
+
+  function closeResetModal() {
+    document.getElementById('resetPasswordModal').style.display = 'none';
+  }
+
+  function toggleModalPassword() {
+    const input = document.getElementById('modalNewPassword');
+    const icon = document.getElementById('toggleEyeIcon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'fa-solid fa-eye-slash';
+    } else {
+      input.type = 'password';
+      icon.className = 'fa-solid fa-eye';
+    }
+  }
+
+  function generateRandomPassword() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#%';
+    let pass = '';
+    for (let i = 0; i < 10; i++) {
+      pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const input = document.getElementById('modalNewPassword');
+    input.type = 'text';
+    input.value = pass;
+    document.getElementById('toggleEyeIcon').className = 'fa-solid fa-eye-slash';
+  }
+
+  // Close modal on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeResetModal();
+  });
+</script>
 
 </body>
 </html>

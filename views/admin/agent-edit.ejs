@@ -84,17 +84,22 @@
           </div>
         </div>
 
-        <% if (!isEdit) { %>
-          <div class="form-group">
-            <label class="form-label" for="password">Initial Agent Password *</label>
-            <div style="position: relative;">
-              <input type="password" id="password" name="password" class="form-control" placeholder="Minimum 6 characters" required minlength="6" />
-              <button type="button" onclick="const p = document.getElementById('password'); p.type = p.type === 'password' ? 'text' : 'password';" style="position: absolute; right: 14px; top: 10px; background: none; border: none; color: var(--admin-text-muted); cursor: pointer;">
-                <i class="fa-solid fa-eye"></i>
-              </button>
-            </div>
+        <div class="form-group">
+          <label class="form-label" for="password">
+            <%= isEdit ? 'Change Agent Password (Optional)' : 'Initial Agent Password *' %>
+          </label>
+          <div style="position: relative;">
+            <input type="password" id="password" name="password" class="form-control" placeholder="<%= isEdit ? 'Leave blank to keep current password (min 6 chars to change)' : 'Minimum 6 characters' %>" <%= isEdit ? '' : 'required' %> minlength="6" />
+            <button type="button" onclick="const p = document.getElementById('password'); p.type = p.type === 'password' ? 'text' : 'password';" style="position: absolute; right: 14px; top: 10px; background: none; border: none; color: var(--admin-text-muted); cursor: pointer;" title="Toggle Password Visibility">
+              <i class="fa-solid fa-eye"></i>
+            </button>
           </div>
-        <% } %>
+          <% if (isEdit) { %>
+            <small style="color: var(--admin-text-muted); font-size: 0.78rem; display: block; margin-top: 4px;">
+              Enter a new password only if you wish to reset this partner agent's login key.
+            </small>
+          <% } %>
+        </div>
 
         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
           <div class="form-group">
