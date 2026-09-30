@@ -108,14 +108,119 @@ const agentController = {
       const agentId = req.agent.id;
       const candidates = Lead.all({ agent_id: agentId });
       const metrics = Lead.getMetrics(agentId);
+      const analytics = Lead.getAgentAnalytics(agentId);
+
+      // Fetch all notifications/updates for this agent
+      const allNotifications = Notification.all();
+      const agentNotifications = allNotifications.filter(n => 
+        n.agent_id === agentId || 
+        n.agent_id === null || 
+        (n.metadata && n.metadata.agent_id === agentId)
+      );
+
+      // System announcements & urgent trade quota updates
+      const systemNotices = [
+        {
+          id: 'notice-1',
+          type: 'urgent_quota',
+          title: '🔥 High-Demand Quota: 6G Welders & Riggers (Saudi NEOM)',
+          message: 'Client interview drive confirmed. Fast-track visa processing with free food, accommodation & overtime.',
+          date: 'Active Now',
+          priority: 'urgent',
+          badge: 'Fast Track'
+        },
+        {
+          id: 'notice-2',
+          type: 'gamca_update',
+          title: '📋 GAMCA Medical Validity Guidelines',
+          message: 'Ensure candidate passports have at least 8 months validity prior to medical slot booking to prevent GCC portal rejections.',
+          date: 'Advisory',
+          priority: 'high',
+          badge: 'Compliance'
+        },
+        {
+          id: 'notice-3',
+          type: 'embassy_update',
+          title: '✈️ Direct UAE & Qatar Embassy Stamping Operational',
+          message: 'Consulate document clearance turnaround now averaging 5-7 working days upon dossier submission.',
+          date: 'Operational',
+          priority: 'normal',
+          badge: 'Update'
+        }
+      ];
 
       res.render('agent/dashboard', {
-        title: `${req.agent.agency_name} | Agent Portal | NG Global`,
+        title: `${req.agent.agency_name} | Agent Intelligence Portal | NG Global`,
         agent: req.agent,
         candidates,
         metrics,
+        analytics,
+        notifications: agentNotifications,
+        systemNotices,
+        activeTab: req.query.tab || 'analytics',
         path: '/agent/dashboard'
       });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  // Export Candidates as CSV Spreadsheet
+  exportCandidatesCsv(req, res, next) {
+    try {
+      const agentId = req.agent.id;
+      const candidates = Lead.all({ agent_id: agentId });
+
+      const headers = [
+        'Candidate ID',
+        'Full Name',
+        'Phone',
+        'Trade',
+        'Destination',
+        'Experience',
+        'Passport No',
+        'GAMCA Status',
+        'Status',
+        'Lead Type',
+        'Dossier Compiled',
+        'Date Registered'
+      ];
+
+      const rows = candidates.map(c => [
+        `"NG-${c.id}"`,
+        `"${(c.full_name || '').replace(/"/g, '""')}"`,
+        `"${(c.phone || '').replace(/"/g, '""')}"`,
+        `"${(c.trade || '').replace(/"/g, '""')}"`,
+        `"${(c.destination || '').replace(/"/g, '""')}"`,
+        `"${(c.experience || '').replace(/"/g, '""')}"`,
+        `"${(c.passport_no || 'N/A').replace(/"/g, '""')}"`,
+        `"${(c.gamca_status || 'Pending').replace(/"/g, '""')}"`,
+        `"${(c.status || 'New').replace(/"/g, '""')}"`,
+        `"${(c.lead_type || 'confirmed_candidate').replace(/"/g, '""')}"`,
+        `"${c.merged_dossier_pdf ? 'Yes' : 'No'}"`,
+        `"${new Date(c.created_at).toLocaleDateString('en-GB')}"`
+      ]);
+
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const filename = `candidates_${req.agent.username}_${new Date().toISOString().slice(0, 10)}.csv`;
+
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.status(200).send(csvContent);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  // Mark Notification Read
+  markNotificationRead(req, res, next) {
+    try {
+      const { id } = req.params;
+      Notification.markAsRead(id);
+      if (req.xhr || req.headers.accept?.includes('json')) {
+        return res.json({ success: true, message: 'Notification marked as read.' });
+      }
+      res.redirect('/agent/dashboard?tab=updates');
     } catch (err) {
       next(err);
     }

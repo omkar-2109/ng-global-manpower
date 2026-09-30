@@ -3,19 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= typeof title !== 'undefined' ? title : 'New Candidate Intake | NG Global' %></title>
+  <title><%= typeof title !== 'undefined' ? title : 'New Candidate Intake & Dossier | NG Global' %></title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
 
   <!-- FontAwesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <!-- Admin Stylesheet -->
   <link rel="stylesheet" href="/css/admin.css" />
+
+  <style>
+    .step-pill-tracker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+    .step-pill-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--admin-text-muted);
+      white-space: nowrap;
+    }
+    .step-pill-item.active {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: rgba(212, 175, 55, 0.4);
+      color: var(--admin-gold);
+      font-weight: 700;
+    }
+    .step-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+    }
+    .step-pill-item.active .step-num {
+      background: var(--admin-gold);
+      color: #040D21;
+      font-weight: 800;
+    }
+    .upload-card-zone {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1.5px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.2s ease;
+    }
+    .upload-card-zone:hover {
+      border-color: var(--admin-gold);
+      background: rgba(212, 175, 55, 0.04);
+    }
+  </style>
 </head>
 <body class="admin-body">
 
@@ -23,13 +78,19 @@
   <header class="admin-navbar">
     <a href="/agent/dashboard" class="admin-nav-brand">
       <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Emblem" />
-      <span>NG GLOBAL <small style="font-weight: 500; color: var(--admin-gold); font-size: 0.8rem; margin-left: 6px;">AGENT PORTAL</small></span>
+      <span>NG GLOBAL <small style="font-weight: 700; color: var(--admin-gold); font-size: 0.8rem; margin-left: 6px;">AGENT INTELLIGENCE PORTAL</small></span>
     </a>
 
     <ul class="admin-nav-links">
       <li>
-        <a href="/agent/dashboard" class="admin-nav-link">
-          <i class="fa-solid fa-gauge-high"></i>
+        <a href="/agent/dashboard?tab=analytics" class="admin-nav-link">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Analytics &amp; Insights</span>
+        </a>
+      </li>
+      <li>
+        <a href="/agent/dashboard?tab=dossiers" class="admin-nav-link">
+          <i class="fa-solid fa-users"></i>
           <span>My Candidates</span>
         </a>
       </li>
@@ -40,15 +101,15 @@
         </a>
       </li>
       <li>
-        <a href="/agency/<%= agent.username %>" target="_blank" class="admin-nav-link">
+        <a href="<%= typeof getAgentLandingUrl === 'function' ? getAgentLandingUrl(agent.username) : ('/agency/' + agent.username) %>" target="_blank" class="admin-nav-link">
           <i class="fa-solid fa-globe"></i>
-          <span>My Public Landing URL</span>
+          <span>Public Page</span>
         </a>
       </li>
     </ul>
 
     <div class="admin-user-pill">
-      <span class="user-badge" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold); border: 1px solid rgba(212, 175, 55, 0.3);">
+      <span class="user-badge" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold); border: 1px solid rgba(212, 175, 55, 0.35);">
         <i class="fa-solid fa-certificate"></i> <%= agent.agency_name %>
       </span>
       <a href="/agent/logout" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
@@ -60,34 +121,58 @@
 
   <main class="admin-container">
 
+    <!-- Page Header -->
     <div class="admin-page-header">
       <div class="admin-page-title">
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
-          <a href="/agent/dashboard" style="color: var(--admin-text-muted); text-decoration: none; font-size: 0.9rem;">
-            &larr; Back to Candidates
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+          <a href="/agent/dashboard" style="color: var(--admin-cyan); text-decoration: none; font-size: 0.88rem;">
+            &larr; Return to Dashboard
           </a>
         </div>
-        <h1>Candidate Intake & Document Dossier Compilation</h1>
-        <p>Enter full candidate details and upload documents. All files will be automatically compressed, named after the candidate, and merged into a single master PDF.</p>
+        <h1 style="font-size: 1.65rem;">Candidate Intake &amp; Dossier Master PDF Compilation</h1>
+        <p>Register candidate details and attach verification credentials. Uploaded CVs, experience letters, and passport pages will be automatically compressed and compiled into a single consolidated dossier.</p>
+      </div>
+    </div>
+
+    <!-- Step Progress Tracker Visual -->
+    <div class="step-pill-tracker">
+      <div class="step-pill-item active">
+        <span class="step-num">1</span>
+        <span>Candidate Details</span>
+      </div>
+      <div class="step-pill-item active">
+        <span class="step-num">2</span>
+        <span>Trade &amp; Destination</span>
+      </div>
+      <div class="step-pill-item active">
+        <span class="step-num">3</span>
+        <span>Passport &amp; GAMCA</span>
+      </div>
+      <div class="step-pill-item active">
+        <span class="step-num">4</span>
+        <span>Auto-Compress &amp; PDF Merge</span>
       </div>
     </div>
 
     <% if (typeof error !== 'undefined' && error) { %>
-      <div class="admin-alert admin-alert-error" style="max-width: 900px; margin-bottom: 20px;">
+      <div class="admin-alert admin-alert-error" style="max-width: 950px; margin-bottom: 20px;">
         <i class="fa-solid fa-triangle-exclamation"></i>
         <span><%= error %></span>
       </div>
     <% } %>
 
-    <div style="max-width: 900px;">
-      <div class="card-panel">
+    <div style="max-width: 950px;">
+      <div class="card-panel" style="padding: 32px;">
         
         <form action="/agent/candidates" method="POST" enctype="multipart/form-data">
           
           <!-- Section 1: Candidate Personal Info -->
-          <h3 style="color: var(--admin-gold); font-size: 1.1rem; margin-top: 0; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-user"></i> 1. Candidate Personal Information
-          </h3>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 10px;">
+            <h3 style="color: var(--admin-gold); font-size: 1.15rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-user"></i> 1. Candidate Identity &amp; Contact
+            </h3>
+            <span style="font-size: 0.78rem; color: var(--admin-text-muted);">Required for official embassy records</span>
+          </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div class="form-group">
@@ -135,47 +220,53 @@
             </div>
           </div>
 
-          <hr style="border: 0; border-top: 1px solid var(--admin-border); margin: 28px 0;" />
+          <hr style="border: 0; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 30px 0 24px 0;" />
 
-          <!-- Section 2: Passport & Deployment Trade -->
-          <h3 style="color: var(--admin-gold); font-size: 1.1rem; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-passport"></i> 2. Trade & Passport Information
-          </h3>
+          <!-- Section 2: Passport & Trade -->
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 10px;">
+            <h3 style="color: var(--admin-gold); font-size: 1.15rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-passport"></i> 2. Trade &amp; Destination Country
+            </h3>
+            <span style="font-size: 0.78rem; color: var(--admin-text-muted);">Allocates candidate into respective country quota</span>
+          </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div class="form-group">
-              <label class="form-label" for="trade">Trade / Specialty Position *</label>
-              <input type="text" id="trade" name="trade" class="form-control" placeholder="e.g. 6G TIG Welder / Heavy Driver" required />
+              <label class="form-label" for="trade">Applied Trade / Position *</label>
+              <input type="text" id="trade" name="trade" class="form-control" placeholder="e.g. 6G TIG Welder, Heavy Driver, Electrician" required />
             </div>
 
             <div class="form-group">
-              <label class="form-label" for="destination">Target Destination Region</label>
+              <label class="form-label" for="destination">Target Country / Destination *</label>
               <select id="destination" name="destination" class="form-control" style="background: #081636;">
-                <option value="Singapore (Work Permit / E-Pass / S-Pass)">Singapore 🇸🇬 (Work Permit / E-Pass)</option>
-                <option value="Saudi Arabia">Saudi Arabia (KSA)</option>
-                <option value="United Arab Emirates (Dubai/Abu Dhabi)">UAE (Dubai / Abu Dhabi)</option>
-                <option value="Qatar">Qatar</option>
-                <option value="Kuwait">Kuwait</option>
-                <option value="Europe (Germany, Poland, Romania)">Europe (Germany, Poland, Romania)</option>
-                <option value="Any Gulf / GCC Country">Any GCC Country</option>
+                <option value="Saudi Arabia (NEOM)">🇸🇦 Saudi Arabia (NEOM / Riyadh / Jeddah)</option>
+                <option value="United Arab Emirates (Dubai)">🇦🇪 United Arab Emirates (Dubai / Abu Dhabi)</option>
+                <option value="Qatar (Doha)">🇶🇦 Qatar (Doha)</option>
+                <option value="Kuwait">🇰🇼 Kuwait</option>
+                <option value="Oman">🇴🇲 Oman</option>
+                <option value="Bahrain">🇧🇭 Bahrain</option>
+                <option value="Europe (Germany, Poland, Romania)">🇪🇺 Europe (Germany, Poland, Romania)</option>
+                <option value="Singapore & SE Asia">🇸🇬 Singapore &amp; SE Asia</option>
+                <option value="United States (H-2B)">🇺🇸 United States (H-2B)</option>
+                <option value="New Zealand & Aus">🇳🇿 New Zealand &amp; Australia</option>
               </select>
             </div>
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
             <div class="form-group">
-              <label class="form-label" for="experience">Total Experience</label>
+              <label class="form-label" for="experience">Overseas / Trade Experience</label>
               <select id="experience" name="experience" class="form-control" style="background: #081636;">
                 <option value="Fresher (No Overseas)">Fresher (India / Domestic Exp)</option>
                 <option value="1 to 2 Years">1 to 2 Years</option>
-                <option value="3 to 5 Years">3 to 5 Years</option>
+                <option value="3 to 5 Years" selected>3 to 5 Years</option>
                 <option value="5+ Years GCC Return">5+ Years GCC / Overseas Return</option>
               </select>
             </div>
 
             <div class="form-group">
               <label class="form-label" for="passport_no">Passport Number</label>
-              <input type="text" id="passport_no" name="passport_no" class="form-control" placeholder="e.g. Z1234567" style="text-transform: uppercase;" />
+              <input type="text" id="passport_no" name="passport_no" class="form-control" placeholder="e.g. Z1234567" style="text-transform: uppercase; font-family: 'Space Grotesk', monospace;" />
             </div>
 
             <div class="form-group">
@@ -184,93 +275,85 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label" for="gamca_status">GAMCA Medical Status</label>
-            <select id="gamca_status" name="gamca_status" class="form-control" style="background: #081636;">
-              <option value="Pending">Not Done / Pending GAMCA</option>
-              <option value="Appointment Booked">Appointment Booked</option>
-              <option value="Passed / Fit">Passed / Medically Fit Certificate Available</option>
-            </select>
-          </div>
-
-          <hr style="border: 0; border-top: 1px solid var(--admin-border); margin: 28px 0;" />
-
-          <!-- Section 3: Document Uploads & Compression / PDF Merge -->
-          <h3 style="color: var(--admin-gold); font-size: 1.1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-file-shield"></i> 3. Document Dossier Uploads (PDF or JPG)
-          </h3>
-          <p style="color: var(--admin-text-muted); font-size: 0.85rem; margin-bottom: 20px;">
-            Upload candidate files in PDF or JPG format. Images will be automatically compressed, files will be renamed after the candidate, and <strong>all documents will be automatically compiled into a single master PDF dossier</strong>.
-          </p>
-
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div class="form-group" style="background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 8px; border: 1px dashed var(--admin-border);">
-              <label class="form-label" for="passport_copy">
-                <i class="fa-solid fa-passport" style="color: var(--admin-gold); margin-right: 6px;"></i> Passport Copy (Front & Back)
-              </label>
-              <input type="file" id="passport_copy" name="passport_copy" class="form-control" accept=".pdf,.jpg,.jpeg,.png" multiple />
-              <small style="color: var(--admin-text-muted); font-size: 0.78rem;">PDF, JPG, or PNG (Select up to 2 files)</small>
+            <div class="form-group">
+              <label class="form-label" for="gamca_status">GAMCA Medical Examination Status</label>
+              <select id="gamca_status" name="gamca_status" class="form-control" style="background: #081636;">
+                <option value="Pending">Medical Slot Pending</option>
+                <option value="In-Process">Under Examination / Awaiting Slip</option>
+                <option value="Passed / Fit">Passed / Fit (GAMCA Slip Available)</option>
+                <option value="Unfit">Unfit</option>
+              </select>
             </div>
 
-            <div class="form-group" style="background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 8px; border: 1px dashed var(--admin-border);">
-              <label class="form-label" for="photo">
-                <i class="fa-solid fa-camera" style="color: var(--admin-cyan); margin-right: 6px;"></i> White-Background Photo
+            <div class="form-group">
+              <label class="form-label" for="notes">Agency Internal Notes / Candidate Readiness</label>
+              <input type="text" id="notes" name="notes" class="form-control" placeholder="e.g. Ready to pay visa advance, available on 3 days notice" />
+            </div>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 30px 0 24px 0;" />
+
+          <!-- Section 3: Document Dossier Uploads -->
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 10px;">
+            <h3 style="color: var(--admin-gold); font-size: 1.15rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-folder-tree"></i> 3. Document Dossier Uploads (Multi-Page PDF &amp; JPG)
+            </h3>
+            <span style="font-size: 0.78rem; color: #34d399; font-weight: 600;">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Automatic Compression &amp; Merge Enabled
+            </span>
+          </div>
+
+          <div style="background: rgba(56, 189, 248, 0.06); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; font-size: 0.85rem; color: #cbd5e1;">
+            <i class="fa-solid fa-shield-check" style="color: var(--admin-cyan); margin-right: 6px;"></i>
+            <strong>Consolidated Embassy Dossier Engine:</strong> All uploaded files (PDF, JPG, PNG) will be named after candidate <code>[Candidate_Name]_[DocType].ext</code>, compressed for fast embassy portal uploading, and compiled into a single master PDF ready for client interviews.
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            
+            <div class="upload-card-zone">
+              <label class="form-label" for="cv" style="color: #fff; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-file-lines" style="color: var(--admin-gold);"></i> 1. Candidate Bio-Data / CV *
+              </label>
+              <input type="file" id="cv" name="cv" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+              <small style="color: var(--admin-text-muted); font-size: 0.75rem; display: block; margin-top: 4px;">PDF or Image of updated resume</small>
+            </div>
+
+            <div class="upload-card-zone">
+              <label class="form-label" for="passport_file" style="color: #fff; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-passport" style="color: var(--admin-cyan);"></i> 2. Passport Copy (Front &amp; Address Page)
+              </label>
+              <input type="file" id="passport_file" name="passport_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
+              <small style="color: var(--admin-text-muted); font-size: 0.75rem; display: block; margin-top: 4px;">Clear scanned copy of bio pages</small>
+            </div>
+
+            <div class="upload-card-zone">
+              <label class="form-label" for="experience_cert" style="color: #fff; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-award" style="color: #34d399;"></i> 3. Experience &amp; Trade Certificate
+              </label>
+              <input type="file" id="experience_cert" name="experience_cert" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
+              <small style="color: var(--admin-text-muted); font-size: 0.75rem; display: block; margin-top: 4px;">GCC trade test, weld 6G card, or heavy license</small>
+            </div>
+
+            <div class="upload-card-zone">
+              <label class="form-label" for="photo" style="color: #fff; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-camera" style="color: #c084fc;"></i> 4. Candidate Studio Photo (White Background)
               </label>
               <input type="file" id="photo" name="photo" class="form-control" accept=".jpg,.jpeg,.png" />
-              <small style="color: var(--admin-text-muted); font-size: 0.78rem;">Passport size studio photograph</small>
+              <small style="color: var(--admin-text-muted); font-size: 0.75rem; display: block; margin-top: 4px;">Passport size photo (white background)</small>
             </div>
+
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
-            <div class="form-group" style="background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 8px; border: 1px dashed var(--admin-border);">
-              <label class="form-label" for="resume">
-                <i class="fa-solid fa-file-lines" style="color: #60a5fa; margin-right: 6px;"></i> Candidate Bio-Data / Resume
-              </label>
-              <input type="file" id="resume" name="resume" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
-              <small style="color: var(--admin-text-muted); font-size: 0.78rem;">PDF or image resume</small>
-            </div>
-
-            <div class="form-group" style="background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 8px; border: 1px dashed var(--admin-border);">
-              <label class="form-label" for="certificates">
-                <i class="fa-solid fa-award" style="color: #34d399; margin-right: 6px;"></i> Trade Test / Experience Certificates
-              </label>
-              <input type="file" id="certificates" name="certificates" class="form-control" accept=".pdf,.jpg,.jpeg,.png" multiple />
-              <small style="color: var(--admin-text-muted); font-size: 0.78rem;">Trade certificates, diploma, GCC experience</small>
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
-            <div class="form-group" style="background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 8px; border: 1px dashed var(--admin-border);">
-              <label class="form-label" for="driving_license">
-                <i class="fa-solid fa-id-card" style="color: #f59e0b; margin-right: 6px;"></i> Driving License (Indian or GCC)
-              </label>
-              <input type="file" id="driving_license" name="driving_license" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
-              <small style="color: var(--admin-text-muted); font-size: 0.78rem;">Optional for non-driving trades</small>
-            </div>
-
-            <div class="form-group" style="background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 8px; border: 1px dashed var(--admin-border);">
-              <label class="form-label" for="medical_report">
-                <i class="fa-solid fa-file-waveform" style="color: #ec4899; margin-right: 6px;"></i> GAMCA Medical Fitness Report
-              </label>
-              <input type="file" id="medical_report" name="medical_report" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
-              <small style="color: var(--admin-text-muted); font-size: 0.78rem;">Optional if medical is pending</small>
-            </div>
-          </div>
-
-          <div class="form-group" style="margin-top: 18px;">
-            <label class="form-label" for="notes">Partner Agent Remarks / Interview Notes</label>
-            <textarea id="notes" name="notes" rows="3" class="form-control" placeholder="Candidate's current availability, trade test evaluation remarks, salary expectations..."></textarea>
-          </div>
-
-          <div style="display: flex; gap: 14px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--admin-border);">
-            <button type="submit" class="btn-admin btn-admin-primary" style="padding: 12px 28px;">
-              <i class="fa-solid fa-file-circle-check"></i>
-              <span>Submit Dossier & Compile Master PDF</span>
-            </button>
-
-            <a href="/agent/dashboard" class="btn-admin btn-admin-secondary" style="padding: 12px 20px;">
-              Cancel
+          <div style="margin-top: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <a href="/agent/dashboard" class="btn-admin btn-admin-secondary" style="padding: 12px 24px;">
+              <i class="fa-solid fa-xmark"></i> Cancel
             </a>
+
+            <button type="submit" class="btn-admin btn-admin-primary" style="padding: 14px 32px; font-size: 1rem; border-radius: 12px;">
+              <i class="fa-solid fa-file-circle-check"></i>
+              <span>Save Candidate &amp; Compile Master Dossier</span>
+            </button>
           </div>
 
         </form>

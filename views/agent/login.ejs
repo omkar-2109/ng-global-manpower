@@ -3,44 +3,82 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= typeof title !== 'undefined' ? title : 'Agent Partner Portal | NG Global Manpower' %></title>
+  <title><%= typeof title !== 'undefined' ? title : 'Recruitment Partner Agent Portal | NG Global' %></title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤝</text></svg>" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
 
   <!-- FontAwesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <!-- Admin & Portal Stylesheet -->
   <link rel="stylesheet" href="/css/admin.css" />
-</head>
-<body class="admin-body" style="justify-content: center; align-items: center; background: radial-gradient(circle at 50% 20%, #061e3b 0%, #020b18 50%, #01040a 100%);">
 
-  <div style="max-width: 460px; width: 100%; padding: 24px;">
+  <style>
+    .login-ambient-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at 50% 15%, #082142 0%, #030b1a 45%, #01040a 100%);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-ambient-wrapper::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .login-glass-card {
+      background: rgba(12, 30, 66, 0.55);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1.5px solid rgba(212, 175, 55, 0.35);
+      border-radius: 20px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 460px;
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <div class="login-ambient-wrapper">
     
-    <!-- Brand Emblem -->
-    <div style="text-align: center; margin-bottom: 28px;">
+    <!-- Brand Header -->
+    <div style="text-align: center; margin-bottom: 24px; position: relative; z-index: 2;">
       <a href="/" style="display: inline-block; text-decoration: none;">
-        <div style="width: 58px; height: 58px; margin: 0 auto 14px auto; background: rgba(255, 255, 255, 0.08); border: 1.5px solid var(--admin-gold); padding: 5px; border-radius: 18px; box-shadow: 0 4px 24px rgba(212, 175, 55, 0.35);">
+        <div style="width: 64px; height: 64px; margin: 0 auto 14px auto; background: rgba(255, 255, 255, 0.08); border: 2px solid var(--admin-gold); padding: 6px; border-radius: 20px; box-shadow: 0 8px 30px rgba(212, 175, 55, 0.35); transition: transform 0.3s ease;">
           <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Logo" style="width: 100%; height: 100%; object-fit: contain;" />
         </div>
-        <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.35rem; color: #fff; margin: 0; font-weight: 800; letter-spacing: -0.01em;">
-          NG GLOBAL <span style="color: var(--admin-gold); font-weight: 600;">AGENT PORTAL</span>
+        <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.45rem; color: #fff; margin: 0; font-weight: 800; letter-spacing: -0.01em;">
+          NG GLOBAL <span style="color: var(--admin-gold); font-weight: 700;">AGENT PORTAL</span>
         </h1>
       </a>
-      <p style="color: var(--admin-text-muted); font-size: 0.88rem; margin-top: 6px;">
+      <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-top: 6px;">
         Authorized Overseas Recruitment Partner Network
       </p>
     </div>
 
-    <!-- Login Box -->
-    <div class="card-panel" style="border: 1.5px solid rgba(212, 175, 55, 0.4); box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65);">
+    <!-- Login Glassmorphic Card -->
+    <div class="login-glass-card">
       
       <% if (typeof error !== 'undefined' && error) { %>
-        <div class="admin-alert admin-alert-error" style="margin-bottom: 18px;">
+        <div class="admin-alert admin-alert-error" style="margin-bottom: 20px;">
           <i class="fa-solid fa-triangle-exclamation"></i>
           <span><%= error %></span>
         </div>
@@ -49,46 +87,61 @@
       <form action="/agent/login" method="POST">
         <input type="hidden" name="redirect" value="<%= typeof redirect !== 'undefined' ? redirect : '/agent/dashboard' %>" />
 
-        <div class="form-group">
-          <label class="form-label" for="identifier">Agent Email or Subdomain Handle</label>
+        <div class="form-group" style="margin-bottom: 18px;">
+          <label class="form-label" for="identifier" style="font-size: 0.88rem; font-weight: 600;">
+            Agent Handle or Registered Email
+          </label>
           <div style="position: relative;">
-            <input type="text" id="identifier" name="identifier" class="form-control" placeholder="e.g. apex-global or agent@agency.in" required autofocus />
-            <i class="fa-solid fa-id-card" style="position: absolute; right: 14px; top: 13px; color: var(--admin-text-muted);"></i>
+            <input type="text" id="identifier" name="identifier" class="form-control" placeholder="e.g. apex-global or vikram@apexrecruitment.in" required autofocus style="padding-left: 42px;" />
+            <i class="fa-solid fa-id-badge" style="position: absolute; left: 14px; top: 13px; color: var(--admin-gold);"></i>
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="password">Password</label>
+        <div class="form-group" style="margin-bottom: 22px;">
+          <label class="form-label" for="password" style="font-size: 0.88rem; font-weight: 600;">
+            Partner Access Password
+          </label>
           <div style="position: relative;">
-            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••••••" required />
-            <button type="button" onclick="const p = document.getElementById('password'); p.type = p.type === 'password' ? 'text' : 'password';" style="position: absolute; right: 14px; top: 10px; background: none; border: none; color: var(--admin-text-muted); cursor: pointer;">
+            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••••••" required style="padding-left: 42px; padding-right: 42px;" />
+            <i class="fa-solid fa-key" style="position: absolute; left: 14px; top: 13px; color: var(--admin-gold);"></i>
+            <button type="button" onclick="const p = document.getElementById('password'); p.type = p.type === 'password' ? 'text' : 'password';" style="position: absolute; right: 14px; top: 10px; background: none; border: none; color: var(--admin-text-muted); cursor: pointer;" aria-label="Toggle password view">
               <i class="fa-solid fa-eye"></i>
             </button>
           </div>
         </div>
 
-        <button type="submit" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem; margin-top: 10px;">
+        <button type="submit" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 13px; font-size: 1rem; border-radius: 10px;">
           <i class="fa-solid fa-right-to-bracket"></i>
-          <span>Sign In to Agent Portal</span>
+          <span>Access Command Center</span>
         </button>
       </form>
 
-      <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--admin-border); text-align: center;">
-        <p style="font-size: 0.8rem; color: var(--admin-text-muted); margin: 0;">
-          <i class="fa-solid fa-shield-halved" style="color: var(--admin-gold); margin-right: 4px;"></i> Ministry Regulated Partner Access
+      <!-- Demo Partner Credentials Hint -->
+      <div style="margin-top: 20px; padding: 10px 14px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 10px; font-size: 0.82rem; color: #cbd5e1; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <span style="color: var(--admin-cyan); font-weight: 600;"><i class="fa-solid fa-key"></i> Registered Partner:</span>
+          <code style="background: rgba(0, 0, 0, 0.4); padding: 2px 6px; border-radius: 4px; color: #fff; margin-left: 4px;">apex-global</code>
+        </div>
+        <span style="color: var(--admin-text-muted); font-size: 0.76rem;">Default partner agency</span>
+      </div>
+
+      <div style="margin-top: 22px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08); text-align: center;">
+        <p style="font-size: 0.8rem; color: var(--admin-text-muted); margin: 0; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <i class="fa-solid fa-shield-halved" style="color: #34d399;"></i>
+          <span>Encrypted Session &bull; Ministry Regulated Overseas Quotas</span>
         </p>
       </div>
 
     </div>
 
-    <!-- Quick Return Link -->
-    <div style="text-align: center; margin-top: 16px;">
+    <!-- Quick Navigation Links -->
+    <div style="text-align: center; margin-top: 20px; position: relative; z-index: 2;">
       <a href="/" style="color: var(--admin-text-muted); text-decoration: none; font-size: 0.88rem; transition: color 0.2s;">
-        &larr; Back to Public Portal
+        <i class="fa-solid fa-arrow-left"></i> Back to Public Platform
       </a>
-      <span style="color: var(--admin-border); margin: 0 10px;">|</span>
-      <a href="/admin/login" style="color: var(--admin-text-muted); text-decoration: none; font-size: 0.88rem;">
-        Staff Command Center &rarr;
+      <span style="color: rgba(255, 255, 255, 0.2); margin: 0 12px;">|</span>
+      <a href="/admin/login" style="color: var(--admin-gold); text-decoration: none; font-size: 0.88rem; font-weight: 600;">
+        <i class="fa-solid fa-user-shield"></i> HR Staff Command Center
       </a>
     </div>
 

@@ -122,6 +122,20 @@ app.use((req, res, next) => {
   next();
 });
 
+const keepAliveService = require('./src/services/keepAliveService');
+
+// 6.5. Health Check & Ping Endpoints for Render Keep-Alive & External Uptime Monitors
+app.get(['/health', '/ping', '/api/v1/health', '/api/v1/ping'], (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    uptime: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+    service: env.appName,
+    environment: env.nodeEnv,
+    keepAlive: keepAliveService.getStatus()
+  });
+});
+
 // 7. Mount Application Routes
 app.use('/', webRoutes);
 app.use('/auth', authRoutes);
@@ -146,6 +160,9 @@ const server = app.listen(env.port, () => {
   console.log(`🛡️ Admin Portal: ${env.appUrl}/admin/login (Strict HR Credentials)`);
   console.log(`🤝 Agent Portal: ${env.appUrl}/agent/login (Subdomain: agents.url)`);
   console.log(`=======================================================`);
+
+  // Start Render 24/7 Keep-Alive Background Service
+  keepAliveService.start();
 });
 
 module.exports = { app, server };

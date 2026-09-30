@@ -6,6 +6,10 @@ const generalLimiter = rateLimit({
   max: 300, // Limit each IP to 300 requests per 15 minutes
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    const p = req.path || '';
+    return p === '/health' || p === '/ping' || p === '/api/v1/health' || p === '/api/v1/ping';
+  },
   message: {
     success: false,
     message: 'Too many requests from this IP, please try again after 15 minutes.'

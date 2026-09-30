@@ -14,9 +14,12 @@ router.post('/logout', agentController.logout);
 // Protected Agent routes
 router.get('/', (req, res) => res.redirect('/agent/dashboard'));
 router.get('/dashboard', requireAgentAuth, agentController.showDashboard);
+router.get('/candidates/export', requireAgentAuth, agentController.exportCandidatesCsv);
 router.get('/candidates/new', requireAgentAuth, agentController.showCandidateForm);
 router.post('/candidates', requireAgentAuth, documentService.uploadFields, agentController.createCandidate);
 router.get('/candidates/:id', requireAgentAuth, agentController.showCandidateDetail);
 router.post('/candidates/:id/status', requireAgentAuth, agentController.updateCandidateStatus);
+router.post('/notifications/:id/read', requireAgentAuth, agentController.markNotificationRead);
+router.get('/notifications/:id/read', requireAgentAuth, agentController.markNotificationRead);
 
 module.exports = router;

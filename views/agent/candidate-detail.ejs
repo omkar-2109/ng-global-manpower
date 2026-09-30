@@ -9,13 +9,80 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
 
   <!-- FontAwesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <!-- Admin Stylesheet -->
   <link rel="stylesheet" href="/css/admin.css" />
+
+  <style>
+    /* 5-Stage Recruitment Progress Timeline */
+    .timeline-stepper {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 20px 0 28px 0;
+      padding: 0 10px;
+    }
+    .timeline-stepper::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      right: 30px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      z-index: 1;
+    }
+    .timeline-step {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      flex: 1;
+    }
+    .timeline-node {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #040D21;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      color: var(--admin-text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px auto;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    .timeline-step.completed .timeline-node {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10B981;
+      color: #34D399;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.35);
+    }
+    .timeline-step.active .timeline-node {
+      background: rgba(212, 175, 55, 0.25);
+      border-color: var(--admin-gold);
+      color: var(--admin-gold);
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.45);
+    }
+    .timeline-step.backed-out .timeline-node {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: var(--admin-rose);
+      color: #fb7185;
+    }
+    .timeline-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--admin-text-muted);
+    }
+    .timeline-step.completed .timeline-label,
+    .timeline-step.active .timeline-label {
+      color: #fff;
+    }
+  </style>
 </head>
 <body class="admin-body">
 
@@ -23,13 +90,19 @@
   <header class="admin-navbar">
     <a href="/agent/dashboard" class="admin-nav-brand">
       <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Emblem" />
-      <span>NG GLOBAL <small style="font-weight: 500; color: var(--admin-gold); font-size: 0.8rem; margin-left: 6px;">AGENT PORTAL</small></span>
+      <span>NG GLOBAL <small style="font-weight: 700; color: var(--admin-gold); font-size: 0.8rem; margin-left: 6px;">AGENT INTELLIGENCE PORTAL</small></span>
     </a>
 
     <ul class="admin-nav-links">
       <li>
-        <a href="/agent/dashboard" class="admin-nav-link active">
-          <i class="fa-solid fa-gauge-high"></i>
+        <a href="/agent/dashboard?tab=analytics" class="admin-nav-link">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Analytics &amp; Insights</span>
+        </a>
+      </li>
+      <li>
+        <a href="/agent/dashboard?tab=dossiers" class="admin-nav-link active">
+          <i class="fa-solid fa-users"></i>
           <span>My Candidates</span>
         </a>
       </li>
@@ -39,16 +112,10 @@
           <span>New Intake</span>
         </a>
       </li>
-      <li>
-        <a href="/agency/<%= agent.username %>" target="_blank" class="admin-nav-link">
-          <i class="fa-solid fa-globe"></i>
-          <span>My Public Landing URL</span>
-        </a>
-      </li>
     </ul>
 
     <div class="admin-user-pill">
-      <span class="user-badge" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold); border: 1px solid rgba(212, 175, 55, 0.3);">
+      <span class="user-badge" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold); border: 1px solid rgba(212, 175, 55, 0.35);">
         <i class="fa-solid fa-certificate"></i> <%= agent.agency_name %>
       </span>
       <a href="/agent/logout" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
@@ -63,17 +130,17 @@
     <div class="admin-page-header">
       <div class="admin-page-title">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
-          <a href="/agent/dashboard" style="color: var(--admin-text-muted); text-decoration: none; font-size: 0.9rem;">
-            &larr; Back to Candidates
+          <a href="/agent/dashboard?tab=dossiers" style="color: var(--admin-cyan); text-decoration: none; font-size: 0.9rem;">
+            &larr; Return to Candidate Roster
           </a>
         </div>
-        <h1>Candidate Dossier: <%= candidate.full_name %></h1>
+        <h1 style="font-size: 1.7rem;">Candidate Dossier: <%= candidate.full_name %></h1>
         <p>Overseas recruitment dossier with compressed documents and consolidated Master PDF.</p>
       </div>
 
       <% if (candidate.merged_dossier_pdf) { %>
         <div>
-          <a href="<%= candidate.merged_dossier_pdf %>" target="_blank" class="btn-admin btn-admin-primary" style="padding: 10px 20px;">
+          <a href="<%= candidate.merged_dossier_pdf %>" target="_blank" class="btn-admin btn-admin-primary" style="padding: 12px 22px; font-size: 0.92rem;">
             <i class="fa-solid fa-file-pdf"></i>
             <span>Download Master Dossier PDF</span>
           </a>
@@ -81,10 +148,11 @@
       <% } %>
     </div>
 
+    <!-- Alerts -->
     <% if (typeof created !== 'undefined' && created) { %>
       <div class="admin-alert admin-alert-success" style="margin-bottom: 24px;">
         <i class="fa-solid fa-circle-check"></i>
-        <span>Candidate intake submitted successfully! Documents have been compressed, sorted (CV &rarr; Experience &rarr; Passport &rarr; Pic), and compiled into the master dossier PDF.</span>
+        <span>Candidate intake submitted successfully! Documents have been compressed and compiled into the master dossier PDF.</span>
       </div>
     <% } %>
 
@@ -110,6 +178,57 @@
       </div>
     <% } %>
 
+    <!-- 5-Stage Recruitment Progress Timeline -->
+    <% 
+      const s = (candidate.status || 'New').toLowerCase();
+      const isBackedOut = s === 'backed out';
+      const step1Done = true;
+      const step2Done = ['confirmed', 'in-progress', 'placed'].includes(s);
+      const step3Done = ['in-progress', 'placed'].includes(s) && ((candidate.gamca_status || '').toLowerCase().includes('pass') || (candidate.gamca_status || '').toLowerCase().includes('fit'));
+      const step4Done = s === 'in-progress' || s === 'placed';
+      const step5Done = s === 'placed';
+    %>
+    <div class="card-panel" style="margin-bottom: 24px; padding: 20px 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 0.85rem; font-weight: 700; color: var(--admin-gold); text-transform: uppercase; letter-spacing: 0.05em;">
+          <i class="fa-solid fa-bars-progress"></i> Overseas Mobilization Track
+        </span>
+        <span class="status-badge <%= candidate.status === 'Placed' ? 'placed' : (candidate.status === 'Backed Out' ? 'error' : (candidate.status === 'In-Progress' ? 'in-progress' : 'contacted')) %>">
+          <%= candidate.status %>
+        </span>
+      </div>
+
+      <div class="timeline-stepper">
+        <div class="timeline-step <%= step1Done ? 'completed' : '' %>">
+          <div class="timeline-node"><i class="fa-solid fa-file-signature"></i></div>
+          <div class="timeline-label">1. Intake Received</div>
+        </div>
+
+        <div class="timeline-step <%= step2Done ? 'completed' : (s === 'new' ? 'active' : '') %>">
+          <div class="timeline-node"><i class="fa-solid fa-folder-check"></i></div>
+          <div class="timeline-label">2. Dossier Verified</div>
+        </div>
+
+        <div class="timeline-step <%= step3Done ? 'completed' : (s === 'confirmed' ? 'active' : '') %>">
+          <div class="timeline-node"><i class="fa-solid fa-heart-pulse"></i></div>
+          <div class="timeline-label">3. GAMCA Medical</div>
+        </div>
+
+        <div class="timeline-step <%= step4Done ? (step5Done ? 'completed' : 'active') : '' %>">
+          <div class="timeline-node"><i class="fa-solid fa-passport"></i></div>
+          <div class="timeline-label">4. Visa Stamping</div>
+        </div>
+
+        <div class="timeline-step <%= isBackedOut ? 'backed-out' : (step5Done ? 'completed' : '') %>">
+          <div class="timeline-node">
+            <i class="fa-solid <%= isBackedOut ? 'fa-user-xmark' : 'fa-plane-departure' %>"></i>
+          </div>
+          <div class="timeline-label"><%= isBackedOut ? 'Backed Out' : '5. Deployed' %></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
       
       <!-- Left Column: Details & Documents -->
@@ -118,7 +237,7 @@
         <!-- Candidate Profile Card -->
         <div class="card-panel" style="margin-bottom: 24px;">
           <h2 style="font-size: 1.15rem; color: #fff; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 12px;">
-            <i class="fa-solid fa-id-card-clip" style="color: var(--admin-gold); margin-right: 6px;"></i> Candidate Identification
+            <i class="fa-solid fa-id-card-clip" style="color: var(--admin-gold); margin-right: 6px;"></i> Candidate Identification &amp; Credentials
           </h2>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 0.9rem;">
@@ -138,68 +257,74 @@
             </div>
 
             <div>
+              <span style="color: var(--admin-text-muted); display: block;">WhatsApp</span>
+              <strong style="color: #34d399;"><%= candidate.whatsapp || candidate.phone %></strong>
+            </div>
+
+            <div>
+              <span style="color: var(--admin-text-muted); display: block;">Target Destination</span>
+              <strong style="color: #fff;"><%= candidate.destination %></strong>
+            </div>
+
+            <div>
+              <span style="color: var(--admin-text-muted); display: block;">Experience</span>
+              <strong style="color: #fff;"><%= candidate.experience || 'Not Specified' %></strong>
+            </div>
+
+            <div>
               <span style="color: var(--admin-text-muted); display: block;">Passport Number</span>
-              <strong style="font-family: monospace; color: var(--admin-gold);"><%= candidate.passport_no || 'Not Provided' %></strong>
+              <strong style="color: var(--admin-gold); font-family: 'Space Grotesk', monospace;"><%= candidate.passport_no || 'Not Provided' %></strong>
             </div>
 
             <div>
               <span style="color: var(--admin-text-muted); display: block;">Passport Expiry</span>
-              <span style="color: #e2e8f0;"><%= candidate.passport_expiry || 'N/A' %></span>
-            </div>
-
-            <div>
-              <span style="color: var(--admin-text-muted); display: block;">Date of Birth</span>
-              <span style="color: #e2e8f0;"><%= candidate.dob || 'N/A' %></span>
-            </div>
-
-            <div>
-              <span style="color: var(--admin-text-muted); display: block;">Location</span>
-              <span style="color: #e2e8f0;"><%= [candidate.city, candidate.state, candidate.nationality].filter(Boolean).join(', ') %></span>
+              <strong style="color: #fff;"><%= candidate.passport_expiry ? new Date(candidate.passport_expiry).toLocaleDateString('en-GB') : 'N/A' %></strong>
             </div>
 
             <div>
               <span style="color: var(--admin-text-muted); display: block;">GAMCA Medical Status</span>
-              <span style="color: <%= candidate.gamca_status === 'Passed / Fit' ? '#34d399' : 'var(--admin-gold)' %>; font-weight: 600;">
+              <span style="font-weight: 700; color: <%= (candidate.gamca_status === 'Passed / Fit') ? '#34d399' : '#e2e8f0' %>;">
                 <%= candidate.gamca_status || 'Pending' %>
               </span>
+            </div>
+
+            <div>
+              <span style="color: var(--admin-text-muted); display: block;">City &amp; State</span>
+              <strong style="color: #fff;"><%= [candidate.city, candidate.state, candidate.nationality].filter(Boolean).join(', ') %></strong>
             </div>
           </div>
 
           <% if (candidate.notes) { %>
             <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--admin-border);">
-              <span style="color: var(--admin-text-muted); font-size: 0.85rem; display: block;">Partner Remarks</span>
-              <p style="color: #cbd5e1; font-size: 0.9rem; margin: 4px 0 0 0;"><%= candidate.notes %></p>
+              <span style="color: var(--admin-text-muted); display: block; font-size: 0.8rem; text-transform: uppercase;">Intake Notes &amp; History:</span>
+              <p style="margin: 4px 0 0 0; color: #cbd5e1; font-size: 0.88rem; white-space: pre-wrap;"><%= candidate.notes %></p>
             </div>
           <% } %>
         </div>
 
-        <!-- Compiled Documents Section -->
+        <!-- Documents Dossier Card -->
         <div class="card-panel">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--admin-border); padding-bottom: 12px;">
             <h2 style="font-size: 1.15rem; color: #fff; margin: 0;">
-              <i class="fa-solid fa-folder-tree" style="color: var(--admin-gold); margin-right: 6px;"></i> Uploaded Documents (<%= (candidate.documents || []).length %> files)
+              <i class="fa-solid fa-folder-open" style="color: var(--admin-cyan); margin-right: 6px;"></i> Attached Document Files
             </h2>
-            
-            <% if (candidate.merged_dossier_pdf) { %>
-              <a href="<%= candidate.merged_dossier_pdf %>" target="_blank" style="color: #34d399; font-size: 0.85rem; text-decoration: none; font-weight: 600;">
-                <i class="fa-solid fa-file-pdf"></i> Open Merged PDF &rarr;
-              </a>
-            <% } %>
+            <span style="font-size: 0.8rem; color: var(--admin-text-muted);">
+              <%= (candidate.documents || []).length %> Attached Files
+            </span>
           </div>
 
           <% if (candidate.documents && candidate.documents.length > 0) { %>
             <div style="display: flex; flex-direction: column; gap: 10px;">
-              <% candidate.documents.forEach(doc => { %>
-                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--admin-border);">
-                  <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="font-size: 1.4rem; color: <%= doc.mime === 'application/pdf' ? '#ef4444' : '#38bdf8' %>;">
-                      <i class="fa-solid <%= doc.mime === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image' %>"></i>
-                    </div>
+              <% candidate.documents.forEach((doc, idx) => { %>
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); border: 1px solid var(--admin-border); border-radius: 8px; padding: 10px 14px;">
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid <%= doc.mimetype === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image' %>" style="color: var(--admin-gold); font-size: 1.2rem;"></i>
                     <div>
-                      <div style="color: #fff; font-weight: 600; font-size: 0.9rem;"><%= doc.filename %></div>
+                      <div style="font-size: 0.9rem; font-weight: 600; color: #fff;">
+                        <%= doc.originalName || doc.filename %>
+                      </div>
                       <small style="color: var(--admin-text-muted); font-size: 0.78rem;">
-                        Type: <span style="text-transform: capitalize;"><%= doc.type.replace(/_/g, ' ') %></span> &bull; 
-                        Size: <%= Math.round(doc.size / 1024) %> KB (Optimized)
+                        Type: <span style="text-transform: capitalize;"><%= doc.type ? doc.type.replace(/_/g, ' ') : 'General' %></span>
                       </small>
                     </div>
                   </div>
@@ -242,7 +367,7 @@
               <span>Download Master Dossier</span>
             </a>
             <div style="font-size: 0.75rem; color: var(--admin-text-muted); text-align: center; margin-top: 10px;">
-              Ready for Embassy, Client Interview & Visa Stamping
+              Ready for Embassy, Client Interview &amp; Visa Stamping
             </div>
           <% } else { %>
             <div style="text-align: center; color: var(--admin-text-muted); font-size: 0.85rem; padding: 10px;">
@@ -254,19 +379,16 @@
         <!-- Candidate Pipeline Status & Backout Actions -->
         <div class="card-panel" style="margin-top: 20px; border: 1.5px solid <%= candidate.status === 'Backed Out' ? '#ef4444' : 'var(--admin-border-gold)' %>;">
           <h4 style="color: #fff; margin-top: 0; margin-bottom: 12px; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center;">
-            <span><i class="fa-solid fa-arrows-spin" style="color: var(--admin-gold); margin-right: 6px;"></i> Candidate Status</span>
-            <span class="status-badge <%= candidate.status === 'Placed' ? 'placed' : (candidate.status === 'Backed Out' ? 'error' : (candidate.status === 'In-Progress' ? 'in-progress' : 'new')) %>">
-              <%= candidate.status %>
-            </span>
+            <span><i class="fa-solid fa-arrows-spin" style="color: var(--admin-gold); margin-right: 6px;"></i> Update Candidate Stage</span>
           </h4>
 
           <form action="/agent/candidates/<%= candidate.id %>/status" method="POST" id="agentStatusForm">
             <div class="form-group">
-              <label class="form-label" for="agent_status_select" style="font-size: 0.8rem;">Update Stage</label>
+              <label class="form-label" for="agent_status_select" style="font-size: 0.8rem;">Recruitment Stage</label>
               <select name="status" id="agent_status_select" class="form-control" style="background: #081636;" onchange="handleAgentStatusChange(this.value)">
-                <option value="Confirmed" <%= candidate.status === 'Confirmed' ? 'selected' : '' %>>Confirmed (Ready to Pay & Mobilize)</option>
+                <option value="Confirmed" <%= candidate.status === 'Confirmed' ? 'selected' : '' %>>Confirmed (Ready to Pay &amp; Mobilize)</option>
                 <option value="In-Progress" <%= candidate.status === 'In-Progress' ? 'selected' : '' %>>In-Progress (Trade / GAMCA / Embassy)</option>
-                <option value="Placed" <%= candidate.status === 'Placed' ? 'selected' : '' %>>Placed (Visa Issued & Deployed)</option>
+                <option value="Placed" <%= candidate.status === 'Placed' ? 'selected' : '' %>>Placed (Visa Issued &amp; Deployed)</option>
                 <option value="Backed Out" <%= candidate.status === 'Backed Out' ? 'selected' : '' %>>🚨 Backed Out (Candidate Withdrawn)</option>
               </select>
             </div>
@@ -276,18 +398,18 @@
               <label class="form-label" for="reason" style="color: #fca5a5; font-size: 0.82rem;">
                 <i class="fa-solid fa-triangle-exclamation"></i> Reason for Backout (Admin Alert) *
               </label>
-              <textarea name="reason" id="backout_reason" class="form-control" rows="2" placeholder="e.g. Candidate accepted another job in local factory / Family refused overseas travel / Financial shortage..."><%= candidate.backout_reason || '' %></textarea>
+              <textarea name="reason" id="backout_reason" class="form-control" rows="2" placeholder="e.g. Candidate accepted another job / Family refused overseas travel..."><%= candidate.backout_reason || '' %></textarea>
               <small style="color: #f87171; font-size: 0.74rem;">NG Global Admin will be notified immediately upon submission.</small>
             </div>
 
             <div class="form-group">
-              <label class="form-label" for="agent_notes" style="font-size: 0.8rem;">Agent Notes</label>
+              <label class="form-label" for="agent_notes" style="font-size: 0.8rem;">Agent Notes / Status Update</label>
               <textarea name="notes" id="agent_notes" class="form-control" rows="2" placeholder="Interview remarks, client feedback..."></textarea>
             </div>
 
             <button type="submit" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.88rem;">
               <i class="fa-solid fa-floppy-disk"></i>
-              <span>Save Status & Notify Admin</span>
+              <span>Save Status &amp; Notify Admin</span>
             </button>
           </form>
 
@@ -310,10 +432,10 @@
             <%= agent.agency_name %>
           </p>
           <p style="color: var(--admin-text-muted); font-size: 0.8rem; margin: 0;">
-            Handle: <strong style="color: var(--admin-gold);"><%= agent.username %>.url</strong>
+            Handle: <strong style="color: var(--admin-gold);"><%= agent.username %></strong>
           </p>
           <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--admin-border); font-size: 0.8rem; color: var(--admin-text-muted);">
-            Submission Date: <%= new Date(candidate.created_at || Date.now()).toLocaleDateString() %>
+            Submission Date: <%= new Date(candidate.created_at || Date.now()).toLocaleDateString('en-GB') %>
           </div>
         </div>
 

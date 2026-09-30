@@ -3,34 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= typeof title !== 'undefined' ? title : 'Agent Partner Portal | NG Global' %></title>
+  <title><%= typeof title !== 'undefined' ? title : 'Agent Partner Portal & Analytics | NG Global' %></title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤝</text></svg>" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
 
   <!-- FontAwesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- Admin Stylesheet -->
+  <!-- Chart.js for Executive Analytics Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Admin & Portal Luxury Stylesheet -->
   <link rel="stylesheet" href="/css/admin.css" />
 </head>
 <body class="admin-body">
 
-  <!-- Agent Navigation Bar -->
+  <!-- Top Executive Navigation Bar -->
   <header class="admin-navbar">
     <a href="/agent/dashboard" class="admin-nav-brand">
       <img src="/brand/4_Brand_Emblem_Only/ng-emblem-transparent-1024px.png" alt="NG Global Emblem" />
-      <span>NG GLOBAL <small style="font-weight: 500; color: var(--admin-gold); font-size: 0.8rem; margin-left: 6px;">AGENT PORTAL</small></span>
+      <span>NG GLOBAL <small style="font-weight: 700; color: var(--admin-gold); font-size: 0.8rem; margin-left: 6px; letter-spacing: 0.05em;">AGENT INTELLIGENCE PORTAL</small></span>
     </a>
 
     <ul class="admin-nav-links">
       <li>
-        <a href="/agent/dashboard" class="admin-nav-link active">
-          <i class="fa-solid fa-gauge-high"></i>
-          <span>My Candidates</span>
+        <a href="javascript:void(0)" onclick="switchPortalTab('analytics')" class="admin-nav-link" id="navLinkAnalytics">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Analytics &amp; Insights</span>
+        </a>
+      </li>
+      <li>
+        <a href="javascript:void(0)" onclick="switchPortalTab('dossiers')" class="admin-nav-link active" id="navLinkDossiers">
+          <i class="fa-solid fa-users-gear"></i>
+          <span>Candidates (<%= (candidates || []).length %>)</span>
+        </a>
+      </li>
+      <li>
+        <a href="javascript:void(0)" onclick="switchPortalTab('updates')" class="admin-nav-link" id="navLinkUpdates">
+          <i class="fa-solid fa-bell"></i>
+          <span>HQ Updates</span>
+          <% const unreadCount = (notifications || []).filter(n => !n.is_read).length; %>
+          <% if (unreadCount > 0) { %>
+            <span style="background: var(--admin-rose); color: #fff; font-size: 0.7rem; padding: 1px 6px; border-radius: 999px; font-weight: 700;"><%= unreadCount %></span>
+          <% } %>
         </a>
       </li>
       <li>
@@ -39,16 +58,10 @@
           <span>New Intake</span>
         </a>
       </li>
-      <li>
-        <a href="<%= typeof getAgentLandingUrl === 'function' ? getAgentLandingUrl(agent.username) : ('/agency/' + agent.username) %>" target="_blank" class="admin-nav-link">
-          <i class="fa-solid fa-globe"></i>
-          <span>My Public Landing URL (<%= agent.username %>.<%= typeof rootHostname !== 'undefined' ? rootHostname : 'ngglobalmp.in' %>)</span>
-        </a>
-      </li>
     </ul>
 
     <div class="admin-user-pill">
-      <span class="user-badge" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold); border: 1px solid rgba(212, 175, 55, 0.3);">
+      <span class="user-badge" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold); border: 1px solid rgba(212, 175, 55, 0.35);">
         <i class="fa-solid fa-certificate"></i> <%= agent.agency_name %>
       </span>
       <a href="/agent/logout" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
@@ -60,220 +73,795 @@
 
   <main class="admin-container">
 
-    <div class="admin-page-header">
-      <div class="admin-page-title">
-        <h1>Partner Candidate Command & Dossiers</h1>
-        <p>Overseas recruitment intake, compressed document archiving, and single-file PDF dossiers for embassy submissions.</p>
-      </div>
-      <div>
-        <a href="/agent/candidates/new" class="btn-admin btn-admin-primary">
-          <i class="fa-solid fa-folder-plus"></i>
-          <span>Submit Candidate & Documents</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- Agency Identity Card -->
-    <div class="card-panel" style="margin-bottom: 24px; background: linear-gradient(135deg, rgba(8, 22, 54, 0.9) 0%, rgba(3, 10, 26, 0.95) 100%); border: 1.5px solid var(--admin-border-gold);">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <!-- Agency Identity & Executive Control Banner -->
+    <div class="portal-banner">
+      <div class="portal-banner-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <h2 style="font-size: 1.25rem; color: #fff; margin: 0; font-weight: 700;"><%= agent.agency_name %></h2>
-            <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">
-              <i class="fa-solid fa-shield-check"></i> Verified Partner
+          <h1 class="portal-agency-title">
+            <span><%= agent.agency_name %></span>
+            <span class="badge-verified-partner">
+              <i class="fa-solid fa-shield-check"></i> Verified Recruitment Partner
             </span>
+          </h1>
+          <div class="portal-meta-line">
+            <span>Principal: <strong style="color: #fff;"><%= agent.name %></strong></span>
+            <span>&bull;</span>
+            <span>License: <span class="portal-meta-pill"><%= agent.license_no || 'Ministry Regulated' %></span></span>
+            <span>&bull;</span>
+            <span>Territory: <strong style="color: #fff;"><%= [agent.city, agent.state, agent.country].filter(Boolean).join(', ') %></strong></span>
+            <% if (agent.commission_notes) { %>
+              <span>&bull;</span>
+              <span style="color: var(--admin-gold);"><i class="fa-solid fa-handshake"></i> <%= agent.commission_notes %></span>
+            <% } %>
           </div>
-          <p style="color: var(--admin-text-muted); font-size: 0.85rem; margin: 4px 0 0 0;">
-            Principal: <strong><%= agent.name %></strong> &bull; License: <strong><%= agent.license_no || 'Authorized Agent' %></strong> &bull; Location: <%= [agent.city, agent.state, agent.country].filter(Boolean).join(', ') %>
-          </p>
         </div>
+
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-          <a href="<%= typeof getAgentLandingUrl === 'function' ? getAgentLandingUrl(agent.username) : ('/agency/' + agent.username) %>" target="_blank" class="btn-admin btn-admin-secondary" style="font-size: 0.85rem;">
+          <a href="/agent/candidates/new" class="btn-admin btn-admin-primary" style="padding: 10px 18px; font-size: 0.9rem;">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Submit Candidate Dossier</span>
+          </a>
+          <a href="/agent/candidates/export" class="btn-admin btn-admin-secondary" style="padding: 10px 16px; font-size: 0.9rem;">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>Export Roster (CSV)</span>
+          </a>
+          <a href="<%= typeof getAgentLandingUrl === 'function' ? getAgentLandingUrl(agent.username) : ('/agency/' + agent.username) %>" target="_blank" class="btn-admin btn-admin-secondary" style="padding: 10px 16px; font-size: 0.9rem;">
             <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            <span>Preview Public Agency Page</span>
+            <span>Public Agency Page</span>
           </a>
         </div>
       </div>
 
-      <!-- Agent Subdomain Access Bar -->
-      <div style="margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
-        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <!-- Dedicated Subdomain Access Bar -->
+      <div class="subdomain-share-box">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
           <span style="font-size: 0.8rem; color: var(--admin-gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
             <i class="fa-solid fa-network-wired"></i> Your Dedicated Subdomain:
           </span>
-          <code id="agentSubdomainText" style="background: rgba(0, 0, 0, 0.5); padding: 5px 12px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); color: #38bdf8; font-family: 'Space Grotesk', monospace; font-size: 0.9rem;">
+          <code id="agentSubdomainText" class="subdomain-code-badge">
             <%= agent.username %>.<%= typeof rootHostname !== 'undefined' ? rootHostname : 'ngglobalmp.in' %>
           </code>
-          <button type="button" class="btn-admin btn-admin-secondary" style="padding: 4px 10px; font-size: 0.78rem;" onclick="copySubdomainUrl()">
-            <i class="fa-solid fa-copy"></i> <span id="copyBtnText">Copy Link</span>
+          <button type="button" class="btn-admin btn-admin-secondary" style="padding: 5px 12px; font-size: 0.8rem;" onclick="copySubdomainUrl()">
+            <i class="fa-solid fa-copy"></i> <span id="copyBtnText">Copy Share Link</span>
           </button>
         </div>
         <div style="font-size: 0.82rem; color: var(--admin-text-muted);">
-          <span>Candidates applying through your subdomain are automatically credited to your dossier account.</span>
+          <i class="fa-solid fa-circle-info" style="color: var(--admin-cyan);"></i>
+          <span>Candidates applying through this URL are auto-credited to your dossier account with instant quota tracking.</span>
         </div>
       </div>
     </div>
 
-    <!-- Metrics Grid -->
-    <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 24px;">
-      <div class="metric-card">
-        <div class="metric-card-header">
-          <span class="metric-label">Total Dossiers Submitted</span>
-          <div class="metric-icon" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
+    <!-- Executive Primary KPI Matrix -->
+    <div class="analytics-kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-title">Total Candidates</span>
+          <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
             <i class="fa-solid fa-users"></i>
           </div>
         </div>
-        <div class="metric-value"><%= metrics.total || 0 %></div>
-        <div class="metric-subtitle">All active candidates</div>
+        <div class="kpi-value"><%= (analytics && analytics.total) ? analytics.total : (candidates || []).length %></div>
+        <div class="kpi-subtitle">
+          <span style="color: #34d399;"><i class="fa-solid fa-arrow-trend-up"></i> <%= (analytics && analytics.recent30DaysCount) ? analytics.recent30DaysCount : 0 %></span> this month
+        </div>
       </div>
 
-      <div class="metric-card">
-        <div class="metric-card-header">
-          <span class="metric-label">Under Verification</span>
-          <div class="metric-icon" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold);">
-            <i class="fa-solid fa-clock-rotate-left"></i>
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-title">Active In Pipeline</span>
+          <div class="kpi-icon" style="background: rgba(56, 189, 248, 0.15); color: var(--admin-cyan);">
+            <i class="fa-solid fa-arrows-spin"></i>
           </div>
         </div>
-        <div class="metric-value"><%= metrics.new || 0 %></div>
-        <div class="metric-subtitle">Trade & document check</div>
+        <div class="kpi-value"><%= (analytics && analytics.activeCount) ? analytics.activeCount : 0 %></div>
+        <div class="kpi-subtitle">Under screening &amp; processing</div>
       </div>
 
-      <div class="metric-card">
-        <div class="metric-card-header">
-          <span class="metric-label">Visa / Medical In-Progress</span>
-          <div class="metric-icon" style="background: rgba(6, 182, 212, 0.15); color: var(--admin-cyan);">
-            <i class="fa-solid fa-passport"></i>
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-title">GAMCA Fit / Medical</span>
+          <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+            <i class="fa-solid fa-heart-pulse"></i>
           </div>
         </div>
-        <div class="metric-value"><%= metrics.inProgress || 0 %></div>
-        <div class="metric-subtitle">Embassy & GAMCA processing</div>
+        <div class="kpi-value"><%= (analytics && analytics.gamcaBreakdown) ? analytics.gamcaBreakdown.passed : 0 %></div>
+        <div class="kpi-subtitle">Passed &amp; embassy ready</div>
       </div>
 
-      <div class="metric-card">
-        <div class="metric-card-header">
-          <span class="metric-label">Deployed Overseas</span>
-          <div class="metric-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-title">Placed Overseas</span>
+          <div class="kpi-icon" style="background: rgba(212, 175, 55, 0.15); color: var(--admin-gold);">
             <i class="fa-solid fa-plane-departure"></i>
           </div>
         </div>
-        <div class="metric-value"><%= metrics.placed || 0 %></div>
-        <div class="metric-subtitle">Successfully mobilized</div>
+        <div class="kpi-value"><%= (analytics && analytics.placedCount) ? analytics.placedCount : 0 %></div>
+        <div class="kpi-subtitle">
+          <span style="color: var(--admin-gold);"><%= (analytics && analytics.placementRate) ? analytics.placementRate : '0.0' %>%</span> conversion
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-title">Dossier PDF Ready</span>
+          <div class="kpi-icon" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">
+            <i class="fa-solid fa-file-pdf"></i>
+          </div>
+        </div>
+        <div class="kpi-value"><%= (analytics && analytics.dossiersReadyCount) ? analytics.dossiersReadyCount : 0 %></div>
+        <div class="kpi-subtitle">
+          <span style="color: #c084fc;"><%= (analytics && analytics.dossierReadyRate) ? analytics.dossierReadyRate : '0.0' %>%</span> completeness
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-card-header">
+          <span class="kpi-title">Backed Out / Drop</span>
+          <div class="kpi-icon" style="background: rgba(244, 63, 94, 0.15); color: #fb7185;">
+            <i class="fa-solid fa-user-xmark"></i>
+          </div>
+        </div>
+        <div class="kpi-value"><%= (analytics && analytics.backedOutCount) ? analytics.backedOutCount : 0 %></div>
+        <div class="kpi-subtitle">Immediate HQ alerts logged</div>
       </div>
     </div>
 
-    <!-- Candidate List Table -->
-    <div class="table-card">
-      <div class="table-responsive">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Candidate Name & Contact</th>
-              <th>Trade & Experience</th>
-              <th>Passport No</th>
-              <th>GAMCA Medical</th>
-              <th>Documents</th>
-              <th>Compiled Master PDF</th>
-              <th>Status</th>
-              <th style="text-align: right;">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if (candidates && candidates.length > 0) { %>
-              <% candidates.forEach(c => { %>
-                <tr>
-                  <td>
-                    <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">
-                      <%= c.full_name %>
+    <!-- Portal Navigation Tabs -->
+    <div class="portal-tabs-nav">
+      <button type="button" class="portal-tab-btn" id="tabBtnAnalytics" onclick="switchPortalTab('analytics')">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Candidate Analytics &amp; Intelligence</span>
+        <span class="tab-badge"><%= (analytics && analytics.countryBreakdown) ? analytics.countryBreakdown.length : 0 %> Countries</span>
+      </button>
+
+      <button type="button" class="portal-tab-btn active" id="tabBtnDossiers" onclick="switchPortalTab('dossiers')">
+        <i class="fa-solid fa-address-book"></i>
+        <span>Candidate Dossiers &amp; Records</span>
+        <span class="tab-badge"><%= (candidates || []).length %> Total</span>
+      </button>
+
+      <button type="button" class="portal-tab-btn" id="tabBtnUpdates" onclick="switchPortalTab('updates')">
+        <i class="fa-solid fa-bullhorn"></i>
+        <span>Important Updates &amp; HQ Notices</span>
+        <% if (unreadCount > 0) { %>
+          <span class="tab-badge" style="background: var(--admin-rose); color: #fff;"><%= unreadCount %> New</span>
+        <% } %>
+      </button>
+    </div>
+
+    <!-- ======================================================================
+         TAB 1: COMPLETE CANDIDATE ANALYTICS & INTELLIGENCE
+         ====================================================================== -->
+    <div id="tabContentAnalytics" class="portal-tab-content">
+      
+      <!-- Row 1: Destination Countries Analytics & Trades Distribution -->
+      <div class="analytics-grid-two">
+        
+        <!-- Country Analytics Panel -->
+        <div class="analytics-panel">
+          <div class="analytics-panel-header">
+            <h3 class="analytics-panel-title">
+              <i class="fa-solid fa-earth-americas"></i>
+              <span>Candidates by Destination Country</span>
+            </h3>
+            <span style="font-size: 0.8rem; color: var(--admin-cyan); font-weight: 600;">
+              <%= (analytics && analytics.countryBreakdown) ? analytics.countryBreakdown.length : 0 %> Active Global Destinations
+            </span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 180px 1fr; gap: 20px; align-items: center; margin-bottom: 20px;">
+            <div style="position: relative; width: 170px; height: 170px; margin: 0 auto;">
+              <canvas id="countryDonutChart"></canvas>
+            </div>
+            <div>
+              <p style="color: var(--admin-text-muted); font-size: 0.85rem; margin-top: 0;">
+                Breakdown of where your registered candidates have applied or been submitted for visa quotas across the Gulf, Europe, and Asia.
+              </p>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                <span style="font-size: 0.76rem; background: rgba(56, 189, 248, 0.15); color: #38bdf8; padding: 3px 8px; border-radius: 6px;">
+                  <i class="fa-solid fa-chart-simple"></i> Live Allocation
+                </span>
+                <span style="font-size: 0.76rem; background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 3px 8px; border-radius: 6px;">
+                  <i class="fa-solid fa-shield"></i> Embassy Verified
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Country Cards Grid -->
+          <div class="country-cards-grid">
+            <% if (analytics && analytics.countryBreakdown && analytics.countryBreakdown.length > 0) { %>
+              <% analytics.countryBreakdown.forEach(country => { %>
+                <div class="country-stat-card">
+                  <div style="display: flex; align-items: center;">
+                    <div class="country-flag-icon"><%= country.flag || '🌐' %></div>
+                    <div>
+                      <div class="country-name-text"><%= country.name %></div>
+                      <div class="country-sub-text">
+                        <%= country.placed %> Placed &bull; <%= country.inProgress %> In Process
+                      </div>
                     </div>
-                    <div style="font-size: 0.8rem; color: var(--admin-text-muted);">
-                      <i class="fa-solid fa-phone" style="margin-right: 4px;"></i> <%= c.phone %>
-                    </div>
-                  </td>
-                  <td>
-                    <div style="font-weight: 600; color: #fff;"><%= c.trade %></div>
-                    <small style="color: var(--admin-text-muted);"><%= c.experience || '1-2 Yrs' %> &bull; <%= c.destination || 'Gulf' %></small>
-                  </td>
-                  <td>
-                    <% if (c.passport_no) { %>
-                      <span style="font-family: monospace; font-weight: 600; color: var(--admin-gold);">
-                        <%= c.passport_no %>
-                      </span>
-                    <% } else { %>
-                      <span style="color: var(--admin-text-muted); font-size: 0.8rem;">Not Provided</span>
-                    <% } %>
-                  </td>
-                  <td>
-                    <span style="font-size: 0.82rem; color: <%= c.gamca_status === 'Passed / Fit' ? '#34d399' : '#e2e8f0' %>;">
-                      <%= c.gamca_status || 'Pending' %>
-                    </span>
-                  </td>
-                  <td>
-                    <span style="background: rgba(255, 255, 255, 0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">
-                      📁 <%= (c.documents || []).length %> files
-                    </span>
-                  </td>
-                  <td>
-                    <% if (c.merged_dossier_pdf) { %>
-                      <a href="<%= c.merged_dossier_pdf %>" target="_blank" class="btn-admin btn-admin-primary" style="padding: 4px 10px; font-size: 0.78rem;">
-                        <i class="fa-solid fa-file-pdf"></i>
-                        <span>Download Dossier PDF</span>
-                      </a>
-                    <% } else { %>
-                      <span style="color: var(--admin-text-muted); font-size: 0.8rem;">No PDF Dossier</span>
-                    <% } %>
-                  </td>
-                  <td>
-                    <%
-                      let agentBadgeClass = 'new';
-                      if (c.status === 'Backed Out') agentBadgeClass = 'error';
-                      else if (c.status === 'Placed') agentBadgeClass = 'placed';
-                      else if (c.status === 'In-Progress') agentBadgeClass = 'in-progress';
-                      else if (c.status === 'Confirmed') agentBadgeClass = 'contacted';
-                    %>
-                    <span class="status-badge <%= agentBadgeClass %>">
-                      <%= c.status %>
-                    </span>
-                  </td>
-                  <td style="text-align: right;">
-                    <a href="/agent/candidates/<%= c.id %>" class="btn-admin btn-admin-secondary" style="padding: 6px 12px; font-size: 0.82rem;">
-                      <i class="fa-solid fa-eye"></i>
-                      <span>View</span>
-                    </a>
-                  </td>
-                </tr>
+                  </div>
+                  <div class="country-count-badge">
+                    <div class="country-count-val"><%= country.count %></div>
+                    <span class="country-pct-pill"><%= country.percentage %>%</span>
+                  </div>
+                </div>
               <% }); %>
             <% } else { %>
-              <tr>
-                <td colspan="8" style="text-align: center; padding: 48px; color: var(--admin-text-muted);">
-                  <i class="fa-solid fa-folder-open" style="font-size: 2rem; margin-bottom: 12px; display: block; opacity: 0.5;"></i>
-                  No candidate dossiers submitted yet. Click "Submit Candidate & Documents" to create your first intake.
-                </td>
-              </tr>
+              <div style="grid-column: 1 / -1; text-align: center; padding: 24px; color: var(--admin-text-muted);">
+                No destination country records yet. Submit candidate dossiers to visualize country analytics.
+              </div>
             <% } %>
-          </tbody>
-        </table>
+          </div>
+        </div>
+
+        <!-- Trade & Skills Categorization Panel -->
+        <div class="analytics-panel">
+          <div class="analytics-panel-header">
+            <h3 class="analytics-panel-title">
+              <i class="fa-solid fa-screwdriver-wrench"></i>
+              <span>Trade &amp; Technical Skills Breakdown</span>
+            </h3>
+            <span style="font-size: 0.8rem; color: var(--admin-gold); font-weight: 600;">
+              <%= (analytics && analytics.tradeBreakdown) ? analytics.tradeBreakdown.length : 0 %> Specializations
+            </span>
+          </div>
+
+          <div class="trade-list-stack">
+            <% if (analytics && analytics.tradeBreakdown && analytics.tradeBreakdown.length > 0) { %>
+              <% 
+                const colorPalette = [
+                  'linear-gradient(90deg, #D4AF37, #F59E0B)',
+                  'linear-gradient(90deg, #38BDF8, #2563EB)',
+                  'linear-gradient(90deg, #10B981, #059669)',
+                  'linear-gradient(90deg, #A855F7, #7C3AED)',
+                  'linear-gradient(90deg, #F43F5E, #E11D48)',
+                  'linear-gradient(90deg, #06B6D4, #0284C7)'
+                ];
+              %>
+              <% analytics.tradeBreakdown.forEach((trade, idx) => { %>
+                <% const barGradient = colorPalette[idx % colorPalette.length]; %>
+                <div class="trade-item-row">
+                  <div class="trade-label-row">
+                    <span class="trade-name">
+                      <i class="fa-solid <%= trade.icon || 'fa-briefcase' %>"></i>
+                      <span><%= trade.name %></span>
+                    </span>
+                    <span class="trade-count-label">
+                      <strong><%= trade.count %></strong> candidates (<%= trade.percentage %>%)
+                    </span>
+                  </div>
+                  <div class="trade-progress-track">
+                    <div class="trade-progress-fill" style="width: <%= trade.percentage %>%; background: <%= barGradient %>;"></div>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <div style="text-align: center; padding: 24px; color: var(--admin-text-muted);">
+                No trade categorization records available.
+              </div>
+            <% } %>
+          </div>
+
+          <!-- Medical & Passport Readiness Summary Box -->
+          <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <span style="font-size: 0.85rem; color: #fff; font-weight: 700;">
+                <i class="fa-solid fa-passport" style="color: var(--admin-gold); margin-right: 6px;"></i> Compliance &amp; Document Readiness
+              </span>
+              <span style="font-size: 0.75rem; color: var(--admin-text-muted);">Embassy Pre-requisites</span>
+            </div>
+
+            <div class="readiness-meter-grid">
+              <div class="readiness-box">
+                <div class="readiness-box-val" style="color: #34d399;">
+                  <%= (analytics && analytics.gamcaBreakdown) ? analytics.gamcaBreakdown.passed : 0 %>
+                </div>
+                <div class="readiness-box-label">GAMCA Fit</div>
+              </div>
+              <div class="readiness-box">
+                <div class="readiness-box-val" style="color: var(--admin-cyan);">
+                  <%= (analytics && analytics.gamcaBreakdown) ? analytics.gamcaBreakdown.inProcess : 0 %>
+                </div>
+                <div class="readiness-box-label">Medical In-Proc</div>
+              </div>
+              <div class="readiness-box">
+                <div class="readiness-box-val" style="color: var(--admin-gold);">
+                  <%= (analytics && analytics.passportBreakdown) ? analytics.passportBreakdown.withPassport : 0 %>
+                </div>
+                <div class="readiness-box-label">Passport On File</div>
+              </div>
+              <div class="readiness-box">
+                <div class="readiness-box-val" style="color: #c084fc;">
+                  <%= (analytics && analytics.dossiersReadyCount) ? analytics.dossiersReadyCount : 0 %>
+                </div>
+                <div class="readiness-box-label">Master PDF Ready</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row 2: Intake Timeline Trend Chart -->
+      <div class="analytics-panel" style="margin-bottom: 24px;">
+        <div class="analytics-panel-header">
+          <h3 class="analytics-panel-title">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Monthly Candidate Intake &amp; Mobilization Velocity</span>
+          </h3>
+          <span style="font-size: 0.8rem; color: var(--admin-text-muted);">
+            Last 6 Calendar Months
+          </span>
+        </div>
+        <div style="height: 220px; width: 100%;">
+          <canvas id="trendLineChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ======================================================================
+         TAB 2: CANDIDATE DOSSIERS & ACTIVE RECORDS
+         ====================================================================== -->
+    <div id="tabContentDossiers" class="portal-tab-content active">
+
+      <!-- Candidate Dossier Interactive Filter Toolbar -->
+      <div class="dossier-toolbar">
+        <div class="dossier-search-wrapper">
+          <i class="fa-solid fa-magnifying-glass dossier-search-icon"></i>
+          <input type="text" id="candidateSearchInput" placeholder="Live search by name, phone, trade, passport no..." oninput="filterCandidateTable()" />
+        </div>
+
+        <div class="dossier-filters-group">
+          <select id="countryFilterSelect" class="filter-select-control" onchange="filterCandidateTable()">
+            <option value="">All Destinations</option>
+            <% if (analytics && analytics.countryBreakdown) { %>
+              <% analytics.countryBreakdown.forEach(c => { %>
+                <option value="<%= c.name.toLowerCase() %>"><%= c.flag %> <%= c.name %></option>
+              <% }); %>
+            <% } %>
+          </select>
+
+          <select id="statusFilterSelect" class="filter-select-control" onchange="filterCandidateTable()">
+            <option value="">All Statuses</option>
+            <option value="new">New</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="in-progress">In-Progress</option>
+            <option value="placed">Placed Overseas</option>
+            <option value="backed out">Backed Out</option>
+          </select>
+
+          <a href="/agent/candidates/export" class="btn-admin btn-admin-secondary" style="padding: 9px 14px; font-size: 0.85rem;" title="Export filtered records to CSV">
+            <i class="fa-solid fa-file-csv"></i>
+            <span>Export CSV</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Candidate Records Table -->
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="admin-table" id="candidatesRosterTable">
+            <thead>
+              <tr>
+                <th>Candidate Profile</th>
+                <th>Trade &amp; Destination</th>
+                <th>Passport Details</th>
+                <th>GAMCA Medical</th>
+                <th>Compiled Master Dossier</th>
+                <th>Recruitment Stage</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (candidates && candidates.length > 0) { %>
+                <% candidates.forEach(c => { %>
+                  <% 
+                    const initials = (c.full_name || 'C')
+                      .split(' ')
+                      .filter(Boolean)
+                      .slice(0, 2)
+                      .map(p => p[0].toUpperCase())
+                      .join('');
+                  %>
+                  <tr class="candidate-row"
+                      data-name="<%= (c.full_name || '').toLowerCase() %>"
+                      data-phone="<%= (c.phone || '').toLowerCase() %>"
+                      data-trade="<%= (c.trade || '').toLowerCase() %>"
+                      data-passport="<%= (c.passport_no || '').toLowerCase() %>"
+                      data-destination="<%= (c.destination || '').toLowerCase() %>"
+                      data-status="<%= (c.status || '').toLowerCase() %>">
+                    
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="candidate-avatar"><%= initials %></div>
+                        <div>
+                          <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">
+                            <%= c.full_name %>
+                          </div>
+                          <div style="font-size: 0.8rem; color: var(--admin-text-muted);">
+                            <i class="fa-solid fa-phone" style="margin-right: 4px; color: var(--admin-cyan);"></i> <%= c.phone %>
+                            <% if (c.city && c.city !== 'Not Specified') { %>
+                              &bull; <%= c.city %>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div style="font-weight: 600; color: #fff; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-briefcase" style="color: var(--admin-gold); font-size: 0.8rem;"></i>
+                        <span><%= c.trade %></span>
+                      </div>
+                      <small style="color: var(--admin-text-muted); display: block; margin-top: 2px;">
+                        <%= c.experience || '1-2 Yrs' %> &bull; <span style="color: #38bdf8;"><%= c.destination || 'Gulf' %></span>
+                      </small>
+                    </td>
+
+                    <td>
+                      <% if (c.passport_no) { %>
+                        <div style="font-family: 'Space Grotesk', monospace; font-weight: 700; color: var(--admin-gold); letter-spacing: 0.05em;">
+                          <%= c.passport_no %>
+                        </div>
+                        <small style="font-size: 0.74rem; color: var(--admin-text-muted);">
+                          Exp: <%= c.passport_expiry ? new Date(c.passport_expiry).toLocaleDateString('en-GB') : 'Valid' %>
+                        </small>
+                      <% } else { %>
+                        <span style="color: #fb7185; font-size: 0.8rem; background: rgba(244, 63, 94, 0.1); padding: 2px 6px; border-radius: 4px;">
+                          <i class="fa-solid fa-triangle-exclamation"></i> Missing
+                        </span>
+                      <% } %>
+                    </td>
+
+                    <td>
+                      <% 
+                        const isFit = (c.gamca_status || '').toLowerCase().includes('pass') || (c.gamca_status || '').toLowerCase().includes('fit');
+                        const isProc = (c.gamca_status || '').toLowerCase().includes('process');
+                      %>
+                      <span style="font-size: 0.82rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; color: <%= isFit ? '#34d399' : (isProc ? '#38bdf8' : '#e2e8f0') %>;">
+                        <i class="fa-solid <%= isFit ? 'fa-circle-check' : (isProc ? 'fa-spinner fa-spin' : 'fa-clock') %>"></i>
+                        <span><%= c.gamca_status || 'Pending' %></span>
+                      </span>
+                    </td>
+
+                    <td>
+                      <% if (c.merged_dossier_pdf) { %>
+                        <a href="<%= c.merged_dossier_pdf %>" target="_blank" class="btn-admin btn-admin-primary" style="padding: 5px 12px; font-size: 0.78rem; text-decoration: none;">
+                          <i class="fa-solid fa-file-pdf"></i>
+                          <span>Download Master PDF</span>
+                        </a>
+                      <% } else { %>
+                        <span style="color: var(--admin-text-muted); font-size: 0.8rem; background: rgba(255, 255, 255, 0.05); padding: 3px 8px; border-radius: 4px;">
+                          📁 <%= (c.documents || []).length %> files uploaded
+                        </span>
+                      <% } %>
+                    </td>
+
+                    <td>
+                      <%
+                        let agentBadgeClass = 'new';
+                        if (c.status === 'Backed Out') agentBadgeClass = 'error';
+                        else if (c.status === 'Placed') agentBadgeClass = 'placed';
+                        else if (c.status === 'In-Progress') agentBadgeClass = 'in-progress';
+                        else if (c.status === 'Confirmed') agentBadgeClass = 'contacted';
+                      %>
+                      <span class="status-badge <%= agentBadgeClass %>">
+                        <%= c.status %>
+                      </span>
+                    </td>
+
+                    <td style="text-align: right;">
+                      <a href="/agent/candidates/<%= c.id %>" class="btn-admin btn-admin-secondary" style="padding: 6px 14px; font-size: 0.82rem;">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <span>Dossier</span>
+                      </a>
+                    </td>
+
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr id="noCandidatesRow">
+                  <td colspan="7" style="text-align: center; padding: 48px; color: var(--admin-text-muted);">
+                    <i class="fa-solid fa-folder-open" style="font-size: 2.2rem; margin-bottom: 12px; display: block; opacity: 0.4;"></i>
+                    No candidate dossiers recorded yet. Click "Submit Candidate Dossier" to create your first intake!
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ======================================================================
+         TAB 3: IMPORTANT UPDATES & HQ NOTICES
+         ====================================================================== -->
+    <div id="tabContentUpdates" class="portal-tab-content">
+      <div class="analytics-grid-two">
+        
+        <!-- Live Candidate Activity & Progression Feed -->
+        <div class="analytics-panel">
+          <div class="analytics-panel-header">
+            <h3 class="analytics-panel-title">
+              <i class="fa-solid fa-bolt" style="color: var(--admin-cyan);"></i>
+              <span>Live Candidate Milestone Updates</span>
+            </h3>
+            <span style="font-size: 0.8rem; color: var(--admin-text-muted);">Real-Time Progression</span>
+          </div>
+
+          <div class="updates-feed">
+            <% if (notifications && notifications.length > 0) { %>
+              <% notifications.forEach(item => { %>
+                <div class="update-card <%= item.priority || 'normal' %>">
+                  <div class="update-body">
+                    <h4>
+                      <% if (item.priority === 'urgent') { %>
+                        <i class="fa-solid fa-triangle-exclamation" style="color: var(--admin-rose);"></i>
+                      <% } else if (item.priority === 'high') { %>
+                        <i class="fa-solid fa-circle-exclamation" style="color: var(--admin-gold);"></i>
+                      <% } else { %>
+                        <i class="fa-solid fa-circle-check" style="color: var(--admin-cyan);"></i>
+                      <% } %>
+                      <span><%= item.title %></span>
+                    </h4>
+                    <p><%= item.message %></p>
+                    <span class="update-time">
+                      <i class="fa-regular fa-clock"></i> <%= new Date(item.created_at).toLocaleString('en-IN') %>
+                    </span>
+                  </div>
+                  <div>
+                    <% if (!item.is_read) { %>
+                      <a href="/agent/notifications/<%= item.id %>/read" class="update-action-btn">
+                        <i class="fa-solid fa-check"></i> Dismiss
+                      </a>
+                    <% } else { %>
+                      <span style="color: var(--admin-text-muted); font-size: 0.75rem;"><i class="fa-solid fa-check-double"></i> Read</span>
+                    <% } %>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <div style="text-align: center; padding: 32px; color: var(--admin-text-muted);">
+                <i class="fa-regular fa-bell-slash" style="font-size: 2rem; margin-bottom: 10px; display: block; opacity: 0.4;"></i>
+                No candidate status alerts currently pending. All dossiers are running on schedule.
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Official NG Global Quotas & Compliance Advisories -->
+        <div class="analytics-panel">
+          <div class="analytics-panel-header">
+            <h3 class="analytics-panel-title">
+              <i class="fa-solid fa-bullhorn" style="color: var(--admin-gold);"></i>
+              <span>HQ Quotas &amp; Embassy Advisories</span>
+            </h3>
+            <span style="font-size: 0.8rem; background: rgba(212, 175, 55, 0.15); color: var(--admin-gold); padding: 2px 8px; border-radius: 999px; font-weight: 700;">
+              Active Bulletins
+            </span>
+          </div>
+
+          <div class="updates-feed">
+            <% if (systemNotices && systemNotices.length > 0) { %>
+              <% systemNotices.forEach(notice => { %>
+                <div class="update-card <%= notice.priority %>">
+                  <div class="update-body">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                      <h4 style="margin: 0;"><%= notice.title %></h4>
+                      <span style="font-size: 0.72rem; background: rgba(255, 255, 255, 0.08); padding: 2px 8px; border-radius: 999px; color: #fff;">
+                        <%= notice.badge %>
+                      </span>
+                    </div>
+                    <p><%= notice.message %></p>
+                    <span class="update-time"><i class="fa-solid fa-signal" style="color: #34d399;"></i> Status: <%= notice.date %></span>
+                  </div>
+                </div>
+              <% }); %>
+            <% } %>
+          </div>
+        </div>
+
       </div>
     </div>
 
   </main>
 
+  <!-- Interactive Dashboard Analytics & Filtering Scripts -->
   <script>
+    // Tab Switching Logic
+    function switchPortalTab(tabName) {
+      const tabs = ['analytics', 'dossiers', 'updates'];
+      tabs.forEach(t => {
+        const content = document.getElementById('tabContent' + t.charAt(0).toUpperCase() + t.slice(1));
+        const btn = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+        const nav = document.getElementById('navLink' + t.charAt(0).toUpperCase() + t.slice(1));
+
+        if (t === tabName) {
+          if (content) content.classList.add('active');
+          if (btn) btn.classList.add('active');
+          if (nav) nav.classList.add('active');
+        } else {
+          if (content) content.classList.remove('active');
+          if (btn) btn.classList.remove('active');
+          if (nav) nav.classList.remove('active');
+        }
+      });
+
+      // Update URL query without page reload
+      const url = new URL(window.location);
+      url.searchParams.set('tab', tabName);
+      window.history.replaceState({}, '', url);
+
+      // Trigger chart re-render if switching to analytics
+      if (tabName === 'analytics' && window.countryChart) {
+        window.countryChart.resize();
+      }
+    }
+
+    // Copy Subdomain URL with toast feedback
     function copySubdomainUrl() {
       const text = document.getElementById('agentSubdomainText');
       if (!text) return;
       const domain = text.textContent.trim();
-      const fullUrl = (window.location.protocol + '//' + domain);
+      const fullUrl = window.location.protocol + '//' + domain;
       navigator.clipboard.writeText(fullUrl).then(() => {
         const btn = document.getElementById('copyBtnText');
         if (btn) {
           const original = btn.textContent;
-          btn.textContent = 'Copied!';
-          setTimeout(() => { btn.textContent = original; }, 2000);
+          btn.textContent = 'Copied to Clipboard!';
+          setTimeout(() => { btn.textContent = original; }, 2200);
         }
       }).catch(() => {
         prompt('Copy your dedicated subdomain URL:', fullUrl);
       });
     }
+
+    // Live Candidate Table Search & Multi-filter
+    function filterCandidateTable() {
+      const q = (document.getElementById('candidateSearchInput')?.value || '').toLowerCase().trim();
+      const country = (document.getElementById('countryFilterSelect')?.value || '').toLowerCase().trim();
+      const status = (document.getElementById('statusFilterSelect')?.value || '').toLowerCase().trim();
+
+      const rows = document.querySelectorAll('.candidate-row');
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const rowName = row.getAttribute('data-name') || '';
+        const rowPhone = row.getAttribute('data-phone') || '';
+        const rowTrade = row.getAttribute('data-trade') || '';
+        const rowPassport = row.getAttribute('data-passport') || '';
+        const rowDest = row.getAttribute('data-destination') || '';
+        const rowStatus = row.getAttribute('data-status') || '';
+
+        const matchesQuery = !q || 
+          rowName.includes(q) || 
+          rowPhone.includes(q) || 
+          rowTrade.includes(q) || 
+          rowPassport.includes(q);
+
+        const matchesCountry = !country || rowDest.includes(country);
+        const matchesStatus = !status || rowStatus === status;
+
+        if (matchesQuery && matchesCountry && matchesStatus) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // Initialize Chart.js Analytics on Page Load
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Check URL query for default tab
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialTab = urlParams.get('tab') || '<%= activeTab || "analytics" %>';
+      switchPortalTab(initialTab);
+
+      // 2. Setup Country Donut Chart
+      <% 
+        const countryLabels = (analytics && analytics.countryBreakdown) ? analytics.countryBreakdown.map(c => c.name) : [];
+        const countryCounts = (analytics && analytics.countryBreakdown) ? analytics.countryBreakdown.map(c => c.count) : [];
+      %>
+      const countryCtx = document.getElementById('countryDonutChart');
+      if (countryCtx) {
+        window.countryChart = new Chart(countryCtx, {
+          type: 'doughnut',
+          data: {
+            labels: <%- JSON.stringify(countryLabels) %>,
+            datasets: [{
+              data: <%- JSON.stringify(countryCounts) %>,
+              backgroundColor: [
+                '#D4AF37', '#38BDF8', '#10B981', '#A855F7', '#F59E0B', '#06B6D4', '#F43F5E'
+              ],
+              borderColor: '#040D21',
+              borderWidth: 2,
+              hoverOffset: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(4, 13, 33, 0.95)',
+                titleColor: '#D4AF37',
+                bodyColor: '#fff',
+                borderColor: 'rgba(212, 175, 55, 0.4)',
+                borderWidth: 1,
+                padding: 10,
+                callbacks: {
+                  label: function(context) {
+                    return ` ${context.label}: ${context.raw} candidates`;
+                  }
+                }
+              }
+            },
+            cutout: '70%'
+          }
+        });
+      }
+
+      // 3. Setup Intake Timeline Trend Line Chart
+      <% 
+        const trendLabels = (analytics && analytics.trendMonths) ? analytics.trendMonths.map(m => m.label) : [];
+        const trendCounts = (analytics && analytics.trendMonths) ? analytics.trendMonths.map(m => m.count) : [];
+      %>
+      const trendCtx = document.getElementById('trendLineChart');
+      if (trendCtx) {
+        new Chart(trendCtx, {
+          type: 'line',
+          data: {
+            labels: <%- JSON.stringify(trendLabels) %>,
+            datasets: [{
+              label: 'Candidates Submitted',
+              data: <%- JSON.stringify(trendCounts) %>,
+              borderColor: '#38BDF8',
+              backgroundColor: 'rgba(56, 189, 248, 0.12)',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.35,
+              pointBackgroundColor: '#D4AF37',
+              pointBorderColor: '#fff',
+              pointRadius: 5,
+              pointHoverRadius: 7
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: '#94a3b8', font: { family: 'Space Grotesk' } }
+              },
+              y: {
+                beginAtZero: true,
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: '#94a3b8', stepSize: 1, font: { family: 'Space Grotesk' } }
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(4, 13, 33, 0.95)',
+                titleColor: '#38BDF8',
+                bodyColor: '#fff',
+                borderColor: 'rgba(56, 189, 248, 0.4)',
+                borderWidth: 1,
+                padding: 10
+              }
+            }
+          }
+        });
+      }
+    });
   </script>
 
 </body>

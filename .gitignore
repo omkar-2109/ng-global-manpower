@@ -24,4 +24,7 @@ temp/
 data/*.tmp
 .DS_Store
 Thumbs.db
+.freebuff/
+.kilo/
+
 

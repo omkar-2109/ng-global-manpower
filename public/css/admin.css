@@ -488,3 +488,637 @@ textarea.form-control {
   border: 1px solid rgba(244, 63, 94, 0.3);
   color: #FB7185;
 }
+
+/* ==========================================================================
+   AGENT PORTAL LUXURY SUITE & ANALYTICS STYLES
+   ========================================================================== */
+
+/* Portal Banner Card */
+.portal-banner {
+  background: radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.15) 0%, rgba(8, 22, 54, 0.95) 50%, rgba(3, 10, 26, 0.98) 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.35);
+  border-radius: 18px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-banner::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.portal-banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.portal-agency-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: -0.01em;
+}
+
+.badge-verified-partner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #34d399;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.portal-meta-line {
+  color: var(--admin-text-muted);
+  font-size: 0.88rem;
+  margin: 6px 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.portal-meta-pill {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: #e2e8f0;
+}
+
+/* Subdomain Link Bar */
+.subdomain-share-box {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.subdomain-code-badge {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+/* Portal Tabs Navigation */
+.portal-tabs-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.portal-tab-btn {
+  background: none;
+  border: none;
+  color: var(--admin-text-muted);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.portal-tab-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.portal-tab-btn.active {
+  color: var(--admin-gold);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.portal-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--admin-gold), #F59E0B);
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+}
+
+.tab-badge {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  color: #fff;
+}
+
+.portal-tab-btn.active .tab-badge {
+  background: rgba(212, 175, 55, 0.25);
+  color: var(--admin-gold);
+}
+
+.portal-tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.portal-tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Primary KPI Grid (6 Columns on Large, 3 on Medium, 1-2 on Small) */
+.analytics-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1200px) {
+  .analytics-kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .analytics-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.kpi-card {
+  background: rgba(12, 30, 66, 0.45);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(212, 175, 55, 0.35);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+}
+
+.kpi-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.kpi-title {
+  color: var(--admin-text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.kpi-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.kpi-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.kpi-subtitle {
+  font-size: 0.78rem;
+  color: var(--admin-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Analytics Row Grid (Two Columns: Countries & Trades, Charts, etc.) */
+.analytics-grid-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 980px) {
+  .analytics-grid-two {
+    grid-template-columns: 1fr;
+  }
+}
+
+.analytics-panel {
+  background: rgba(12, 30, 66, 0.45);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+}
+
+.analytics-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.analytics-panel-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.analytics-panel-title i {
+  color: var(--admin-gold);
+}
+
+/* Country Analytics Cards Grid */
+.country-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 580px) {
+  .country-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.country-stat-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.country-stat-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(56, 189, 248, 0.35);
+  transform: translateX(2px);
+}
+
+.country-flag-icon {
+  font-size: 1.7rem;
+  line-height: 1;
+  margin-right: 12px;
+}
+
+.country-name-text {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.country-sub-text {
+  font-size: 0.74rem;
+  color: var(--admin-text-muted);
+}
+
+.country-count-badge {
+  text-align: right;
+}
+
+.country-count-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--admin-cyan);
+}
+
+.country-pct-pill {
+  font-size: 0.7rem;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* Trade Progress Bars */
+.trade-list-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.trade-item-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.trade-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.86rem;
+}
+
+.trade-name {
+  color: #f1f5f9;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trade-name i {
+  color: var(--admin-gold);
+  width: 16px;
+  text-align: center;
+}
+
+.trade-count-label {
+  color: var(--admin-text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.trade-count-label strong {
+  color: #fff;
+}
+
+.trade-progress-track {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.trade-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Medical & Passport Readiness Cards */
+.readiness-meter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+@media (max-width: 768px) {
+  .readiness-meter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.readiness-box {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+}
+
+.readiness-box-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.readiness-box-label {
+  font-size: 0.75rem;
+  color: var(--admin-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+/* Updates & Notifications Feed */
+.updates-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.update-card {
+  background: rgba(12, 30, 66, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.update-card:hover {
+  background: rgba(18, 42, 92, 0.65);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.update-card.urgent {
+  border-left: 4px solid var(--admin-rose);
+  background: rgba(244, 63, 94, 0.08);
+}
+
+.update-card.high {
+  border-left: 4px solid var(--admin-gold);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.update-card.normal {
+  border-left: 4px solid var(--admin-cyan);
+}
+
+.update-body h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.update-body p {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.update-time {
+  font-size: 0.74rem;
+  color: var(--admin-text-muted);
+  margin-top: 6px;
+  display: block;
+}
+
+.update-action-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.update-action-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* Candidate Dossiers Interactive Filter Toolbar */
+.dossier-toolbar {
+  background: rgba(8, 22, 54, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.dossier-search-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 260px;
+}
+
+.dossier-search-wrapper input {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 10px 16px 10px 40px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.dossier-search-wrapper input:focus {
+  outline: none;
+  border-color: var(--admin-gold);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+}
+
+.dossier-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 13px;
+  color: var(--admin-text-muted);
+  pointer-events: none;
+}
+
+.dossier-filters-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-select-control {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.filter-select-control:focus {
+  outline: none;
+  border-color: var(--admin-gold);
+}
+
+/* Candidate Avatar Pill */
+.candidate-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(56, 189, 248, 0.2) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: var(--admin-gold);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+

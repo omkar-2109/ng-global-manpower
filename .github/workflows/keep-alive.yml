@@ -1,0 +1,24 @@
+name: Render 24/7 Keep-Alive Monitor
+
+on:
+  schedule:
+    # Trigger every 12 minutes to beat Render's 15-minute free tier idle sleep
+    - cron: '*/12 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  ping-render:
+    name: Ping Render Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Health Endpoint
+        run: |
+          TARGET_URL="${{ vars.RENDER_URL || secrets.RENDER_URL || 'https://ng-global-manpower.onrender.com' }}"
+          echo "Pinging ${TARGET_URL}/health..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s" --max-time 30 "${TARGET_URL}/health" || echo "CURL_FAILED")
+          echo "$RESPONSE"
+          if echo "$RESPONSE" | grep -q "HTTP_STATUS:200"; then
+            echo "🟢 Service is active and healthy!"
+          else
+            echo "⚠️ Non-200 response or warm-up in progress."
+          fi
