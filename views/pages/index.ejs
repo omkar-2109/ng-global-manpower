@@ -24,8 +24,24 @@
       </h1>
 
       <p class="hero-job-subhead">
-        Direct employment quotas with accredited employers in the Gulf, Europe, USA, and New Zealand. Transparent regulated service charges with select 100% employer-funded positions.
+        Direct company vacancies with accredited infrastructure, industrial, and engineering employers across the Gulf, Europe, USA, and New Zealand. Company-provided accommodation, food allowances, and direct interview coordination.
       </p>
+
+      <!-- 3 Primary Hero CTA Action Buttons -->
+      <div class="hero-primary-ctas" style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 20px 0 28px 0;">
+        <a href="#live-openings" class="btn btn-gold hero-cta-btn" style="padding: 13px 22px; font-size: 0.95rem;">
+          <i class="fa-solid fa-briefcase"></i>
+          <span>View Verified Openings</span>
+        </a>
+        <a href="#lead-funnel" class="btn btn-secondary hero-cta-btn" style="padding: 13px 22px; font-size: 0.95rem;">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Check Eligibility Online</span>
+        </a>
+        <a href="https://wa.me/<%= typeof settings !== 'undefined' && settings.whatsappNumber ? settings.whatsappNumber : '918080025670' %>?text=Hello%20NG%20Global%20HR,%20I%20want%20to%20apply%20for%20overseas%20jobs.%20Please%20guide%20me." target="_blank" class="btn btn-whatsapp hero-cta-btn" style="padding: 13px 22px; font-size: 0.95rem;">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>WhatsApp HR</span>
+        </a>
+      </div>
 
       <!-- Unified Modern Search Bar (Stripe UI Style) -->
       <form class="hero-search-bar" onsubmit="handleHeroSearch(event)">
@@ -84,11 +100,11 @@
         </button>
       </div>
 
-      <!-- Visual Trust Badges Strip -->
+      <!-- Visual Trust Badges Strip (Compliant & Honest) -->
       <div class="trust-badges-strip">
         <div class="trust-badge-item">
           <i class="fa-solid fa-circle-check"></i>
-          <span>Government Registered</span>
+          <span>Direct Company Demand</span>
         </div>
         <div class="trust-badge-item">
           <i class="fa-solid fa-circle-check"></i>
@@ -100,11 +116,11 @@
         </div>
         <div class="trust-badge-item">
           <i class="fa-solid fa-circle-check"></i>
-          <span>Transparent Charges</span>
+          <span>Transparent Terms</span>
         </div>
         <div class="trust-badge-item">
           <i class="fa-solid fa-circle-check"></i>
-          <span>Anti-Fraud Advisory</span>
+          <span>Anti-Fraud Protection</span>
         </div>
       </div>
 
@@ -112,7 +128,7 @@
   </section>
 
   <!-- ==========================================================================
-       2. LIVE JOBS DASHBOARD SECTION (GLOWING CARDS)
+       2. LIVE JOBS DASHBOARD SECTION (TRUST METRICS)
        ========================================================================== -->
   <section class="live-pulse-section">
     <div class="container">
@@ -133,18 +149,18 @@
           <p class="pulse-card-label">Active Verified Overseas Jobs</p>
         </div>
 
-        <!-- Metric 2: New Today -->
+        <!-- Metric 2: Candidates Assisted -->
         <div class="live-pulse-card">
           <div class="pulse-card-header">
             <div class="pulse-card-icon pulse-icon-blue">
-              <i class="fa-solid fa-bolt"></i>
+              <i class="fa-solid fa-user-check"></i>
             </div>
-            <span class="pulse-status-badge" style="color: #BAE6FD;">
-              <i class="fa-solid fa-clock"></i> Last 24 Hours
+            <span class="pulse-status-badge" style="color: #93C5FD;">
+              Verified Support
             </span>
           </div>
-          <div class="pulse-card-value"><%= (typeof stats !== 'undefined' && stats.newToday) ? stats.newToday : 3 %></div>
-          <p class="pulse-card-label">New Quotas Received Today</p>
+          <div class="pulse-card-value">12,500+</div>
+          <p class="pulse-card-label">Candidates Guided</p>
         </div>
 
         <!-- Metric 3: Countries -->
@@ -157,22 +173,22 @@
               Global Network
             </span>
           </div>
-          <div class="pulse-card-value"><%= (typeof stats !== 'undefined' && stats.countriesCount) ? stats.countriesCount : 6 %></div>
+          <div class="pulse-card-value"><%= (typeof stats !== 'undefined' && stats.countriesCount) ? stats.countriesCount : 6 %>+</div>
           <p class="pulse-card-label">Overseas Destination Countries</p>
         </div>
 
-        <!-- Metric 4: Sponsored Jobs -->
+        <!-- Metric 4: Direct Company Contracts -->
         <div class="live-pulse-card">
           <div class="pulse-card-header">
             <div class="pulse-card-icon pulse-icon-green">
-              <i class="fa-solid fa-gift"></i>
+              <i class="fa-solid fa-file-contract"></i>
             </div>
             <span class="pulse-status-badge" style="color: #6EE7B7;">
-              Zero Fee Quotas
+              Authentic Quotas
             </span>
           </div>
-          <div class="pulse-card-value"><%= (typeof stats !== 'undefined' && stats.sponsoredCount) ? stats.sponsoredCount : 2 %></div>
-          <p class="pulse-card-label">100% Employer-Funded Openings</p>
+          <div class="pulse-card-value">100%</div>
+          <p class="pulse-card-label">Direct Company Contracts</p>
         </div>
 
       </div>
@@ -292,14 +308,10 @@
                       <span><%= job.flag || '🌐' %></span>
                       <span><%= job.country.split('(')[0].trim() %></span>
                     </span>
-                    <% if (job.employer_funded) { %>
-                      <span class="card-fee-pill sponsored"><i class="fa-solid fa-gift"></i> 100% Free Quota</span>
-                    <% } else { %>
-                      <span class="card-fee-pill standard"><i class="fa-solid fa-shield-halved"></i> Regulated Fee</span>
-                    <% } %>
+                    <span class="card-fee-pill standard"><i class="fa-solid fa-building"></i> Direct Company Demand</span>
                   </div>
                   <div>
-                    <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold-300); background: rgba(0,0,0,0.65); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(212,175,55,0.3);">
+                    <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold-primary); background: rgba(0,0,0,0.65); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(212,175,55,0.3);">
                       Ref: <%= job.job_code %>
                     </span>
                   </div>
@@ -310,48 +322,55 @@
               <div class="job-card-content">
                 <div>
                   <a href="/jobs/<%= job.job_code || job.id %>" style="text-decoration: none; color: inherit;">
-                    <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff; margin: 0 0 6px 0; line-height: 1.35; transition: color 0.2s ease;">
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 6px 0; line-height: 1.35; transition: color 0.2s ease;">
                       <%= job.title %>
                     </h3>
                   </a>
                   <div style="font-size: 0.82rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
-                    <i class="fa-solid fa-wrench" style="color: var(--gold-amber);"></i>
+                    <i class="fa-solid fa-wrench" style="color: var(--royal-blue);"></i>
                     <span><%= job.category %></span>
                   </div>
 
                   <!-- Salary Badge -->
                   <div class="salary-badge-glow">
-                    <span><%= job.salary_foreign || job.salary_inr %></span>
-                    <span style="font-size: 0.82rem; color: #BAE6FD; font-weight: 600; font-family: var(--font-body); margin-left: 6px;">
-                      (<%= job.salary_inr.split('/')[0].trim() %>)
-                    </span>
+                    <span><%= job.salary_inr %></span>
+                    <% if (job.salary_foreign) { %>
+                      <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600; font-family: var(--font-body); margin-left: 6px;">
+                        (<%= job.salary_foreign %>)
+                      </span>
+                    <% } %>
                   </div>
 
-                  <!-- Key Perks -->
-                  <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;">
+                  <!-- Key Amenities / Perks -->
+                  <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px;">
                     <% (job.perks || []).slice(0, 3).forEach(perk => { %>
-                      <span style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); color: #CBD5E1; padding: 4px 9px; border-radius: 8px; font-size: 0.78rem;">
+                      <span class="amenity-chip-item">
                         <i class="fa-solid fa-check" style="color: #10B981; margin-right: 4px;"></i> <%= perk %>
                       </span>
                     <% }); %>
                   </div>
                 </div>
 
-                <!-- Apply Trigger & View Details -->
-                <div style="display: flex; gap: 8px;">
-                  <a href="/jobs/<%= job.job_code || job.id %>" class="btn btn-secondary" style="flex: 1; justify-content: center; padding: 12px 10px; font-size: 0.88rem; border-radius: 12px; border-color: rgba(255,255,255,0.2);">
-                    <i class="fa-solid fa-circle-info"></i>
+                <!-- Card Action Row: Save, Share, Details, Apply Now -->
+                <div class="job-card-action-bar">
+                  <button type="button" class="card-mini-btn" onclick="saveJobBookmark('<%= job.job_code %>', this)" title="Save Job" aria-label="Bookmark Job">
+                    <i class="fa-regular fa-bookmark"></i>
+                  </button>
+                  <button type="button" class="card-mini-btn" onclick="shareJobOpening('<%= job.job_code %>', '<%= job.title %>')" title="Share Job" aria-label="Share Job">
+                    <i class="fa-solid fa-share-nodes"></i>
+                  </button>
+                  <a href="/jobs/<%= job.job_code || job.id %>" class="btn btn-secondary card-details-btn">
                     <span>Details</span>
                   </a>
-                  <button type="button" class="btn btn-gold" style="flex: 1.3; justify-content: center; padding: 12px 10px; font-size: 0.88rem; border-radius: 12px;" 
+                  <button type="button" class="btn btn-gold card-apply-btn" 
                           data-job-code="<%= job.job_code %>" 
                           data-job-title="<%= job.title %>" 
                           data-job-country="<%= job.country %>" 
                           data-job-salary="<%= job.salary_foreign || job.salary_inr %>" 
                           data-job-category="<%= job.category %>" 
                           onclick="triggerJobApply(this)">
-                    <i class="fa-brands fa-whatsapp" style="font-size: 1.05rem;"></i>
-                    <span>Apply</span>
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span>Apply Now</span>
                   </button>
                 </div>
               </div>
@@ -1096,15 +1115,15 @@
           <form id="leadCaptureForm" onsubmit="handleFormSubmission(event)">
             <div class="contact-form-grid">
               <div class="form-group">
-                <label class="form-label" for="candidateName">Full Name *</label>
-                <input type="text" id="candidateName" class="form-input-box" placeholder="e.g. Ramesh Patel" required />
+                <label class="form-label" for="candidateName">Full Legal Name *</label>
+                <input type="text" id="candidateName" class="form-input-box" placeholder="e.g. Ramesh Patel" autocomplete="name" required />
               </div>
               <div class="form-group">
                 <label class="form-label" for="candidatePhone">WhatsApp Phone Number *</label>
-                <input type="tel" id="candidatePhone" class="form-input-box" placeholder="e.g. +91 98765 43210" required />
+                <input type="tel" id="candidatePhone" class="form-input-box" placeholder="e.g. 9876543210" inputmode="numeric" autocomplete="tel" required />
               </div>
               <div class="form-group">
-                <label class="form-label" for="candidateExp">Years of Experience</label>
+                <label class="form-label" for="candidateExp">Years of Trade Experience</label>
                 <select id="candidateExp" class="form-input-box">
                   <option value="1 to 2 Years">1 to 2 Years (Junior)</option>
                   <option value="3 to 5 Years" selected>3 to 5 Years (Experienced)</option>
@@ -1114,7 +1133,7 @@
               </div>
               <div class="form-group">
                 <label class="form-label" for="candidateCity">Your Current City / State</label>
-                <input type="text" id="candidateCity" class="form-input-box" placeholder="e.g. Mumbai, Maharashtra" />
+                <input type="text" id="candidateCity" class="form-input-box" placeholder="e.g. Surat, Gujarat" autocomplete="address-level2" />
               </div>
             </div>
             <div class="funnel-nav-actions">
@@ -1123,7 +1142,7 @@
               </button>
               <button type="submit" class="btn btn-whatsapp" style="font-size: 1.02rem; padding: 16px 28px; width: 100%;">
                 <i class="fa-brands fa-whatsapp" style="font-size: 1.3rem;"></i>
-                <span>Check Eligibility & Connect on WhatsApp</span>
+                <span>Check Eligibility &amp; Connect with Recruiter</span>
               </button>
             </div>
           </form>
@@ -1143,15 +1162,15 @@
           <i class="fa-solid fa-triangle-exclamation"></i>
         </div>
         <div class="fraud-text-box">
-          <h3>Beware of Fraudulent Recruitment Agents Demanding Upfront Cash Deposits</h3>
+          <h3>Beware of Fraudulent Recruitment Agents Demanding Unofficial Cash Deposits</h3>
           <p>
-            NG Global Manpower Services maintains transparent, regulated service charges, with selected overseas project quotas 100% sponsored by employers. Official visa application, consular biometrics, and GAMCA medical fees are payable directly to government portals and authorized medical clinics—never into personal bank accounts of unverified middlemen. Report any suspicious agent immediately to our official helpline.
+            NG Global Manpower Services coordinates direct, verified international employment opportunities. Official visa processing, employer trade tests, and authorized GAMCA medicals must always be verified through official channels. Never transfer cash to unofficial personal bank accounts of local middlemen. Report any suspicious agent or unverified claim immediately to our official HR desk.
           </p>
         </div>
         <div>
-          <a href="https://wa.me/918080025670?text=Hello%20NG%20Global,%20I%20want%20to%20verify%20a%20recruitment%20agent%20claim." target="_blank" class="btn btn-secondary">
+          <a href="https://wa.me/<%= typeof settings !== 'undefined' && settings.whatsappNumber ? settings.whatsappNumber : '918080025670' %>?text=Hello%20NG%20Global,%20I%20want%20to%20verify%20a%20recruitment%20agent%20claim." target="_blank" class="btn btn-secondary">
             <i class="fa-solid fa-shield"></i>
-            <span>Verify Official Agent</span>
+            <span>Verify Official Opening</span>
           </a>
         </div>
       </div>

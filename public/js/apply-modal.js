@@ -243,20 +243,54 @@
     const recruiterNumber = window.NG_SETTINGS?.whatsappNumber || '918080025670';
     const whatsappUrl = `https://wa.me/${recruiterNumber}?text=${encodeURIComponent(message)}`;
 
-    // Close modal
+    // Close apply modal
     closeApplyModal();
 
-    // Trigger fireworks/confetti if available
+    // Trigger celebration confetti
     if (typeof confetti === 'function') {
       confetti({
-        particleCount: 60,
+        particleCount: 70,
         spread: 70,
         origin: { y: 0.7 }
       });
     }
 
-    // Open WhatsApp
-    window.open(whatsappUrl, '_blank');
+    // Show reassurance modal if available
+    const modalEl = document.getElementById('reassuranceModal');
+    if (modalEl) {
+      const refEl = document.getElementById('modalRefId');
+      const summaryEl = document.getElementById('modalCandidateSummary');
+      const directBtn = document.getElementById('modalWhatsappDirectBtn');
+      const noteEl = document.getElementById('modalRedirectTimerNote');
+
+      if (refEl) refEl.textContent = '#' + currentJob.code;
+      if (directBtn) directBtn.href = whatsappUrl;
+      if (summaryEl) {
+        summaryEl.innerHTML = `
+          <div class="summary-line"><span class="sum-label"><i class="fa-solid fa-user"></i> Name:</span> <span class="sum-val"><strong>${candidateData.name}</strong></span></div>
+          <div class="summary-line"><span class="sum-label"><i class="fa-solid fa-briefcase"></i> Position:</span> <span class="sum-val">${currentJob.title}</span></div>
+          <div class="summary-line"><span class="sum-label"><i class="fa-solid fa-earth-americas"></i> Country:</span> <span class="sum-val">${currentJob.country}</span></div>
+          <div class="summary-line"><span class="sum-label"><i class="fa-brands fa-whatsapp"></i> WhatsApp:</span> <span class="sum-val">${candidateData.phone}</span></div>
+        `;
+      }
+      modalEl.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      let countdown = 3;
+      if (noteEl) noteEl.textContent = `Connecting to official WhatsApp in ${countdown}s...`;
+      const timer = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+          if (noteEl) noteEl.textContent = `Connecting to official WhatsApp in ${countdown}s...`;
+        } else {
+          clearInterval(timer);
+          window.location.href = whatsappUrl;
+        }
+      }, 1000);
+      if (directBtn) directBtn.onclick = () => clearInterval(timer);
+    } else {
+      window.location.href = whatsappUrl;
+    }
   }
 
   // Keyboard accessibility

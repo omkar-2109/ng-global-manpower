@@ -152,17 +152,20 @@ app.use(notFoundHandler);
 app.use(globalErrorHandler);
 
 // 9. Start Server
-const server = app.listen(env.port, () => {
-  console.log(`=======================================================`);
-  console.log(`🚀 ${env.appName} running on port ${env.port}`);
-  console.log(`🌐 Environment: ${env.nodeEnv}`);
-  console.log(`🔗 Local URL:   ${env.appUrl}`);
-  console.log(`🛡️ Admin Portal: ${env.appUrl}/admin/login (Strict HR Credentials)`);
-  console.log(`🤝 Agent Portal: ${env.appUrl}/agent/login (Subdomain: agents.url)`);
-  console.log(`=======================================================`);
+let server = null;
+if (require.main === module) {
+  server = app.listen(env.port, () => {
+    console.log(`=======================================================`);
+    console.log(`🚀 ${env.appName} running on port ${env.port}`);
+    console.log(`🌐 Environment: ${env.nodeEnv}`);
+    console.log(`🔗 Local URL:   ${env.appUrl}`);
+    console.log(`🛡️ Admin Portal: ${env.appUrl}/admin/login (Strict HR Credentials)`);
+    console.log(`🤝 Agent Portal: ${env.appUrl}/agent/login (Subdomain: agents.url)`);
+    console.log(`=======================================================`);
 
-  // Start Render 24/7 Keep-Alive Background Service
-  keepAliveService.start();
-});
+    // Start Render 24/7 Keep-Alive Background Service
+    keepAliveService.start();
+  });
+}
 
 module.exports = { app, server };

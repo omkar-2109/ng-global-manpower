@@ -84,12 +84,81 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; <%= typeof currentYear !== 'undefined' ? currentYear : 2026 %> NG Global Manpower Services. All rights reserved. Registered Overseas Recruitment Platform.</p>
+        <p>&copy; <%= typeof currentYear !== 'undefined' ? currentYear : 2026 %> NG Global Manpower Services. All rights reserved. International Manpower &amp; Workforce Placement Coordination.</p>
         <div style="display: flex; gap: 20px;">
-          <a href="/#fraud-advisory">Legal Disclaimer</a>
-          <a href="/#fraud-advisory">Privacy Policy</a>
-          <a href="/#why-us">Zero Fraud Guarantee</a>
+          <a href="/#fraud-advisory">Anti-Fraud Advisory</a>
+          <a href="/#why-us">Safe Processing Policy</a>
+          <a href="/jobs">Active Demands</a>
         </div>
       </div>
     </div>
   </footer>
+
+  <!-- Universal Floating WhatsApp Contact Button (Mobile & Desktop) -->
+  <a href="https://wa.me/<%= typeof settings !== 'undefined' && settings.whatsappNumber ? settings.whatsappNumber : '918080025670' %>?text=Hello%20NG%20Global%20HR,%20I%20am%20looking%20for%20verified%20overseas%20employment%20openings.%20Please%20guide%20me." 
+     target="_blank" 
+     class="floating-whatsapp-btn" 
+     aria-label="Direct WhatsApp HR Helpline" 
+     id="floatingWhatsappBtn">
+    <div class="floating-wa-pulse"></div>
+    <i class="fa-brands fa-whatsapp"></i>
+    <span class="floating-wa-label">WhatsApp HR</span>
+  </a>
+
+  <!-- Mobile Sticky Conversion Bar (Visible only on viewports <= 768px) -->
+  <aside class="mobile-sticky-action-bar" id="mobileStickyActionBar" aria-label="Quick Mobile Actions">
+    <a href="tel:<%= typeof settings !== 'undefined' && settings.helplinePhone ? settings.helplinePhone.replace(/[^0-9+]/g, '') : '+918080025670' %>" class="mobile-bar-btn helpline-btn">
+      <i class="fa-solid fa-phone"></i>
+      <span>Call HR</span>
+    </a>
+    <a href="/#lead-funnel" class="mobile-bar-btn apply-btn" onclick="if(window.location.pathname === '/') { event.preventDefault(); document.getElementById('lead-funnel')?.scrollIntoView({behavior:'smooth'}); }">
+      <i class="fa-solid fa-bolt"></i>
+      <span>Apply Now</span>
+    </a>
+    <a href="https://wa.me/<%= typeof settings !== 'undefined' && settings.whatsappNumber ? settings.whatsappNumber : '918080025670' %>?text=Hello%20NG%20Global,%20I%20am%20interested%20in%20overseas%20jobs.%20Please%20share%20verified%20openings." target="_blank" class="mobile-bar-btn whatsapp-btn">
+      <i class="fa-brands fa-whatsapp"></i>
+      <span>WhatsApp</span>
+    </a>
+  </aside>
+
+  <!-- Reassurance & Lead Confirmation Modal (High Trust & Conversion) -->
+  <div id="reassuranceModal" class="reassurance-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalConfirmTitle">
+    <div class="reassurance-modal-card">
+      <button type="button" class="modal-close-icon" onclick="closeReassuranceModal()" aria-label="Close Dialog">&times;</button>
+      
+      <div class="modal-success-badge">
+        <i class="fa-solid fa-check"></i>
+      </div>
+
+      <h3 id="modalConfirmTitle" class="modal-confirm-heading">Application Registered!</h3>
+      <p class="modal-confirm-sub">Your profile has been saved in our recruitment database.</p>
+
+      <div class="modal-reference-pill">
+        <span>Dossier Reference ID:</span>
+        <strong id="modalRefId">#NG-PENDING</strong>
+      </div>
+
+      <div class="modal-candidate-summary" id="modalCandidateSummary">
+        <!-- Injected via JS with Name, Trade, Destination -->
+      </div>
+
+      <div class="modal-next-steps-box">
+        <h4><i class="fa-solid fa-list-check"></i> Next Steps with Your Recruiter:</h4>
+        <ul>
+          <li><strong>Document Review:</strong> Verification of trade skill &amp; passport validity.</li>
+          <li><strong>Company Terms:</strong> Direct foreign company salary, food &amp; room explained.</li>
+          <li><strong>Visa Procedure:</strong> Legitimate step-by-step guidance without illegal middlemen.</li>
+        </ul>
+        <div class="modal-sla-badge">
+          <i class="fa-solid fa-clock"></i>
+          <span>Expected Recruiter Contact: <strong>Within 15 to 30 Minutes</strong></span>
+        </div>
+      </div>
+
+      <a id="modalWhatsappDirectBtn" href="#" target="_blank" class="btn btn-whatsapp modal-action-btn">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span>Chat with Recruiter on WhatsApp Now</span>
+      </a>
+      <p class="modal-auto-redirect-note" id="modalRedirectTimerNote">Opening WhatsApp automatically...</p>
+    </div>
+  </div>

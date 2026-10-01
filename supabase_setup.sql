@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS leads (
     merged_dossier_pdf VARCHAR(255),
     job_code VARCHAR(100),
     status VARCHAR(50) DEFAULT 'New',
+    ip_address VARCHAR(100),
     notes TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -123,6 +124,7 @@ ALTER TABLE leads ADD COLUMN IF NOT EXISTS documents JSONB DEFAULT '[]'::jsonb;
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS merged_dossier_pdf VARCHAR(255);
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS job_code VARCHAR(100);
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'New';
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS ip_address VARCHAR(100);
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS notes TEXT;
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS backout_reason TEXT;
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS backed_out_at TIMESTAMPTZ;
@@ -164,3 +166,38 @@ INSERT INTO settings (key, value) VALUES
 ('support_email', '"hr@ngglobalmp.in"'::jsonb),
 ('anti_fraud_notice', '"Official visa & medical fees are paid directly to embassies. NG Global maintains transparent regulated service fees, with select 100% employer-funded positions."'::jsonb)
 ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
+
+-- 7. ROW LEVEL SECURITY (RLS) POLICIES
+-- Option A: Enable Row Level Security with permissive public access for API syncing:
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow anon all on users" ON users;
+CREATE POLICY "Allow anon all on users" ON users FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+ALTER TABLE agents ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow anon all on agents" ON agents;
+CREATE POLICY "Allow anon all on agents" ON agents FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+ALTER TABLE jobs ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow anon all on jobs" ON jobs;
+CREATE POLICY "Allow anon all on jobs" ON jobs FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow anon all on leads" ON leads;
+CREATE POLICY "Allow anon all on leads" ON leads FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow anon all on notifications" ON notifications;
+CREATE POLICY "Allow anon all on notifications" ON notifications FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow anon all on settings" ON settings;
+CREATE POLICY "Allow anon all on settings" ON settings FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+-- Option B (Alternative): If you prefer to completely disable RLS for direct backend syncing:
+-- ALTER TABLE users DISABLE ROW LEVEL SECURITY;
+-- ALTER TABLE agents DISABLE ROW LEVEL SECURITY;
+-- ALTER TABLE jobs DISABLE ROW LEVEL SECURITY;
+-- ALTER TABLE leads DISABLE ROW LEVEL SECURITY;
+-- ALTER TABLE notifications DISABLE ROW LEVEL SECURITY;
+-- ALTER TABLE settings DISABLE ROW LEVEL SECURITY;
+

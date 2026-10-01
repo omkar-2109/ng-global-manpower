@@ -95,8 +95,25 @@ const authService = {
     };
   },
 
+  adminLogin(email, password) {
+    return this.login(email, password);
+  },
+
   verifyToken(token) {
-    return jwt.verify(token, env.jwtSecret);
+    try {
+      return jwt.verify(token, env.jwtSecret);
+    } catch (err) {
+      return null;
+    }
+  },
+
+  verifyAgentToken(token) {
+    try {
+      const decoded = jwt.verify(token, env.jwtSecret);
+      return decoded.role === 'agent' ? decoded : null;
+    } catch (err) {
+      return null;
+    }
   }
 };
 

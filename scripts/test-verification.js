@@ -3,8 +3,10 @@ const Agent = require('../src/models/Agent');
 const Job = require('../src/models/Job');
 const authService = require('../src/services/authService');
 const jobService = require('../src/services/jobService');
+const { initializeDatabase } = require('../src/models/dbInit');
 
 async function runVerification() {
+  initializeDatabase();
   console.log('--- 1. Testing Agent Password Reset ---');
   const agent = Agent.findByUsername('apex-global');
   if (!agent) {
@@ -34,12 +36,19 @@ async function runVerification() {
   console.log('\n--- 2. Testing Job Openings & Counters ---');
   const activeJobs = jobService.getActiveJobs();
   console.log(`Active live jobs in catalog: ${activeJobs.length}`);
-  if (activeJobs.length < 6) {
-    throw new Error(`Expected at least 6 active jobs, found ${activeJobs.length}`);
+  const dummyCodes = ['NG-KSA-9041', 'NG-EU-7720', 'NG-UAE-4412', 'NG-QAT-3180', 'NG-NZ-5510', 'NG-USA-8210'];
+  const hasDummy = activeJobs.some(j => dummyCodes.includes(j.job_code));
+  if (hasDummy) {
+    throw new Error('Hardcoded sample jobs detected in active job catalog!');
   }
-  activeJobs.forEach((j, i) => {
-    console.log(`  ${i + 1}. [${j.job_code}] ${j.title} (${j.country}) - ${j.employer_funded ? '100% Funded' : j.salary_inr}`);
-  });
+  console.log('Sample dummy jobs check: PASS (Zero dummy jobs auto-seeded)');
+  if (activeJobs.length > 0) {
+    activeJobs.forEach((j, i) => {
+      console.log(`  ${i + 1}. [${j.job_code}] ${j.title} (${j.country}) - ${j.employer_funded ? '100% Funded' : j.salary_inr}`);
+    });
+  } else {
+    console.log('  Catalog is clean and ready for HR postings (0 dummy jobs).');
+  }
 
   console.log('\n--- 3. Testing Files & Assets ---');
   const fs = require('fs');

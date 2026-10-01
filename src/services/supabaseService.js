@@ -24,7 +24,7 @@ const supabaseService = {
     if (!this.isEnabled()) return null;
     try {
       const url = `${this.getBaseUrl()}/${table}?select=*`;
-      const res = await fetch(url, { headers: this.getHeaders() });
+      const res = await fetch(url, { headers: this.getHeaders(), signal: AbortSignal.timeout(5000) });
       if (!res.ok) {
         const errorText = await res.text();
         console.warn(`[Supabase] Table ${table} fetch returned status ${res.status}:`, errorText.slice(0, 150));
@@ -49,7 +49,8 @@ const supabaseService = {
           ...this.getHeaders(),
           'Prefer': 'resolution=merge-duplicates'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        signal: AbortSignal.timeout(5000)
       });
       if (!res.ok) {
         const errText = await res.text();
@@ -68,7 +69,8 @@ const supabaseService = {
       const res = await fetch(url, {
         method: 'PATCH',
         headers: this.getHeaders(),
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        signal: AbortSignal.timeout(5000)
       });
       if (!res.ok) {
         const errText = await res.text();
@@ -86,7 +88,8 @@ const supabaseService = {
       const url = `${this.getBaseUrl()}/${table}?id=eq.${id}`;
       const res = await fetch(url, {
         method: 'DELETE',
-        headers: this.getHeaders()
+        headers: this.getHeaders(),
+        signal: AbortSignal.timeout(5000)
       });
       if (!res.ok) {
         const errText = await res.text();
@@ -98,7 +101,8 @@ const supabaseService = {
         const urlCode = `${this.getBaseUrl()}/${table}?job_code=eq.${encodeURIComponent(extra.job_code)}`;
         await fetch(urlCode, {
           method: 'DELETE',
-          headers: this.getHeaders()
+          headers: this.getHeaders(),
+          signal: AbortSignal.timeout(5000)
         }).catch(() => {});
       }
     } catch (err) {
@@ -114,7 +118,8 @@ const supabaseService = {
       const url = `${this.getBaseUrl()}/${table}?id=in.(${idList})`;
       const res = await fetch(url, {
         method: 'DELETE',
-        headers: this.getHeaders()
+        headers: this.getHeaders(),
+        signal: AbortSignal.timeout(5000)
       });
       if (!res.ok) {
         const errText = await res.text();
@@ -136,11 +141,19 @@ const supabaseService = {
       console.log('[Supabase] Connecting to Supabase to fetch live jobs & database state...');
       const remoteJobs = await this.fetchTable('jobs');
 
-      if (Array.isArray(remoteJobs)) {
+      if (Array.isArray(remoteJobs) && remoteJobs.length > 0) {
         console.log(`[Supabase] Successfully fetched ${remoteJobs.length} live jobs from Supabase.`);
-        // Jobs come strictly from Supabase! Never inject test jobs from git.
         store.jobs = remoteJobs;
         if (typeof persistFn === 'function') persistFn();
+      } else if (Array.isArray(remoteJobs) && remoteJobs.length === 0) {
+        if (store.jobs && store.jobs.length > 0) {
+          console.log(`[Supabase] Remote jobs table is empty; preserving ${store.jobs.length} local catalog jobs.`);
+          for (const localJob of store.jobs) {
+            this.pushRecord('jobs', localJob).catch(() => {});
+          }
+        } else {
+          console.log('[Supabase] No jobs found locally or in Supabase.');
+        }
       } else {
         console.warn('[Supabase] Could not fetch jobs from Supabase (returned non-array or error). Keeping current memory state.');
       }

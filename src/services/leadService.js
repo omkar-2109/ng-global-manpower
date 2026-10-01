@@ -85,6 +85,10 @@ const leadService = {
     ]);
 
     return [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  },
+
+  getLeadsCsv() {
+    return this.exportToCsv();
   }
 };
 

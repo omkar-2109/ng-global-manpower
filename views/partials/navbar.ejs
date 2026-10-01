@@ -6,12 +6,12 @@
       <% tickerJobs.forEach(tJob => { %>
         <a href="/jobs/<%= tJob.job_code || tJob.id %>" class="ticker-job-item">
           <span><%= tJob.flag || '🌐' %> <%= tJob.title %> (<%= (tJob.country || '').split('(')[0].trim() %>)</span>
-          <% if (tJob.employer_funded) { %>
-            <span class="ticker-sponsored-pill"><i class="fa-solid fa-gift"></i> 100% Free Quota</span>
-          <% } else if (tJob.salary_foreign) { %>
+          <% if (tJob.salary_foreign) { %>
             <span class="ticker-job-tag"><%= tJob.salary_foreign %></span>
           <% } else if (tJob.salary_inr) { %>
             <span class="ticker-job-tag"><%= tJob.salary_inr %></span>
+          <% } else { %>
+            <span class="ticker-sponsored-pill"><i class="fa-solid fa-building"></i> Direct Demand</span>
           <% } %>
         </a>
         <span style="color: var(--border-gold); opacity: 0.5;">•</span>
@@ -22,12 +22,12 @@
       <% tickerJobs.forEach(tJob => { %>
         <a href="/jobs/<%= tJob.job_code || tJob.id %>" class="ticker-job-item">
           <span><%= tJob.flag || '🌐' %> <%= tJob.title %> (<%= (tJob.country || '').split('(')[0].trim() %>)</span>
-          <% if (tJob.employer_funded) { %>
-            <span class="ticker-sponsored-pill"><i class="fa-solid fa-gift"></i> 100% Free Quota</span>
-          <% } else if (tJob.salary_foreign) { %>
+          <% if (tJob.salary_foreign) { %>
             <span class="ticker-job-tag"><%= tJob.salary_foreign %></span>
           <% } else if (tJob.salary_inr) { %>
             <span class="ticker-job-tag"><%= tJob.salary_inr %></span>
+          <% } else { %>
+            <span class="ticker-sponsored-pill"><i class="fa-solid fa-building"></i> Direct Demand</span>
           <% } %>
         </a>
         <span style="color: var(--border-gold); opacity: 0.5;">•</span>
@@ -41,7 +41,7 @@
     <div class="container top-bar-content">
       <div class="top-badge-pulse">
         <span class="pulse-dot"></span>
-        <span>Transparent & Regulated Service Charges • 100% Company-Sponsored Quotas Available • Official Embassy Processing</span>
+        <span>Direct Overseas Corporate Demands • Verified Company Contracts • Legitimate Visa &amp; Embassy Assistance</span>
       </div>
       <div class="top-bar-links">
         <span><i class="fa-solid fa-phone"></i> Helpline: <%= (typeof settings !== 'undefined' && settings.helplinePhone ? settings.helplinePhone : '+91 80800 25670').replace(/['"]+/g, '').trim() %></span>
