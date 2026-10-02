@@ -120,6 +120,9 @@ async function runTestSuite() {
     const result = authService.agentLogin(agent.email, 'AgentTest@2026');
     assert(result && result.token, 'Must return JWT token');
     assert.strictEqual(result.agent.id, agent.id);
+
+    // Restore agent password to standard fixture
+    Agent.updatePassword(agent.id, 'Agent@2026');
   });
 
   await test('Agent login fails with incorrect password', () => {
@@ -235,12 +238,12 @@ async function runTestSuite() {
   const testServer = http.createServer(app);
 
   await new Promise((resolve, reject) => {
-    testServer.listen(testPort, resolve);
+    testServer.listen(testPort, '127.0.0.1', resolve);
     testServer.on('error', reject);
   });
 
-  console.log(`  [HTTP Test Server running at http://localhost:${testPort}]`);
-  const baseUrl = `http://localhost:${testPort}`;
+  console.log(`  [HTTP Test Server running at http://127.0.0.1:${testPort}]`);
+  const baseUrl = `http://127.0.0.1:${testPort}`;
 
   try {
     // Test 1: GET /health

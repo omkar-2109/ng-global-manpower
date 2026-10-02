@@ -41,6 +41,7 @@ const supabaseService = {
   // Push single record (upsert)
   async pushRecord(table, data) {
     if (!this.isEnabled() || !data) return;
+    let payload = { ...data };
     try {
       const url = `${this.getBaseUrl()}/${table}`;
       const res = await fetch(url, {
@@ -49,11 +50,25 @@ const supabaseService = {
           ...this.getHeaders(),
           'Prefer': 'resolution=merge-duplicates'
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
         signal: AbortSignal.timeout(5000)
       });
       if (!res.ok) {
         const errText = await res.text();
+        const colMatch = errText.match(/Could not find the '([^']+)' column/i);
+        if (colMatch && colMatch[1] && payload[colMatch[1]] !== undefined) {
+          delete payload[colMatch[1]];
+          const retryRes = await fetch(url, {
+            method: 'POST',
+            headers: {
+              ...this.getHeaders(),
+              'Prefer': 'resolution=merge-duplicates'
+            },
+            body: JSON.stringify(payload),
+            signal: AbortSignal.timeout(5000)
+          });
+          if (retryRes.ok) return;
+        }
         console.warn(`[Supabase] Upsert into ${table} failed (${res.status}):`, errText.slice(0, 150));
       }
     } catch (err) {
@@ -64,16 +79,28 @@ const supabaseService = {
   // Update record by id
   async updateRecord(table, id, data) {
     if (!this.isEnabled() || !id) return;
+    let payload = { ...data };
     try {
       const url = `${this.getBaseUrl()}/${table}?id=eq.${id}`;
       const res = await fetch(url, {
         method: 'PATCH',
         headers: this.getHeaders(),
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
         signal: AbortSignal.timeout(5000)
       });
       if (!res.ok) {
         const errText = await res.text();
+        const colMatch = errText.match(/Could not find the '([^']+)' column/i);
+        if (colMatch && colMatch[1] && payload[colMatch[1]] !== undefined) {
+          delete payload[colMatch[1]];
+          const retryRes = await fetch(url, {
+            method: 'PATCH',
+            headers: this.getHeaders(),
+            body: JSON.stringify(payload),
+            signal: AbortSignal.timeout(5000)
+          });
+          if (retryRes.ok) return;
+        }
         console.warn(`[Supabase] updateRecord in ${table} id=${id} failed (${res.status}):`, errText.slice(0, 150));
       }
     } catch (err) {
