@@ -88,10 +88,30 @@ const jobService = {
 
     // Regional breakdown dynamically computed from active jobs
     const regions = {
-      middleEast: jobs.filter(j => /UAE|Saudi|Qatar|Kuwait|Dubai|Oman/i.test(j.country)).length,
-      europe: jobs.filter(j => /Germany|Poland|EU|UK/i.test(j.country)).length,
-      oceania: jobs.filter(j => /New Zealand|Australia/i.test(j.country)).length,
+      middleEast: jobs.filter(j => /UAE|Saudi|Qatar|Kuwait|Dubai|Oman|Bahrain/i.test(j.country)).length,
+      europe: jobs.filter(j => /Germany|Poland|EU|UK|Czech|Romania|Malta|Europe/i.test(j.country)).length,
+      oceania: jobs.filter(j => /New Zealand|Australia|NZ/i.test(j.country)).length,
       northAmerica: jobs.filter(j => /United States|USA|Canada/i.test(j.country)).length
+    };
+
+    // Country-specific breakdowns for quick destination chips
+    const countries = {
+      uae: jobs.filter(j => /UAE|Dubai|Abu Dhabi/i.test(j.country)).length,
+      germany: jobs.filter(j => /Germany/i.test(j.country)).length,
+      qatar: jobs.filter(j => /Qatar/i.test(j.country)).length,
+      saudi: jobs.filter(j => /Saudi|KSA|Riyadh/i.test(j.country)).length,
+      usa: jobs.filter(j => /United States|USA/i.test(j.country)).length,
+      newZealand: jobs.filter(j => /New Zealand|NZ/i.test(j.country)).length
+    };
+
+    // Category breakdown for popular trade cards
+    const categories = {
+      construction: jobs.filter(j => /Construction|Infrastructure|Civil|Steel|Rigger/i.test(j.category) || /Construction|Rigger|Steel/i.test(j.title)).length,
+      logistics: jobs.filter(j => /Driving|Driver|Logistics|Trailer/i.test(j.category) || /Driver|Driving|Trailer|Truck/i.test(j.title)).length,
+      warehouse: jobs.filter(j => /Warehouse|Storekeeper|Inventory|Forklift/i.test(j.category) || /Warehouse|Storekeeper|Forklift/i.test(j.title)).length,
+      hospitality: jobs.filter(j => /Hospitality|Catering|Hotel|Restaurant|Chef|Cook|Waiter/i.test(j.category) || /Chef|Cook|Waiter|Hospitality/i.test(j.title)).length,
+      oilGas: jobs.filter(j => /Oil|Gas|Refinery|Petrochemical/i.test(j.category) || /Oil|Gas|Piping/i.test(j.title)).length,
+      manufacturing: jobs.filter(j => /Manufacturing|Industrial|Electrical|Plumbing|MEP|Welder|CNC|Mechanic/i.test(j.category) || /Welder|Mechanic|CNC|Electrician|Plumber/i.test(j.title)).length
     };
 
     return {
@@ -99,7 +119,9 @@ const jobService = {
       countriesCount,
       sponsoredCount,
       newToday,
-      regions
+      regions,
+      countries,
+      categories
     };
   }
 };

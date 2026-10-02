@@ -73,29 +73,29 @@
 
       <!-- Popular Country Quick Chips -->
       <div class="hero-country-chips">
-        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-right: 6px;">Top Destinations:</span>
+        <span style="font-size: 0.85rem; color: #475569; font-weight: 700; margin-right: 6px;">Top Destinations:</span>
         <button type="button" class="hero-country-chip" onclick="filterByCountryPill('UAE', this)">
-          <span class="chip-flag">🇦🇪</span>
+          <img src="/images/flags/ae.svg" alt="UAE" class="flag-img" />
           <span>UAE</span>
         </button>
         <button type="button" class="hero-country-chip" onclick="filterByCountryPill('Germany', this)">
-          <span class="chip-flag">🇩🇪</span>
+          <img src="/images/flags/de.svg" alt="Germany" class="flag-img" />
           <span>Germany</span>
         </button>
         <button type="button" class="hero-country-chip" onclick="filterByCountryPill('Qatar', this)">
-          <span class="chip-flag">🇶🇦</span>
+          <img src="/images/flags/qa.svg" alt="Qatar" class="flag-img" />
           <span>Qatar</span>
         </button>
         <button type="button" class="hero-country-chip" onclick="filterByCountryPill('Saudi', this)">
-          <span class="chip-flag">🇸🇦</span>
+          <img src="/images/flags/sa.svg" alt="Saudi Arabia" class="flag-img" />
           <span>Saudi Arabia</span>
         </button>
         <button type="button" class="hero-country-chip" onclick="filterByCountryPill('United States', this)">
-          <span class="chip-flag">🇺🇸</span>
+          <img src="/images/flags/us.svg" alt="USA" class="flag-img" />
           <span>USA</span>
         </button>
         <button type="button" class="hero-country-chip" onclick="filterByCountryPill('New Zealand', this)">
-          <span class="chip-flag">🇳🇿</span>
+          <img src="/images/flags/nz.svg" alt="New Zealand" class="flag-img" />
           <span>New Zealand</span>
         </button>
       </div>
@@ -378,13 +378,15 @@
             </div>
           <% }); %>
         <% } else { %>
-          <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 60px 24px; border-radius: 20px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08);">
-            <i class="fa-solid fa-briefcase" style="font-size: 3rem; color: var(--gold-amber); margin-bottom: 16px; opacity: 0.85;"></i>
-            <h3 style="font-size: 1.35rem; color: #fff; margin-bottom: 8px;">No Active Overseas Openings Right Now</h3>
-            <p style="color: var(--text-muted); max-width: 520px; margin: 0 auto 24px auto; font-size: 0.95rem; line-height: 1.6;">
+          <div class="empty-jobs-card" style="grid-column: 1 / -1; text-align: center; padding: 56px 24px; border-radius: 20px; background: #FFFFFF; border: 1.5px solid #E2E8F0; box-shadow: 0 4px 20px -2px rgba(11, 25, 44, 0.06);">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: #EFF6FF; border: 1px solid #BFDBFE; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 18px;">
+              <i class="fa-solid fa-briefcase" style="font-size: 1.8rem; color: #1D4ED8;"></i>
+            </div>
+            <h3 style="font-size: 1.4rem; color: #0B192C; margin-bottom: 8px; font-weight: 800;">No Active Overseas Openings Right Now</h3>
+            <p style="color: #64748B; max-width: 540px; margin: 0 auto 24px auto; font-size: 0.95rem; line-height: 1.65;">
               New verified international vacancies are published directly by our HR recruitment operations desk. You can submit your candidate profile to get instantly matched once suitable employer quotas open.
             </p>
-            <a href="#lead-funnel" class="btn btn-gold" style="display: inline-flex; padding: 12px 24px;">
+            <a href="#lead-funnel" class="btn btn-gold" style="display: inline-flex; padding: 12px 24px; font-weight: 700;">
               <span>Submit Candidate Profile</span>
               <i class="fa-solid fa-arrow-right"></i>
             </a>
@@ -392,14 +394,19 @@
         <% } %>
       </div>
 
-      <!-- No Results Feedback State -->
-      <div id="liveJobsNoResults" class="glass-card" style="display: none; text-align: center; padding: 60px 24px; margin-top: 24px; border-radius: 20px;">
-        <i class="fa-solid fa-magnifying-glass" style="font-size: 3rem; color: var(--gold-primary); margin-bottom: 16px;"></i>
-        <h3 style="font-size: 1.35rem; color: #fff; margin-bottom: 8px;">No Openings Match Your Filter</h3>
-        <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto 20px auto;">
+      <!-- No Results Feedback State (Shown when search/filter returns 0 items) -->
+      <div id="liveJobsNoResults" style="display: none; text-align: center; padding: 50px 24px; margin-top: 24px; border-radius: 20px; background: #FFFFFF; border: 1.5px solid #E2E8F0; box-shadow: 0 4px 20px -2px rgba(11, 25, 44, 0.06);">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: #FEF3C7; border: 1px solid #FDE68A; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+          <i class="fa-solid fa-magnifying-glass" style="font-size: 1.5rem; color: #B45309;"></i>
+        </div>
+        <h3 style="font-size: 1.35rem; color: #0B192C; margin-bottom: 8px; font-weight: 800;">No Openings Match Your Filter</h3>
+        <p style="color: #64748B; max-width: 480px; margin: 0 auto 20px auto; font-size: 0.95rem;">
           Try adjusting your search terms or clearing your country and trade filters to see all available international vacancies.
         </p>
-        <button type="button" class="btn btn-gold" onclick="filterJobsLive('', '', '')">Show All Openings</button>
+        <button type="button" class="btn btn-secondary" onclick="filterJobsLive('', '', '')" style="padding: 10px 20px; font-weight: 700;">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span>Show All Openings</span>
+        </button>
       </div>
 
     </div>
@@ -424,132 +431,50 @@
 
       <div class="regional-hub-layout">
         
-        <!-- Left: Stylized Interactive SVG World Map -->
-        <div class="world-map-svg-container">
-          <svg viewBox="0 0 1000 500" class="world-map-svg" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <radialGradient id="mapBg" cx="50%" cy="50%" r="60%">
-                <stop offset="0%" stop-color="#0D1F4A" stop-opacity="1"/>
-                <stop offset="100%" stop-color="#030A1A" stop-opacity="1"/>
-              </radialGradient>
-              <filter id="nodeGlow" x="-80%" y="-80%" width="260%" height="260%">
-                <feGaussianBlur stdDeviation="4" result="glow"/>
-                <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-              <filter id="continentShadow" x="-5%" y="-5%" width="110%" height="110%">
-                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.5"/>
-              </filter>
-              <style>
-                .continent { stroke-linejoin: round; stroke-linecap: round; }
-                @keyframes nodePulse { 0%,100%{r:14;opacity:0.6} 50%{r:20;opacity:0.15} }
-                .node-ring { animation: nodePulse 2.5s infinite ease-in-out; }
-                @keyframes dashMove { from{stroke-dashoffset:0} to{stroke-dashoffset:-24} }
-                .arc-line { animation: dashMove 2s linear infinite; }
-              </style>
-            </defs>
+        <% 
+          const meCount = (typeof stats !== 'undefined' && stats.regions && typeof stats.regions.middleEast === 'number') ? stats.regions.middleEast : 0;
+          const euCount = (typeof stats !== 'undefined' && stats.regions && typeof stats.regions.europe === 'number') ? stats.regions.europe : 0;
+          const ocCount = (typeof stats !== 'undefined' && stats.regions && typeof stats.regions.oceania === 'number') ? stats.regions.oceania : 0;
+          const naCount = (typeof stats !== 'undefined' && stats.regions && typeof stats.regions.northAmerica === 'number') ? stats.regions.northAmerica : 0;
+        %>
 
-            <!-- Ocean background -->
-            <rect width="1000" height="500" fill="url(#mapBg)"/>
-            <!-- Latitude grid lines -->
-            <line x1="0" y1="125" x2="1000" y2="125" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
-            <line x1="0" y1="250" x2="1000" y2="250" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
-            <line x1="0" y1="375" x2="1000" y2="375" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
-            <!-- Longitude grid lines -->
-            <line x1="250" y1="0" x2="250" y2="500" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
-            <line x1="500" y1="0" x2="500" y2="500" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
-            <line x1="750" y1="0" x2="750" y2="500" stroke="rgba(56,189,248,0.06)" stroke-width="0.8"/>
-            <!-- Equator -->
-            <line x1="0" y1="265" x2="1000" y2="265" stroke="rgba(56,189,248,0.12)" stroke-width="1" stroke-dasharray="6,6"/>
+        <!-- Left: High-Definition Global Deployment Corridors Map -->
+        <div class="world-map-card-wrapper">
+          <img src="/images/world-map-hubs.jpg" alt="NG Global International Deployment Hubs" class="world-map-base-img" loading="lazy" />
 
-            <!-- ===== CONTINENTS ===== -->
-            <!-- North America -->
-            <path class="continent" d="M 95 55 L 115 50 L 140 45 L 175 50 L 200 48 L 215 55 L 220 65 L 210 72 L 218 78 L 215 90 L 205 98 L 196 108 L 200 118 L 192 128 L 188 140 L 178 148 L 175 160 L 165 168 L 162 178 L 155 185 L 148 195 L 138 210 L 130 225 L 122 240 L 118 255 L 112 268 L 105 278 L 95 285 L 88 278 L 92 268 L 98 258 L 96 245 L 90 240 L 85 232 L 80 225 L 78 215 L 82 205 L 88 195 L 90 185 L 85 178 L 78 170 L 72 160 L 70 148 L 68 135 L 72 122 L 75 110 L 72 98 L 70 88 L 75 78 L 82 68 L 90 60 Z" fill="#0C2A5F" stroke="rgba(56,189,248,0.3)" stroke-width="1.2" filter="url(#continentShadow)"/>
-            <!-- Alaska/Canada extension -->
-            <path class="continent" d="M 95 55 L 85 48 L 70 42 L 55 38 L 45 42 L 40 50 L 45 58 L 55 62 L 65 60 L 75 58 L 85 55 Z" fill="#0C2A5F" stroke="rgba(56,189,248,0.25)" stroke-width="1"/>
-            <!-- Greenland -->
-            <path class="continent" d="M 195 25 L 215 20 L 235 22 L 248 30 L 252 42 L 245 52 L 230 58 L 218 55 L 205 48 L 198 38 Z" fill="#0A2250" stroke="rgba(56,189,248,0.2)" stroke-width="1"/>
-            <!-- Central America & Caribbean -->
-            <path class="continent" d="M 138 210 L 148 215 L 155 218 L 158 228 L 155 235 L 148 240 L 142 235 L 138 225 Z" fill="#0C2A5F" stroke="rgba(56,189,248,0.2)" stroke-width="1"/>
-            <!-- South America -->
-            <path class="continent" d="M 200 268 L 215 262 L 228 265 L 240 272 L 250 282 L 255 295 L 260 310 L 262 325 L 258 340 L 252 355 L 242 370 L 230 382 L 218 390 L 208 395 L 198 392 L 188 385 L 180 375 L 175 360 L 172 345 L 175 330 L 180 318 L 178 305 L 175 292 L 178 280 L 185 272 Z" fill="#0A1E48" stroke="rgba(56,189,248,0.25)" stroke-width="1.2" filter="url(#continentShadow)"/>
+          <!-- Middle East & Gulf Hotspot -->
+          <div class="map-hotspot-pin" style="top: 45%; left: 26%;" onclick="filterByCountryPill('UAE', this)" title="Explore Gulf Hub (UAE, Saudi, Qatar)">
+            <span class="map-beacon-dot gold"></span>
+            <span>Gulf Hub</span>
+            <span style="opacity: 0.85; font-size: 0.72rem; font-weight: 600;">(<%= meCount %>)</span>
+          </div>
 
-            <!-- Europe (highlighted - has hiring) -->
-            <path class="continent" d="M 445 85 L 458 80 L 472 78 L 485 82 L 498 80 L 512 78 L 525 82 L 530 92 L 528 102 L 520 110 L 518 120 L 512 128 L 505 132 L 498 128 L 492 135 L 485 140 L 478 135 L 472 128 L 465 122 L 458 118 L 452 112 L 448 105 L 445 98 Z" fill="#1A4080" stroke="rgba(212,175,55,0.55)" stroke-width="1.8" filter="url(#continentShadow)"/>
-            <!-- Scandinavia -->
-            <path class="continent" d="M 480 58 L 492 52 L 505 55 L 512 62 L 510 72 L 505 78 L 498 80 L 490 75 L 482 68 Z" fill="#143368" stroke="rgba(212,175,55,0.4)" stroke-width="1.2"/>
-            <!-- UK & Ireland -->
-            <path class="continent" d="M 432 88 L 438 84 L 442 90 L 440 98 L 435 102 L 430 98 L 430 92 Z" fill="#143368" stroke="rgba(212,175,55,0.35)" stroke-width="1"/>
+          <!-- Europe & EU Hotspot -->
+          <div class="map-hotspot-pin" style="top: 30%; left: 16%;" onclick="filterByCountryPill('Germany', this)" title="Explore Europe Hub (Germany, Poland, EU)">
+            <span class="map-beacon-dot cyan"></span>
+            <span>Europe & EU</span>
+            <span style="opacity: 0.85; font-size: 0.72rem; font-weight: 600;">(<%= euCount %>)</span>
+          </div>
 
-            <!-- Africa -->
-            <path class="continent" d="M 448 148 L 462 142 L 478 140 L 495 142 L 510 148 L 520 158 L 525 172 L 528 188 L 525 205 L 518 220 L 510 235 L 505 250 L 502 265 L 498 280 L 492 295 L 485 310 L 475 320 L 462 325 L 450 322 L 440 312 L 432 300 L 428 285 L 428 270 L 432 255 L 435 240 L 432 225 L 428 210 L 425 195 L 425 180 L 428 168 L 432 158 L 440 150 Z" fill="#0A1E48" stroke="rgba(56,189,248,0.25)" stroke-width="1.2" filter="url(#continentShadow)"/>
-            <!-- Madagascar -->
-            <path class="continent" d="M 535 282 L 540 278 L 545 285 L 545 295 L 540 302 L 535 298 L 533 290 Z" fill="#0A1E48" stroke="rgba(56,189,248,0.2)" stroke-width="0.8"/>
+          <!-- India Headquarters (Source Hub) -->
+          <div class="map-hotspot-pin" style="top: 48%; left: 33%; border-color: rgba(56, 189, 248, 0.85); background: rgba(8, 22, 54, 0.92);" onclick="filterByCountryPill('', this)" title="NG Global Recruitment HQ (India)">
+            <span class="map-beacon-dot" style="background: #38BDF8; box-shadow: 0 0 10px #38BDF8;"></span>
+            <span>India HQ</span>
+          </div>
 
-            <!-- Middle East & Arabian Peninsula (highlighted - major hiring) -->
-            <path class="continent" d="M 535 135 L 548 130 L 562 128 L 578 130 L 592 138 L 602 148 L 605 160 L 600 172 L 592 182 L 582 190 L 572 195 L 560 198 L 548 195 L 538 188 L 530 178 L 528 168 L 530 158 L 535 148 Z" fill="#1A4A8F" stroke="rgba(212,175,55,0.6)" stroke-width="2" filter="url(#continentShadow)"/>
+          <!-- North America Hotspot -->
+          <div class="map-hotspot-pin" style="top: 35%; left: 78%;" onclick="filterByCountryPill('United States', this)" title="Explore North America (USA, Canada)">
+            <span class="map-beacon-dot cyan"></span>
+            <span>USA &amp; Canada</span>
+            <span style="opacity: 0.85; font-size: 0.72rem; font-weight: 600;">(<%= naCount %>)</span>
+          </div>
 
-            <!-- Asia (Russia/Central/East) -->
-            <path class="continent" d="M 535 55 L 560 48 L 590 42 L 625 40 L 660 42 L 695 45 L 725 50 L 752 55 L 775 62 L 792 72 L 800 85 L 802 98 L 798 110 L 788 120 L 778 130 L 765 138 L 752 142 L 738 148 L 722 152 L 708 155 L 695 158 L 682 162 L 668 165 L 655 168 L 642 165 L 628 158 L 615 152 L 602 148 L 590 138 L 578 130 L 562 128 L 548 130 L 535 135 L 530 125 L 530 112 L 532 100 L 530 88 L 532 75 L 535 62 Z" fill="#0D2455" stroke="rgba(56,189,248,0.28)" stroke-width="1.3" filter="url(#continentShadow)"/>
-            <!-- Indian Subcontinent -->
-            <path class="continent" d="M 608 162 L 622 158 L 635 162 L 642 172 L 642 185 L 638 198 L 630 210 L 618 218 L 608 215 L 600 205 L 598 192 L 600 178 L 605 168 Z" fill="#0D2455" stroke="rgba(56,189,248,0.25)" stroke-width="1"/>
-            <!-- Southeast Asia -->
-            <path class="continent" d="M 695 165 L 712 162 L 725 168 L 730 180 L 725 192 L 715 200 L 705 202 L 695 198 L 688 188 L 688 178 L 692 170 Z" fill="#0D2455" stroke="rgba(56,189,248,0.22)" stroke-width="1"/>
-            <!-- Japan/Korea -->
-            <path class="continent" d="M 775 108 L 785 105 L 792 110 L 792 118 L 785 122 L 778 118 L 775 112 Z" fill="#0D2455" stroke="rgba(56,189,248,0.2)" stroke-width="0.8"/>
-            <!-- Sri Lanka -->
-            <path class="continent" d="M 628 222 L 632 218 L 636 222 L 635 228 L 630 230 L 627 227 Z" fill="#0D2455" stroke="rgba(56,189,248,0.18)" stroke-width="0.8"/>
-
-            <!-- Indonesia / Philippines -->
-            <path class="continent" d="M 725 235 L 738 228 L 748 232 L 755 242 L 752 252 L 740 255 L 728 252 L 722 242 Z" fill="#0A1E48" stroke="rgba(56,189,248,0.2)" stroke-width="0.8"/>
-            <path class="continent" d="M 760 198 L 770 195 L 778 200 L 778 210 L 770 215 L 762 210 L 760 204 Z" fill="#0A1E48" stroke="rgba(56,189,248,0.2)" stroke-width="0.8"/>
-
-            <!-- Australia (highlighted - NZ hiring) -->
-            <path class="continent" d="M 778 295 L 798 288 L 818 285 L 840 288 L 858 298 L 870 312 L 875 328 L 872 345 L 862 360 L 848 370 L 830 375 L 812 372 L 795 362 L 782 348 L 775 332 L 774 315 L 778 300 Z" fill="#0E2855" stroke="rgba(56,189,248,0.38)" stroke-width="1.5" filter="url(#continentShadow)"/>
-            <!-- New Zealand -->
-            <path class="continent" d="M 895 348 L 900 342 L 908 345 L 912 355 L 908 362 L 900 365 L 895 358 Z" fill="#0E2855" stroke="rgba(16,185,129,0.5)" stroke-width="1.2"/>
-            <path class="continent" d="M 903 330 L 908 325 L 914 328 L 916 335 L 912 340 L 905 338 Z" fill="#0E2855" stroke="rgba(16,185,129,0.5)" stroke-width="1"/>
-
-            <!-- ===== CONNECTING FLIGHT ARCS ===== -->
-            <!-- Middle East → Europe -->
-            <path class="arc-line" d="M 568 162 Q 545 120 490 112" fill="none" stroke="#D4AF37" stroke-width="1.8" stroke-dasharray="6,4" opacity="0.8"/>
-            <!-- Middle East → North America -->
-            <path class="arc-line" d="M 568 162 Q 400 100 160 190" fill="none" stroke="#38BDF8" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.65"/>
-            <!-- Middle East → Australia -->
-            <path class="arc-line" d="M 568 162 Q 700 200 825 330" fill="none" stroke="#10B981" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.7"/>
-
-            <!-- ===== HIRING REGION NODES ===== -->
-            <!-- 1. Gulf / Middle East (UAE, Saudi, Qatar) -->
-            <g transform="translate(568, 165)" filter="url(#nodeGlow)" onclick="filterByCountryPill('UAE', null)" style="cursor:pointer">
-              <circle class="node-ring" cx="0" cy="0" r="14" fill="rgba(212,175,55,0.18)" stroke="rgba(212,175,55,0.5)" stroke-width="1"/>
-              <circle cx="0" cy="0" r="8" fill="rgba(212,175,55,0.9)"/>
-              <circle cx="0" cy="0" r="3.5" fill="#fff"/>
-              <text x="12" y="5" fill="#FDE047" font-size="11" font-weight="700" font-family="Inter,sans-serif">Gulf Hub (UAE &amp; KSA)</text>
-            </g>
-
-            <!-- 2. Europe (Germany) -->
-            <g transform="translate(490, 112)" filter="url(#nodeGlow)" onclick="filterByCountryPill('Germany', null)" style="cursor:pointer">
-              <circle class="node-ring" cx="0" cy="0" r="12" fill="rgba(56,189,248,0.18)" stroke="rgba(56,189,248,0.5)" stroke-width="1"/>
-              <circle cx="0" cy="0" r="7" fill="rgba(56,189,248,0.9)"/>
-              <circle cx="0" cy="0" r="3" fill="#fff"/>
-              <text x="-95" y="-14" fill="#BAE6FD" font-size="11" font-weight="700" font-family="Inter,sans-serif">Europe (Germany/EU)</text>
-            </g>
-
-            <!-- 3. North America (USA) -->
-            <g transform="translate(160, 192)" filter="url(#nodeGlow)" onclick="filterByCountryPill('United States', null)" style="cursor:pointer">
-              <circle class="node-ring" cx="0" cy="0" r="12" fill="rgba(56,189,248,0.18)" stroke="rgba(56,189,248,0.5)" stroke-width="1"/>
-              <circle cx="0" cy="0" r="7" fill="rgba(56,189,248,0.9)"/>
-              <circle cx="0" cy="0" r="3" fill="#fff"/>
-              <text x="12" y="-8" fill="#BAE6FD" font-size="11" font-weight="700" font-family="Inter,sans-serif">USA (H-2B)</text>
-            </g>
-
-            <!-- 4. Oceania (NZ / Australia) -->
-            <g transform="translate(825, 332)" filter="url(#nodeGlow)" onclick="filterByCountryPill('New Zealand', null)" style="cursor:pointer">
-              <circle class="node-ring" cx="0" cy="0" r="12" fill="rgba(16,185,129,0.18)" stroke="rgba(16,185,129,0.5)" stroke-width="1"/>
-              <circle cx="0" cy="0" r="7" fill="rgba(16,185,129,0.9)"/>
-              <circle cx="0" cy="0" r="3" fill="#fff"/>
-              <text x="-125" y="22" fill="#6EE7B7" font-size="11" font-weight="700" font-family="Inter,sans-serif">NZ &amp; Australia</text>
-            </g>
-          </svg>
+          <!-- Oceania & New Zealand Hotspot -->
+          <div class="map-hotspot-pin" style="top: 76%; left: 56%;" onclick="filterByCountryPill('New Zealand', this)" title="Explore Oceania (New Zealand & Australia)">
+            <span class="map-beacon-dot" style="background: #10B981; box-shadow: 0 0 10px #10B981;"></span>
+            <span>NZ &amp; Australia</span>
+            <span style="opacity: 0.85; font-size: 0.72rem; font-weight: 600;">(<%= ocCount %>)</span>
+          </div>
         </div>
 
         <!-- Right: Interactive Region Cards with Live Database Counts -->
@@ -558,56 +483,70 @@
           <!-- Middle East -->
           <div class="regional-hub-card" onclick="filterByCountryPill('UAE', this)">
             <div class="region-card-left">
-              <div class="region-flag-group">🇦🇪 🇸🇦 🇶🇦</div>
+              <div class="region-flag-group">
+                <img src="/images/flags/ae.svg" alt="UAE" class="flag-img" />
+                <img src="/images/flags/sa.svg" alt="Saudi Arabia" class="flag-img" />
+                <img src="/images/flags/qa.svg" alt="Qatar" class="flag-img" />
+              </div>
               <div>
-                <h3 class="region-name">Middle East & Gulf</h3>
+                <h3 class="region-name">Middle East &amp; Gulf</h3>
                 <p class="region-countries-sub">UAE, Saudi Arabia, Qatar, Kuwait • Express e-Visa</p>
               </div>
             </div>
-            <div class="region-jobs-badge">
-              <%= (typeof stats !== 'undefined' && stats.regions && stats.regions.middleEast) ? stats.regions.middleEast : 5 %> Jobs Available
+            <div class="region-jobs-badge <%= meCount === 0 ? 'badge-zero' : '' %>" id="hubCountMiddleEast">
+              <%= meCount %> <%= meCount === 1 ? 'Job' : 'Jobs' %> Available
             </div>
           </div>
 
           <!-- Europe & UK -->
           <div class="regional-hub-card" onclick="filterByCountryPill('Germany', this)">
             <div class="region-card-left">
-              <div class="region-flag-group">🇩🇪 🇵🇱 🇪🇺</div>
+              <div class="region-flag-group">
+                <img src="/images/flags/de.svg" alt="Germany" class="flag-img" />
+                <img src="/images/flags/pl.svg" alt="Poland" class="flag-img" />
+                <img src="/images/flags/eu.svg" alt="EU" class="flag-img" />
+              </div>
               <div>
-                <h3 class="region-name">Europe & EU</h3>
+                <h3 class="region-name">Europe &amp; EU</h3>
                 <p class="region-countries-sub">Germany, Poland, Czechia • Work Permits</p>
               </div>
             </div>
-            <div class="region-jobs-badge">
-              <%= (typeof stats !== 'undefined' && stats.regions && stats.regions.europe) ? stats.regions.europe : 1 %> Job Available
+            <div class="region-jobs-badge <%= euCount === 0 ? 'badge-zero' : '' %>" id="hubCountEurope">
+              <%= euCount %> <%= euCount === 1 ? 'Job' : 'Jobs' %> Available
             </div>
           </div>
 
           <!-- Australia & New Zealand -->
           <div class="regional-hub-card" onclick="filterByCountryPill('New Zealand', this)">
             <div class="region-card-left">
-              <div class="region-flag-group">🇳🇿 🇦🇺</div>
+              <div class="region-flag-group">
+                <img src="/images/flags/nz.svg" alt="New Zealand" class="flag-img" />
+                <img src="/images/flags/au.svg" alt="Australia" class="flag-img" />
+              </div>
               <div>
-                <h3 class="region-name">Australia & New Zealand</h3>
+                <h3 class="region-name">Australia &amp; New Zealand</h3>
                 <p class="region-countries-sub">Accredited Employer Work Visas (AEWV)</p>
               </div>
             </div>
-            <div class="region-jobs-badge">
-              <%= (typeof stats !== 'undefined' && stats.regions && stats.regions.oceania) ? stats.regions.oceania : 1 %> Job Available
+            <div class="region-jobs-badge <%= ocCount === 0 ? 'badge-zero' : '' %>" id="hubCountOceania">
+              <%= ocCount %> <%= ocCount === 1 ? 'Job' : 'Jobs' %> Available
             </div>
           </div>
 
           <!-- North America -->
           <div class="regional-hub-card" onclick="filterByCountryPill('United States', this)">
             <div class="region-card-left">
-              <div class="region-flag-group">🇺🇸 🇨🇦</div>
+              <div class="region-flag-group">
+                <img src="/images/flags/us.svg" alt="USA" class="flag-img" />
+                <img src="/images/flags/ca.svg" alt="Canada" class="flag-img" />
+              </div>
               <div>
                 <h3 class="region-name">North America</h3>
-                <p class="region-countries-sub">United States (H-2B Seasonal) & Canada</p>
+                <p class="region-countries-sub">United States (H-2B Seasonal) &amp; Canada</p>
               </div>
             </div>
-            <div class="region-jobs-badge">
-              <%= (typeof stats !== 'undefined' && stats.regions && stats.regions.northAmerica) ? stats.regions.northAmerica : 1 %> Job Available
+            <div class="region-jobs-badge <%= naCount === 0 ? 'badge-zero' : '' %>" id="hubCountNorthAmerica">
+              <%= naCount %> <%= naCount === 1 ? 'Job' : 'Jobs' %> Available
             </div>
           </div>
 

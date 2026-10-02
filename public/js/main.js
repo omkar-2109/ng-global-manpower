@@ -149,8 +149,51 @@
 
     const noResults = document.getElementById('liveJobsNoResults');
     if (noResults) {
-      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+      if (cards.length === 0) {
+        // If there are zero total active jobs rendered, keep the filter noResults hidden
+        // because the primary catalog empty state card is already displayed.
+        noResults.style.display = 'none';
+      } else {
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
     }
+  };
+
+  // Dynamically update regional hub cards based on live jobs array
+  window.updateLiveHubCounters = function(jobs) {
+    if (!Array.isArray(jobs)) return;
+    const regionMap = {
+      middleEast: ['uae', 'united arab emirates', 'dubai', 'saudi arabia', 'ksa', 'qatar', 'kuwait', 'oman', 'bahrain', 'gulf'],
+      europe: ['poland', 'germany', 'croatia', 'romania', 'lithuania', 'czech', 'slovakia', 'malta', 'uk', 'united kingdom', 'europe'],
+      oceania: ['new zealand', 'australia', 'oceania'],
+      northAmerica: ['usa', 'united states', 'canada', 'america', 'north america']
+    };
+
+    let counts = { middleEast: 0, europe: 0, oceania: 0, northAmerica: 0 };
+    jobs.forEach(job => {
+      if (job.status && job.status !== 'active') return;
+      const c = (job.country || '').toLowerCase();
+      if (regionMap.middleEast.some(r => c.includes(r))) counts.middleEast++;
+      else if (regionMap.europe.some(r => c.includes(r))) counts.europe++;
+      else if (regionMap.oceania.some(r => c.includes(r))) counts.oceania++;
+      else if (regionMap.northAmerica.some(r => c.includes(r))) counts.northAmerica++;
+    });
+
+    const updateBadge = (id, count) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = `<span class="hub-count-num">${count}</span> ${count === 1 ? 'Job' : 'Jobs'} Available`;
+      if (count === 0) {
+        el.classList.add('badge-zero');
+      } else {
+        el.classList.remove('badge-zero');
+      }
+    };
+
+    updateBadge('hubCountMiddleEast', counts.middleEast);
+    updateBadge('hubCountEurope', counts.europe);
+    updateBadge('hubCountOceania', counts.oceania);
+    updateBadge('hubCountNorthAmerica', counts.northAmerica);
   };
 
   window.handleHeroSearch = function(e) {
@@ -246,6 +289,18 @@
       heroForm.addEventListener('submit', (e) => {
         handleHeroSearch(e);
       });
+    }
+
+    // Refresh hub counters if hub badges exist on the page
+    if (document.getElementById('hubCountMiddleEast')) {
+      fetch('/api/v1/jobs')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.success && Array.isArray(data.jobs)) {
+            window.updateLiveHubCounters(data.jobs);
+          }
+        })
+        .catch(() => {/* fallback to server-rendered counts */});
     }
   });
 })();

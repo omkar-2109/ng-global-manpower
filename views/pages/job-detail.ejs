@@ -67,7 +67,7 @@
             </span>
           </div>
 
-          <h1 style="font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 12px;">
+          <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--text-heading); line-height: 1.25; margin-bottom: 12px;">
             <%= cleanText(job.title) %>
           </h1>
 
@@ -85,10 +85,10 @@
               <span style="font-size: 0.76rem; color: #6ee7b7; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; display: block; margin-bottom: 4px;">
                 Monthly Earning Package
               </span>
-              <div style="font-size: 1.6rem; font-weight: 800; color: #fff; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+              <div style="font-size: 1.6rem; font-weight: 800; color: var(--text-heading); display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
                 <span><%= cleanText(job.salary_inr) %></span>
                 <% if (job.salary_foreign) { %>
-                  <span style="font-size: 1.15rem; color: #34d399; font-weight: 600;">(<%= cleanText(job.salary_foreign) %>)</span>
+                  <span style="font-size: 1.15rem; color: #059669; font-weight: 700;">(<%= cleanText(job.salary_foreign) %>)</span>
                 <% } %>
               </div>
             </div>
@@ -105,7 +105,7 @@
         <% if (job.image && job.image.startsWith('/uploads/')) { %>
           <div class="glass-card" style="padding: 24px; border-radius: 18px; margin-bottom: 28px; border: 1.5px solid rgba(16, 185, 129, 0.4);">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-              <h3 style="margin: 0; color: #fff; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+              <h3 style="margin: 0; color: var(--text-heading); font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
                 <i class="fa-solid fa-image" style="color: #10b981;"></i>
                 <span>Official Employer Recruitment Flyer</span>
               </h3>
@@ -124,50 +124,50 @@
           
           <div class="glass-card" style="padding: 18px; border-radius: 14px;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-              <i class="fa-solid fa-clock" style="color: #60a5fa; font-size: 1.1rem;"></i>
+              <i class="fa-solid fa-clock" style="color: #2563eb; font-size: 1.1rem;"></i>
               <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">DUTY & SHIFTS</span>
             </div>
-            <div style="font-size: 1rem; color: #fff; font-weight: 600;">
+            <div style="font-size: 1rem; color: var(--text-heading); font-weight: 600;">
               <%= cleanText(job.working_hours) || '10 Hours Duty / 2 Days Off' %>
             </div>
           </div>
 
           <div class="glass-card" style="padding: 18px; border-radius: 14px;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-              <i class="fa-solid fa-user-check" style="color: #f59e0b; font-size: 1.1rem;"></i>
+              <i class="fa-solid fa-user-check" style="color: #d97706; font-size: 1.1rem;"></i>
               <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">AGE CRITERIA</span>
             </div>
-            <div style="font-size: 1rem; color: #fff; font-weight: 600;">
+            <div style="font-size: 1rem; color: var(--text-heading); font-weight: 600;">
               <%= cleanText(job.age_limit) || '18 – 49 Years' %>
             </div>
           </div>
 
           <div class="glass-card" style="padding: 18px; border-radius: 14px;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-              <i class="fa-solid fa-passport" style="color: #10b981; font-size: 1.1rem;"></i>
+              <i class="fa-solid fa-passport" style="color: #059669; font-size: 1.1rem;"></i>
               <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">ELIGIBLE NATIONALITIES</span>
             </div>
-            <div style="font-size: 0.95rem; color: #fff; font-weight: 600;">
+            <div style="font-size: 0.95rem; color: var(--text-heading); font-weight: 600;">
               <%= cleanText(job.eligibility_notes) || 'Indians, Bangladeshis, Nepalis' %>
             </div>
           </div>
 
           <div class="glass-card" style="padding: 18px; border-radius: 14px;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-              <i class="fa-solid fa-house" style="color: #a855f7; font-size: 1.1rem;"></i>
+              <i class="fa-solid fa-house" style="color: #7c3aed; font-size: 1.1rem;"></i>
               <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">ACCOMMODATION</span>
             </div>
-            <div style="font-size: 0.95rem; color: #fff; font-weight: 600;">
+            <div style="font-size: 0.95rem; color: var(--text-heading); font-weight: 600;">
               Room Allowance / Camp Provided
             </div>
           </div>
 
           <div class="glass-card" style="padding: 18px; border-radius: 14px;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-              <i class="fa-solid fa-heart-pulse" style="color: #ef4444; font-size: 1.1rem;"></i>
+              <i class="fa-solid fa-heart-pulse" style="color: #dc2626; font-size: 1.1rem;"></i>
               <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">MEDICAL & HEALTH</span>
             </div>
-            <div style="font-size: 0.95rem; color: #fff; font-weight: 600;">
+            <div style="font-size: 0.95rem; color: var(--text-heading); font-weight: 600;">
               GAMCA Medical / Employer Cover
             </div>
           </div>
@@ -177,7 +177,7 @@
               <i class="fa-solid fa-file-contract" style="color: var(--gold-amber); font-size: 1.1rem;"></i>
               <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">CONTRACT & PERMIT</span>
             </div>
-            <div style="font-size: 0.95rem; color: #fff; font-weight: 600;">
+            <div style="font-size: 0.95rem; color: var(--text-heading); font-weight: 600;">
               2-Year Renewable Work Permit
             </div>
           </div>
@@ -186,11 +186,11 @@
 
         <!-- Scope of Work & Description -->
         <div class="glass-card" style="padding: 28px; border-radius: 18px; margin-bottom: 28px;">
-          <h3 style="font-size: 1.2rem; color: #fff; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+          <h3 style="font-size: 1.2rem; color: var(--text-heading); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
             <i class="fa-solid fa-file-lines" style="color: var(--gold-amber);"></i>
             <span>Role Scope & Responsibilities</span>
           </h3>
-          <div style="font-size: 0.95rem; color: #cbd5e1; line-height: 1.7; white-space: pre-line;">
+          <div style="font-size: 0.95rem; color: var(--text-body); line-height: 1.7; white-space: pre-line;">
             <%= cleanText(job.description) || 'Full scope of duties includes day-to-day operational support, adherence to workplace safety regulations, equipment operation, and team coordination under employer guidance.' %>
           </div>
         </div>
@@ -198,13 +198,13 @@
         <!-- Perks & Amenities -->
         <% if (job.perks && job.perks.length > 0) { %>
           <div class="glass-card" style="padding: 28px; border-radius: 18px; margin-bottom: 28px;">
-            <h3 style="font-size: 1.2rem; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <h3 style="font-size: 1.2rem; color: var(--text-heading); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
               <i class="fa-solid fa-star" style="color: #fbbf24;"></i>
               <span>Included Perks & Allowances</span>
             </h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
               <% job.perks.forEach(perk => { %>
-                <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px 14px; border-radius: 10px; display: flex; align-items: center; gap: 10px; color: #e2e8f0; font-size: 0.9rem;">
+                <div style="background: var(--bg-elevated); border: 1px solid var(--border-subtle); padding: 12px 14px; border-radius: 10px; display: flex; align-items: center; gap: 10px; color: var(--text-body); font-size: 0.9rem;">
                   <i class="fa-solid fa-circle-check" style="color: #10b981;"></i>
                   <span><%= cleanText(perk) %></span>
                 </div>
@@ -214,46 +214,46 @@
         <% } %>
 
         <!-- Mandatory Documentation Checklist (Strict Order) -->
-        <div class="glass-card" style="padding: 28px; border-radius: 18px; margin-bottom: 28px; border: 1px solid rgba(212, 175, 55, 0.35);">
+        <div class="glass-card" style="padding: 28px; border-radius: 18px; margin-bottom: 28px; border: 1px solid var(--border-gold);">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-            <h3 style="font-size: 1.2rem; color: #fff; margin: 0; display: flex; align-items: center; gap: 8px;">
+            <h3 style="font-size: 1.2rem; color: var(--text-heading); margin: 0; display: flex; align-items: center; gap: 8px;">
               <i class="fa-solid fa-folder-open" style="color: var(--gold-amber);"></i>
               <span>Mandatory Candidate Documents (In Strict Order)</span>
             </h3>
-            <span style="font-size: 0.76rem; color: #34d399; background: rgba(16, 185, 129, 0.15); padding: 4px 10px; border-radius: 12px; font-weight: 600;">
+            <span style="font-size: 0.76rem; color: #059669; background: rgba(16, 185, 129, 0.15); padding: 4px 10px; border-radius: 12px; font-weight: 700;">
               CONFIRMED DOSSIER
             </span>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.03); padding: 12px 16px; border-radius: 10px;">
-              <span style="background: var(--gold-amber); color: #000; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">1</span>
+            <div style="display: flex; align-items: center; gap: 12px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); padding: 12px 16px; border-radius: 10px;">
+              <span style="background: var(--gold-amber); color: #fff; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">1</span>
               <div>
-                <strong style="color: #fff; font-size: 0.95rem;">Updated CV / Bio-Data</strong>
+                <strong style="color: var(--text-heading); font-size: 0.95rem;">Updated CV / Bio-Data</strong>
                 <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">Detailing complete work history, past employers, and contact information.</span>
               </div>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.03); padding: 12px 16px; border-radius: 10px;">
-              <span style="background: var(--gold-amber); color: #000; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">2</span>
+            <div style="display: flex; align-items: center; gap: 12px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); padding: 12px 16px; border-radius: 10px;">
+              <span style="background: var(--gold-amber); color: #fff; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">2</span>
               <div>
-                <strong style="color: #fff; font-size: 0.95rem;">Trade & Experience Certificates</strong>
+                <strong style="color: var(--text-heading); font-size: 0.95rem;">Trade & Experience Certificates</strong>
                 <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">Skill proof, technical trade test certification, or previous overseas service records.</span>
               </div>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.03); padding: 12px 16px; border-radius: 10px;">
-              <span style="background: var(--gold-amber); color: #000; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">3</span>
+            <div style="display: flex; align-items: center; gap: 12px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); padding: 12px 16px; border-radius: 10px;">
+              <span style="background: var(--gold-amber); color: #fff; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">3</span>
               <div>
-                <strong style="color: #fff; font-size: 0.95rem;">Original Passport Copy (Front & Back)</strong>
+                <strong style="color: var(--text-heading); font-size: 0.95rem;">Original Passport Copy (Front & Back)</strong>
                 <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">Clear color scan with minimum 1+ year validity from the date of submission.</span>
               </div>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.03); padding: 12px 16px; border-radius: 10px;">
-              <span style="background: var(--gold-amber); color: #000; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">4</span>
+            <div style="display: flex; align-items: center; gap: 12px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); padding: 12px 16px; border-radius: 10px;">
+              <span style="background: var(--gold-amber); color: #fff; font-weight: 800; font-size: 0.85rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">4</span>
               <div>
-                <strong style="color: #fff; font-size: 0.95rem;">White-Background Studio Photograph 📸</strong>
+                <strong style="color: var(--text-heading); font-size: 0.95rem;">White-Background Studio Photograph 📸</strong>
                 <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">1 professional passport studio print with formal attire and clear white background.</span>
               </div>
             </div>
@@ -284,11 +284,11 @@
             <span style="font-size: 0.78rem; color: var(--gold-amber); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">
               APPLY FOR THIS QUOTA
             </span>
-            <div style="font-size: 1.8rem; font-weight: 800; color: #fff;">
+            <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-heading);">
               <%= cleanText(job.salary_inr).split('/')[0].trim() %>
             </div>
             <% if (job.salary_foreign) { %>
-              <div style="font-size: 1rem; color: #34d399; font-weight: 600; margin-top: 2px;">
+              <div style="font-size: 1rem; color: #059669; font-weight: 700; margin-top: 2px;">
                 <%= cleanText(job.salary_foreign) %>
               </div>
             <% } %>
@@ -309,10 +309,10 @@
           <!-- Quick Portal Apply Form (Candidate Inquiry Leads) -->
           <div style="border-top: 1px solid var(--border-light); padding-top: 20px; margin-top: 20px;">
             <div style="text-align: center; margin-bottom: 14px;">
-              <span style="font-size: 0.9rem; color: #fff; font-weight: 700; display: block;">
+              <span style="font-size: 0.95rem; color: var(--text-heading); font-weight: 700; display: block;">
                 Direct Candidate Inquiry
               </span>
-              <span style="font-size: 0.76rem; color: var(--text-muted); display: block; margin-top: 2px;">
+              <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 2px;">
                 Mandatory candidate details for verified recruiter contact
               </span>
             </div>
@@ -320,8 +320,8 @@
             <!-- Success Box -->
             <div id="quick-apply-success-box" style="display: none; background: rgba(16, 185, 129, 0.15); border: 1.5px solid #10b981; border-radius: 12px; padding: 18px; text-align: center; margin-bottom: 16px;">
               <i class="fa-solid fa-circle-check" style="font-size: 2.2rem; color: #34d399; margin-bottom: 8px; display: block;"></i>
-              <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 1.05rem;">Inquiry Registered!</h4>
-              <p style="color: #cbd5e1; font-size: 0.82rem; margin: 0 0 12px 0;">
+              <h4 style="color: var(--text-heading); margin: 0 0 6px 0; font-size: 1.05rem;">Inquiry Registered!</h4>
+              <p style="color: var(--text-body); font-size: 0.82rem; margin: 0 0 12px 0;">
                 Application Reference: <strong id="success-app-ref" style="color: var(--gold-amber); font-family: var(--font-mono);">#NG-LEAD</strong>. Our overseas team will review your dossier.
               </p>
               <a id="success-wa-btn" href="<%= waLink %>" target="_blank" class="btn btn-gold" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.88rem;">
@@ -331,7 +331,7 @@
             </div>
 
             <!-- Error Box -->
-            <div id="quick-apply-error-box" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; color: #fca5a5; font-size: 0.82rem; font-weight: 600;"></div>
+            <div id="quick-apply-error-box" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; color: #dc2626; font-size: 0.82rem; font-weight: 600;"></div>
 
             <form id="job-quick-apply-form" novalidate>
               <input type="hidden" name="job_code" value="<%= job.job_code %>" />
@@ -340,39 +340,39 @@
               <input type="hidden" name="source" value="job_detail_page" />
 
               <div class="form-group" style="margin-bottom: 12px;">
-                <label style="display: block; font-size: 0.78rem; color: #cbd5e1; margin-bottom: 4px; font-weight: 600;">
+                <label style="display: block; font-size: 0.78rem; color: var(--text-body); margin-bottom: 4px; font-weight: 600;">
                   Full Name (as in Passport) <span style="color: var(--gold-amber);">*</span>
                 </label>
                 <input type="text" name="full_name" class="form-control" placeholder="e.g. Ramesh Chandra Verma" required style="font-size: 0.88rem; padding: 10px 12px;" />
               </div>
 
               <div class="form-group" style="margin-bottom: 12px;">
-                <label style="display: block; font-size: 0.78rem; color: #cbd5e1; margin-bottom: 4px; font-weight: 600;">
+                <label style="display: block; font-size: 0.78rem; color: var(--text-body); margin-bottom: 4px; font-weight: 600;">
                   Mobile / WhatsApp Number <span style="color: var(--gold-amber);">*</span>
                 </label>
                 <input type="tel" name="phone" class="form-control" placeholder="e.g. +91 98765 43210" required style="font-size: 0.88rem; padding: 10px 12px;" />
               </div>
 
               <div class="form-group" style="margin-bottom: 12px;">
-                <label style="display: block; font-size: 0.78rem; color: #cbd5e1; margin-bottom: 4px; font-weight: 600;">
+                <label style="display: block; font-size: 0.78rem; color: var(--text-body); margin-bottom: 4px; font-weight: 600;">
                   Current City & State <span style="color: var(--gold-amber);">*</span>
                 </label>
                 <input type="text" name="city" class="form-control" placeholder="e.g. Gorakhpur, UP" required style="font-size: 0.88rem; padding: 10px 12px;" />
               </div>
 
               <div class="form-group" style="margin-bottom: 16px;">
-                <label style="display: block; font-size: 0.78rem; color: #cbd5e1; margin-bottom: 4px; font-weight: 600;">
+                <label style="display: block; font-size: 0.78rem; color: var(--text-body); margin-bottom: 4px; font-weight: 600;">
                   Total Experience Level <span style="color: var(--gold-amber);">*</span>
                 </label>
-                <select name="experience" class="form-control" style="font-size: 0.88rem; padding: 10px 12px; background-color: #081636 !important; color: #ffffff !important;">
-                  <option value="Fresher / Initial Trade" style="background-color: #081636; color: #ffffff;">Fresher / Initial Trade</option>
-                  <option value="1 to 2 Years" style="background-color: #081636; color: #ffffff;">1 to 2 Years</option>
-                  <option value="3 to 5 Years" selected style="background-color: #081636; color: #ffffff;">3 to 5 Years Experience</option>
-                  <option value="5+ Years GCC / Overseas" style="background-color: #081636; color: #ffffff;">5+ Years GCC / Overseas</option>
+                <select name="experience" class="form-control" style="font-size: 0.88rem; padding: 10px 12px;">
+                  <option value="Fresher / Initial Trade">Fresher / Initial Trade</option>
+                  <option value="1 to 2 Years">1 to 2 Years</option>
+                  <option value="3 to 5 Years" selected>3 to 5 Years Experience</option>
+                  <option value="5+ Years GCC / Overseas">5+ Years GCC / Overseas</option>
                 </select>
               </div>
 
-              <button type="submit" id="quick-apply-submit-btn" class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.92rem; border-color: rgba(255,255,255,0.25); background: rgba(255, 255, 255, 0.08); color: #fff;">
+              <button type="submit" id="quick-apply-submit-btn" class="btn btn-gold" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.92rem;">
                 <i class="fa-solid fa-paper-plane"></i>
                 <span>Submit Candidate Inquiry</span>
               </button>
@@ -401,21 +401,21 @@
     <!-- Related Jobs Section -->
     <% if (relatedJobs && relatedJobs.length > 0) { %>
       <div style="margin-top: 60px;">
-        <h2 style="font-size: 1.6rem; color: #fff; margin-bottom: 24px;">Similar Overseas Opportunities</h2>
+        <h2 style="font-size: 1.6rem; color: var(--text-heading); margin-bottom: 24px;">Similar Overseas Opportunities</h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
           <% relatedJobs.forEach(rel => { %>
             <div class="glass-card card-3d-interactive" style="padding: 20px; border-radius: 16px; display: flex; flex-direction: column; justify-content: space-between;">
               <div>
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                  <span style="font-size: 0.8rem; color: #38bdf8; background: rgba(56, 189, 248, 0.15); padding: 3px 10px; border-radius: 12px;">
+                  <span style="font-size: 0.8rem; color: #2563eb; background: rgba(37, 99, 235, 0.12); padding: 3px 10px; border-radius: 12px; font-weight: 600;">
                     <%= rel.flag %> <%= cleanText(rel.country) %>
                   </span>
-                  <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold-amber);">
+                  <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold-amber); font-weight: 600;">
                     <%= rel.job_code %>
                   </span>
                 </div>
-                <h4 style="font-size: 1.1rem; color: #fff; margin: 0 0 8px 0;"><%= cleanText(rel.title) %></h4>
-                <div style="font-size: 0.95rem; font-weight: 700; color: #34d399; margin-bottom: 14px;">
+                <h4 style="font-size: 1.1rem; color: var(--text-heading); margin: 0 0 8px 0;"><%= cleanText(rel.title) %></h4>
+                <div style="font-size: 0.95rem; font-weight: 700; color: #059669; margin-bottom: 14px;">
                   <%= cleanText(rel.salary_foreign || rel.salary_inr) %>
                 </div>
               </div>
