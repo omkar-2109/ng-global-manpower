@@ -109,10 +109,13 @@
     }
 
     .gold-gradient-text {
-      background: linear-gradient(135deg, #FFF6D3 0%, #D4AF37 40%, #F59E0B 70%, #FDE68A 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      background: linear-gradient(135deg, #92400E 0%, #B45309 35%, #D97706 70%, #78350F 100%) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      background-clip: text !important;
+      color: #B45309;
       display: inline-block;
+      font-weight: 800;
     }
 
     .sapphire-gradient-text {
@@ -5149,4 +5152,120 @@
       -webkit-background-clip: text !important;
       -webkit-text-fill-color: transparent !important;
       background-clip: text !important;
+    }
+
+    /* 6. Corporate Light Theme Cards & Flag Integrity */
+    .hero-country-chips {
+      display: flex !important;
+      align-items: center !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+    }
+    .hero-country-chip {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      padding: 6px 14px !important;
+      background: #FFFFFF !important;
+      border: 1.5px solid #CBD5E1 !important;
+      border-radius: 9999px !important;
+      box-shadow: 0 2px 6px rgba(11, 25, 44, 0.04) !important;
+      flex-shrink: 0 !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+    }
+    .hero-country-chip:hover, .hero-country-chip.active {
+      border-color: #B45309 !important;
+      background: #FEF3C7 !important;
+      transform: translateY(-1px) !important;
+    }
+    .hero-country-chip span {
+      font-size: 0.84rem !important;
+      font-weight: 700 !important;
+      color: #0B192C !important;
+      white-space: nowrap !important;
+    }
+    .flag-img {
+      width: 22px !important;
+      height: 15px !important;
+      min-width: 22px !important;
+      max-width: 22px !important;
+      min-height: 15px !important;
+      max-height: 15px !important;
+      object-fit: cover !important;
+      border-radius: 2px !important;
+      display: inline-block !important;
+      vertical-align: middle !important;
+      flex-shrink: 0 !important;
+      border: 1px solid rgba(0, 0, 0, 0.12) !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Why Global Workers Choose NG Global (.value-card) */
+    .value-card {
+      background: #FFFFFF !important;
+      border: 1.5px solid #E2E8F0 !important;
+      box-shadow: 0 4px 16px rgba(11, 25, 44, 0.05) !important;
+      border-radius: 18px !important;
+      padding: 34px 26px !important;
+    }
+    .value-card:hover {
+      border-color: #B45309 !important;
+      box-shadow: 0 12px 30px rgba(11, 25, 44, 0.08), 0 0 16px rgba(180, 83, 9, 0.12) !important;
+    }
+    .value-card h3 {
+      color: #0B192C !important;
+      font-size: 1.32rem !important;
+      font-weight: 800 !important;
+      margin-bottom: 12px !important;
+    }
+    .value-card p {
+      color: #475569 !important;
+      font-size: 0.92rem !important;
+      line-height: 1.68 !important;
+    }
+    .value-step-num {
+      color: #E2E8F0 !important;
+      font-weight: 900 !important;
+    }
+    .value-pill {
+      background: #F1F5F9 !important;
+      border: 1px solid #CBD5E1 !important;
+      color: #0B192C !important;
+      font-weight: 700 !important;
+    }
+
+    /* Worker Testimonials (.testimonial-card) */
+    .testimonial-card {
+      background: #FFFFFF !important;
+      border: 1.5px solid #E2E8F0 !important;
+      box-shadow: 0 4px 16px rgba(11, 25, 44, 0.05) !important;
+      border-radius: 18px !important;
+      padding: 28px !important;
+    }
+    .testimonial-card:hover {
+      border-color: #B45309 !important;
+      box-shadow: 0 12px 30px rgba(11, 25, 44, 0.08), 0 0 16px rgba(180, 83, 9, 0.12) !important;
+    }
+    .testimonial-quote-icon {
+      color: #F59E0B !important;
+      opacity: 0.4 !important;
+    }
+    .testimonial-text {
+      color: #334155 !important;
+      font-size: 0.92rem !important;
+      line-height: 1.68 !important;
+      font-style: italic !important;
+    }
+    .testimonial-author-box {
+      border-top: 1px solid #E2E8F0 !important;
+    }
+    .author-details h5 {
+      color: #0B192C !important;
+      font-weight: 800 !important;
+      font-size: 0.98rem !important;
+    }
+    .author-details p {
+      color: #64748B !important;
+      font-size: 0.82rem !important;
     }
