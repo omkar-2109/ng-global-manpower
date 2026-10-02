@@ -1,22 +1,11 @@
 const authService = require('../services/authService');
 const env = require('../config/env');
-
-// Helper to extract root domain for wildcard cookie sharing across admin subdomains
-function getCookieDomain(req) {
-  const host = (req.headers.host || '').split(':')[0].toLowerCase();
-  if (host === 'localhost' || host.endsWith('.localhost') || /^\d+\.\d+\.\d+\.\d+$/.test(host) || host.endsWith('.onrender.com')) {
-    return undefined;
-  }
-  const parts = host.split('.');
-  if (parts.length >= 2) {
-    return '.' + parts.slice(-2).join('.');
-  }
-  return undefined;
-}
+const { getCookieDomain, clearAuthCookie } = require('../middleware/authMiddleware');
 
 const authController = {
   showLogin(req, res) {
-    if (req.user) {
+    // Only redirect to dashboard if an admin/staff user is actively authenticated with auth_token
+    if (req.user && req.user.role !== 'agent' && req.cookies && req.cookies.auth_token) {
       return res.redirect('/admin/dashboard');
     }
     res.render('admin/login', {
@@ -47,7 +36,7 @@ const authController = {
         return res.json({ success: true, message: 'Logged in successfully.', user, token });
       }
 
-      const targetUrl = redirect && redirect.startsWith('/') ? redirect : '/admin/dashboard';
+      const targetUrl = redirect && redirect.startsWith('/') && redirect !== '/admin/login' ? redirect : '/admin/dashboard';
       res.redirect(targetUrl);
     } catch (err) {
       if (req.xhr || req.headers.accept?.includes('json')) {
@@ -62,8 +51,7 @@ const authController = {
   },
 
   logout(req, res) {
-    const cookieDomain = getCookieDomain(req);
-    res.clearCookie('auth_token', cookieDomain ? { domain: cookieDomain } : {});
+    clearAuthCookie(req, res);
     if (req.xhr || req.headers.accept?.includes('json')) {
       return res.json({ success: true, message: 'Logged out successfully.' });
     }

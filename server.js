@@ -25,6 +25,9 @@ const db = require('./src/config/db');
 
 const app = express();
 
+// Trust reverse proxy (Render / Cloudflare) for accurate client IP, secure cookies, and protocol
+app.set('trust proxy', 1);
+
 // 1. Initialize & Seed Database (Strict HR Admin & Sample Agent)
 initializeDatabase();
 db.syncWithSupabase().catch(err => console.warn('[Supabase] Initial sync note:', err.message));
@@ -111,7 +114,8 @@ app.use((req, res, next) => {
   res.locals.agentPortalUrl = res.locals.getSubdomainUrl('agents', '/agent/dashboard');
   res.locals.publicSiteUrl = res.locals.getSubdomainUrl('', '/');
   res.locals.getAgentLandingUrl = function(username) {
-    return res.locals.getSubdomainUrl(username, '/');
+    if (!username) return '/';
+    return res.locals.publicSiteUrl.replace(/\/$/, '') + '/agency/' + encodeURIComponent(username);
   };
 
   try {

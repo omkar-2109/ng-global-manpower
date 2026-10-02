@@ -839,7 +839,7 @@
         </div>
 
         <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-          <a href="/agent/login" class="btn btn-gold" style="padding: 12px 24px; font-size: 0.95rem;">
+          <a href="<%= typeof agentLoginUrl !== 'undefined' ? agentLoginUrl : '/agent/login' %>" class="btn btn-gold" style="padding: 12px 24px; font-size: 0.95rem;">
             <i class="fa-solid fa-right-to-bracket"></i>
             <span>Agent Partner Login</span>
           </a>
@@ -957,8 +957,8 @@
 
         <!-- STEP 1 -->
         <div id="panelStep1" class="funnel-step-panel active">
-          <h3 class="panel-question-title">Step 1: What is your primary skill or trade?</h3>
-          <p class="panel-question-desc">Select the occupational category that best matches your experience.</p>
+          <h3 class="panel-question-title" style="color: #FFFFFF !important; font-size: clamp(1.35rem, 3vw, 1.85rem); font-weight: 800; margin-bottom: 10px;">Step 1: What is your primary skill or trade?</h3>
+          <p class="panel-question-desc" style="color: #94A3B8 !important; font-size: 0.95rem; margin-bottom: 26px;">Select the occupational category that best matches your experience.</p>
           <div class="trade-options-grid">
             <div class="trade-card-btn selected" onclick="selectTrade(this, 'Construction & Infrastructure')">
               <i class="fa-solid fa-trowel-bricks trade-card-icon"></i>
@@ -1001,8 +1001,8 @@
 
         <!-- STEP 2 -->
         <div id="panelStep2" class="funnel-step-panel">
-          <h3 class="panel-question-title">Step 2: Where do you want to work?</h3>
-          <p class="panel-question-desc">Choose your preferred international region for visa sponsorship.</p>
+          <h3 class="panel-question-title" style="color: #FFFFFF !important; font-size: clamp(1.35rem, 3vw, 1.85rem); font-weight: 800; margin-bottom: 10px;">Step 2: Where do you want to work?</h3>
+          <p class="panel-question-desc" style="color: #94A3B8 !important; font-size: 0.95rem; margin-bottom: 26px;">Choose your preferred international region for visa sponsorship.</p>
           <div class="dest-options-grid">
             <div class="dest-card-btn selected" onclick="selectDest(this, 'Gulf Countries (UAE, Saudi, Qatar)')">
               <div class="dest-flag-icon">⚡</div>
@@ -1049,8 +1049,8 @@
 
         <!-- STEP 3 -->
         <div id="panelStep3" class="funnel-step-panel">
-          <h3 class="panel-question-title">Step 3: Your Contact Details</h3>
-          <p class="panel-question-desc">We will verify your profile and connect you directly to our official career executive on WhatsApp.</p>
+          <h3 class="panel-question-title" style="color: #FFFFFF !important; font-size: clamp(1.35rem, 3vw, 1.85rem); font-weight: 800; margin-bottom: 10px;">Step 3: Your Contact Details</h3>
+          <p class="panel-question-desc" style="color: #94A3B8 !important; font-size: 0.95rem; margin-bottom: 26px;">We will verify your profile and connect you directly to our official career executive on WhatsApp.</p>
           <form id="leadCaptureForm" onsubmit="handleFormSubmission(event)">
             <div class="contact-form-grid">
               <div class="form-group">

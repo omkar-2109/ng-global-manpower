@@ -4,52 +4,13 @@ const Lead = require('../models/Lead');
 const Agent = require('../models/Agent');
 const Notification = require('../models/Notification');
 const env = require('../config/env');
-
-// Helper to extract root domain for wildcard cookie sharing across subdomains
-function getCookieDomain(req) {
-  const host = (req.headers.host || '').split(':')[0].toLowerCase();
-  if (host === 'localhost' || host.endsWith('.localhost') || /^\d+\.\d+\.\d+\.\d+$/.test(host) || host.endsWith('.onrender.com')) {
-    return undefined;
-  }
-  const parts = host.split('.');
-  if (parts.length >= 2) {
-    return '.' + parts.slice(-2).join('.');
-  }
-  return undefined;
-}
-
-// Helper to determine agent's dedicated named subdomain dashboard URL
-function getAgentDashboardUrl(req, agent) {
-  const rawHost = req.headers.host || '';
-  const hostname = rawHost.split(':')[0].toLowerCase();
-  const port = rawHost.split(':')[1];
-  const portSuffix = port ? `:${port}` : '';
-  const proto = req.secure || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
-
-  if (!agent || !agent.username) {
-    return '/agent/dashboard';
-  }
-
-  // 1. Localhost development support: http://[username].localhost:3000/agent/dashboard
-  if (hostname === 'localhost' || hostname.endsWith('.localhost')) {
-    return `${proto}://${agent.username}.localhost${portSuffix}/agent/dashboard`;
-  }
-
-  // 2. Custom Domain production support: https://[username].yourdomain.com/agent/dashboard
-  const parts = hostname.split('.');
-  if (parts.length >= 2 && !hostname.endsWith('.onrender.com') && !/^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
-    const rootDomain = parts.slice(-2).join('.');
-    return `${proto}://${agent.username}.${rootDomain}${portSuffix}/agent/dashboard`;
-  }
-
-  return '/agent/dashboard';
-}
+const { getCookieDomain, clearAgentCookie } = require('../middleware/authMiddleware');
 
 const agentController = {
   // Agent Login View
   showLogin(req, res) {
-    if (req.agent) {
-      return res.redirect(getAgentDashboardUrl(req, req.agent));
+    if (req.agent && req.cookies && req.cookies.agent_token) {
+      return res.redirect('/agent/dashboard');
     }
     res.render('agent/login', {
       title: 'Recruitment Partner Agent Portal | NG Global',
@@ -75,13 +36,13 @@ const agentController = {
 
       res.cookie('agent_token', token, cookieOpts);
 
-      const dashboardUrl = getAgentDashboardUrl(req, agent);
+      const dashboardUrl = '/agent/dashboard';
 
       if (req.xhr || req.headers.accept?.includes('json')) {
         return res.json({ success: true, message: 'Welcome back, Agent partner!', agent, token, redirectUrl: dashboardUrl });
       }
 
-      const target = redirect && redirect.startsWith('/') && redirect !== '/agent/dashboard' ? redirect : dashboardUrl;
+      const target = redirect && redirect.startsWith('/') && redirect !== '/agent/login' ? redirect : dashboardUrl;
       res.redirect(target);
     } catch (err) {
       if (req.xhr || req.headers.accept?.includes('json')) {
@@ -97,8 +58,7 @@ const agentController = {
 
   // Agent Logout
   logout(req, res) {
-    const cookieDomain = getCookieDomain(req);
-    res.clearCookie('agent_token', cookieDomain ? { domain: cookieDomain } : {});
+    clearAgentCookie(req, res);
     res.redirect('/agent/login?loggedOut=true');
   },
 

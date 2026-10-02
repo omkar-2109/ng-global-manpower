@@ -40,6 +40,11 @@ function subdomainMiddleware(req, res, next) {
       return res.redirect('/admin/dashboard');
     }
 
+    // If accessing agent routes on admin subdomain, redirect cleanly to agents portal
+    if (req.path === '/agent' || req.path.startsWith('/agent/')) {
+      return res.redirect(`${proto}://agents.${rootDomain}${req.originalUrl}`);
+    }
+
     // If consumer tries to access general jobs directory on admin subdomain, redirect to main site
     if (req.path === '/jobs' || req.path.startsWith('/jobs/')) {
       return res.redirect(`${proto}://${rootDomain}${req.originalUrl}`);
@@ -56,9 +61,6 @@ function subdomainMiddleware(req, res, next) {
     // If accessing root of agents subdomain:
     if (req.path === '/') {
       if (req.agent) {
-        if (!isLocal && !isIpOrRender && req.agent.username) {
-          return res.redirect(`${proto}://${req.agent.username}.${rootDomain}/agent/dashboard`);
-        }
         return res.redirect('/agent/dashboard');
       }
       return res.redirect('/agent/login');
@@ -72,46 +74,7 @@ function subdomainMiddleware(req, res, next) {
     return next();
   }
 
-  // 3. Handle agent custom subdomain: [username].ngglobalmp.in or [username].localhost
-  const reserved = ['www', 'admin', 'api', 'mail', 'app', 'portal', 'agents', 'agent', 'static'];
-  if (subdomain && !reserved.includes(subdomain)) {
-    const agent = Agent.findByUsername(subdomain);
-    if (agent && agent.status === 'active') {
-      req.subdomainAgent = agent;
-      res.locals.subdomainAgent = agent;
-
-      // Handle root access on agent's named subdomain:
-      if (req.path === '/') {
-        // If the logged-in agent matches this subdomain, open their private Dashboard
-        if (req.agent && req.agent.id === agent.id) {
-          return res.redirect('/agent/dashboard');
-        }
-        // Otherwise, render their branded public agency intake page directly on this subdomain
-        req.params.username = agent.username;
-        return agentController.showAgencyProfile(req, res, next);
-      }
-
-      // Handle public candidate submission on agent's subdomain
-      if (req.path === '/apply' && req.method === 'POST') {
-        req.params.username = agent.username;
-        return agentController.handlePublicCandidateApplication(req, res, next);
-      }
-
-      if (req.path === '/apply' && req.method === 'GET') {
-        req.params.username = agent.username;
-        return agentController.showAgencyProfile(req, res, next);
-      }
-
-      // If user accesses /dashboard on the agent's subdomain
-      if (req.path === '/dashboard') {
-        return res.redirect('/agent/dashboard');
-      }
-
-      return next();
-    }
-  }
-
-  // 4. Main Apex Public Site (ngglobalmp.in or www.ngglobalmp.in)
+  // 3. Main Apex Public Site (ngglobalmp.in or www.ngglobalmp.in)
   // In production with custom domain, seamlessly route portal paths to their dedicated subdomains
   if (!isLocal && !isIpOrRender && (subdomain === null || subdomain === 'www')) {
     // Redirect /admin and /admin/* to admin.ngglobalmp.in
@@ -130,14 +93,7 @@ function subdomainMiddleware(req, res, next) {
       return res.redirect(302, `${proto}://agents.${rootDomain}${req.originalUrl}`);
     }
 
-    // Redirect /agency/:username to [username].ngglobalmp.in
-    const agencyMatch = req.path.match(/^\/agency\/([a-zA-Z0-9_-]+)/);
-    if (agencyMatch && agencyMatch[1]) {
-      const targetAgent = Agent.findByUsername(agencyMatch[1]);
-      if (targetAgent && targetAgent.status === 'active') {
-        return res.redirect(302, `${proto}://${targetAgent.username}.${rootDomain}/`);
-      }
-    }
+    // Note: Public agency profiles remain hosted on apex domain at /agency/:username (no vanity subdomains)
   }
 
   next();

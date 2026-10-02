@@ -124,7 +124,7 @@
                   </div>
                   <div style="margin-top: 4px;">
                     <a href="<%= typeof getAgentLandingUrl === 'function' ? getAgentLandingUrl(agent.username) : ('/agency/' + agent.username) %>" target="_blank" style="font-size: 0.78rem; color: var(--admin-cyan); text-decoration: none;">
-                      <i class="fa-solid fa-up-right-from-square"></i> <%= agent.username %>.<%= typeof rootHostname !== 'undefined' ? rootHostname : 'ngglobalmp.in' %>
+                      <i class="fa-solid fa-up-right-from-square"></i> /agency/<%= agent.username %>
                     </a>
                   </div>
                 </td>

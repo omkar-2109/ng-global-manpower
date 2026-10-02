@@ -43,6 +43,16 @@ const securityHeaders = helmet({
         'https://*.whatsapp.com'
       ],
       objectSrc: ["'none'"],
+      formAction: [
+        "'self'",
+        'https://*.ngglobalmp.in',
+        'https://ngglobalmp.in',
+        'https://*.onrender.com',
+        'http://localhost:*',
+        'http://*.localhost:*',
+        'https://wa.me',
+        'https://*.whatsapp.com'
+      ],
       upgradeInsecureRequests: []
     }
   },
